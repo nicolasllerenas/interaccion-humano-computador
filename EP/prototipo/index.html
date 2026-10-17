@@ -1,0 +1,1328 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Justicia Cercana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: riel de navegación fijo a la izquierda + barra superior con estado de conexión + contenido con desplazamiento propio (tableta 10" horizontal, 1280×800) */
+:root{
+  --bg:#EAF0F4; --surface:#FFFFFF; --surface-2:#F4F7F9; --ink:#14212C; --ink-2:#465663; --line:#D2DBE3; --line-strong:#9FB0BF;
+  --primary:#164C70; --primary-hover:#0E3A57; --primary-soft:#E0ECF5; --on-primary:#FFFFFF;
+  --rail:#0F2F48; --rail-ink:#D6E4EF; --rail-strong:#FFFFFF; --rail-soft:#1B425F;
+  --ok:#1A6E42; --ok-soft:#DFF2E6; --warn:#8A4F00; --warn-soft:#FFF0CC; --bad:#B02318; --bad-soft:#FCE6E3; --info:#1B57A0; --info-soft:#E3EEFB; --neutral:#4E5B66; --neutral-soft:#E9EDF0;
+  --c-aud:#5636B8; --c-aud-soft:#ECE7FB; --c-reu:#0A6F6D; --c-reu-soft:#DAF1F0; --c-vis:#944419; --c-vis-soft:#F8E8DD; --c-not:#1B57A0; --c-not-soft:#E3EEFB; --c-otr:#4E5B66; --c-otr-soft:#E9EDF0;
+  --note:#D0215F; --note-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(15,47,72,.08), 0 4px 14px rgba(15,47,72,.06);
+  --font:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0C141B; --surface:#141F29; --surface-2:#1A2733; --ink:#E5EDF3; --ink-2:#A7B6C3; --line:#283948; --line-strong:#40566A;
+  --primary:#86BFEA; --primary-hover:#A5D0F0; --primary-soft:#183248; --on-primary:#08192A;
+  --rail:#08141E; --rail-ink:#B9CCDA; --rail-strong:#FFFFFF; --rail-soft:#15293A;
+  --ok:#6BD197; --ok-soft:#133224; --warn:#F3BC57; --warn-soft:#35270C; --bad:#FF8C80; --bad-soft:#3A1714; --info:#94C0F4; --info-soft:#15283D; --neutral:#B2BEC8; --neutral-soft:#223140;
+  --c-aud:#B7A4F5; --c-aud-soft:#2A2147; --c-reu:#6FD4D1; --c-reu-soft:#12302F; --c-vis:#F0A77E; --c-vis-soft:#3A2417; --c-not:#94C0F4; --c-not-soft:#15283D; --c-otr:#B2BEC8; --c-otr-soft:#223140;
+  --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0C141B; --surface:#141F29; --surface-2:#1A2733; --ink:#E5EDF3; --ink-2:#A7B6C3; --line:#283948; --line-strong:#40566A;
+  --primary:#86BFEA; --primary-hover:#A5D0F0; --primary-soft:#183248; --on-primary:#08192A;
+  --rail:#08141E; --rail-ink:#B9CCDA; --rail-strong:#FFFFFF; --rail-soft:#15293A;
+  --ok:#6BD197; --ok-soft:#133224; --warn:#F3BC57; --warn-soft:#35270C; --bad:#FF8C80; --bad-soft:#3A1714; --info:#94C0F4; --info-soft:#15283D; --neutral:#B2BEC8; --neutral-soft:#223140;
+  --c-aud:#B7A4F5; --c-aud-soft:#2A2147; --c-reu:#6FD4D1; --c-reu-soft:#12302F; --c-vis:#F0A77E; --c-vis-soft:#3A2417; --c-not:#94C0F4; --c-not-soft:#15283D; --c-otr:#B2BEC8; --c-otr-soft:#223140;
+  --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark; }
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.45 var(--font);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+p{margin:0}
+.i{width:24px;height:24px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Shell ---------- */
+#app{height:100%}
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);height:100%}
+.rail{background:var(--rail);color:var(--rail-ink);display:flex;flex-direction:column;gap:6px;padding:16px 12px;overflow:auto}
+.brand{display:flex;gap:10px;align-items:center;padding:2px 6px 14px;color:var(--rail-strong)}
+.brand .logo{width:44px;height:44px;border-radius:12px;background:var(--rail-strong);color:var(--rail);display:grid;place-items:center;flex:none}
+.brand .logo .i{width:28px;height:28px}
+.brand b{display:block;font-size:18px;line-height:1.1}
+.brand small{display:block;font-size:13px;line-height:1.25;opacity:.85;margin-top:3px}
+.nav{display:flex;flex-direction:column;gap:6px}
+.nav button{display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 12px;border-radius:12px;border:0;background:none;color:var(--rail-ink);font-weight:700;font-size:17px;line-height:1.15;text-align:left;cursor:pointer;width:100%}
+.nav button:hover{background:var(--rail-soft)}
+.nav button.on{background:var(--rail-strong);color:var(--rail)}
+.nav .count{margin-left:auto;min-width:30px;height:30px;display:grid;place-items:center;border-radius:999px;background:var(--warn-soft);color:var(--warn);font-size:15px;padding:0 8px}
+.rail-foot{margin-top:auto;display:flex;flex-direction:column;gap:12px;padding-top:12px}
+.who{display:flex;gap:10px;align-items:center;padding:0 6px;color:var(--rail-strong)}
+.who b{display:block;font-size:15px;line-height:1.2}.who small{font-size:13px;opacity:.8}
+.demo{border:2px dashed var(--rail-soft);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.demo p{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
+.switch{display:flex;align-items:center;gap:10px;min-height:44px;border:0;background:var(--rail-soft);border-radius:999px;padding:6px 14px 6px 6px;color:var(--rail-strong);font-weight:700;font-size:15px;cursor:pointer}
+.switch .knob{width:44px;height:26px;border-radius:999px;background:var(--bad);position:relative;flex:none}
+.switch .knob::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--rail-strong);transition:left .15s}
+.switch.on .knob{background:var(--ok)}.switch.on .knob::after{left:21px}
+.linkish{background:none;border:0;padding:6px 0;color:inherit;text-decoration:underline;cursor:pointer;font-size:14.5px;text-align:left}
+
+.main{display:flex;flex-direction:column;min-width:0;height:100%;overflow:auto;position:relative;scroll-behavior:smooth}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:10px 24px;min-height:78px}
+.top .ttl{min-width:0}
+.crumb{font-size:15px;color:var(--ink-2)}
+.top h1{font-size:25px}
+.pill{margin-left:auto;display:flex;align-items:center;gap:12px;min-height:58px;padding:6px 18px 6px 14px;border-radius:14px;border:2px solid;cursor:pointer;text-align:left;flex:none}
+.pill .i{width:28px;height:28px}
+.pill b{display:block;font-size:17px;line-height:1.2}.pill small{display:block;font-size:14.5px;line-height:1.25}
+.pill.warn{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.pill.info{background:var(--info-soft);border-color:var(--info);color:var(--info)}
+.pill.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.pill.neutral{background:var(--neutral-soft);border-color:var(--neutral);color:var(--neutral)}
+.spin{animation:spin 1.1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+.view{padding:20px 24px 28px;display:flex;flex-direction:column;gap:18px;flex:1}
+.foot{position:sticky;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);padding:12px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.foot .grow{margin-left:auto}
+
+/* ---------- Common ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);min-width:0}
+.card-h{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.card h3{font-size:20px;display:flex;gap:10px;align-items:center}
+.card h3 .n{background:var(--warn-soft);color:var(--warn);border-radius:999px;font-size:15px;padding:2px 10px}
+.eyebrow{font-size:15px;color:var(--ink-2);font-weight:700;letter-spacing:.02em}
+.muted{color:var(--ink-2)}
+.lead{color:var(--ink-2);font-size:17.5px;max-width:62ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 22px;border-radius:12px;border:2px solid transparent;font-weight:700;font-size:18px;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.sm{min-height:48px;padding:0 16px;font-size:16.5px}
+.btn.lg{min-height:64px;padding:0 28px;font-size:19px}
+.btn.primary{background:var(--primary);color:var(--on-primary)}
+.btn.primary:hover{background:var(--primary-hover)}
+.btn.secondary{background:var(--surface);border-color:var(--line-strong);color:var(--primary)}
+.btn.secondary:hover{background:var(--primary-soft)}
+.btn.ghost{background:none;color:var(--ink-2);border-color:transparent;text-decoration:underline;padding:0 10px}
+.btn.danger{background:var(--surface);border-color:var(--bad);color:var(--bad)}
+.btn:disabled{background:var(--neutral-soft);color:var(--neutral);border-color:var(--neutral-soft);cursor:not-allowed}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 11px 4px 8px;border-radius:999px;font-size:15px;font-weight:700;line-height:1.2;white-space:nowrap}
+.badge .i{width:18px;height:18px}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}.badge.warn{background:var(--warn-soft);color:var(--warn)}.badge.bad{background:var(--bad-soft);color:var(--bad)}.badge.info{background:var(--info-soft);color:var(--info)}.badge.neutral{background:var(--neutral-soft);color:var(--neutral)}
+.banner{display:flex;align-items:center;gap:14px;padding:12px 24px;border-bottom:1px solid var(--line)}
+.banner p{flex:1}
+.banner.info{background:var(--info-soft);color:var(--info)}
+.banner.edit{background:var(--warn-soft);color:var(--warn);border:2px solid var(--warn);border-radius:14px}
+.back{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:var(--primary);font-weight:700;cursor:pointer;min-height:48px;padding:0;align-self:flex-start}
+.search{display:flex;align-items:center;gap:12px;background:var(--surface);border:2px solid var(--line-strong);border-radius:14px;padding:0 16px;min-height:58px;flex:1;min-width:0}
+.search:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.search input{border:0;outline:0;background:none;flex:1;min-width:0;font-size:18px;height:54px}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.fchip{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 16px;border-radius:999px;border:2px solid var(--line-strong);background:var(--surface);font-weight:700;font-size:16.5px;cursor:pointer;color:var(--ink)}
+.fchip .c{background:var(--surface-2);border-radius:999px;padding:0 8px;font-size:14.5px}
+.fchip.on{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.fchip.on .c{background:var(--on-primary);color:var(--primary)}
+.fchip .i{width:20px;height:20px}
+.toolbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+
+/* ---------- Home ---------- */
+.hello{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.hello > div:first-child{flex:1 1 320px}
+.hello h2{font-size:28px}
+.hello .search{flex:1 1 420px}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.qa{display:flex;align-items:center;gap:14px;min-height:96px;padding:14px 18px;border-radius:16px;border:2px solid var(--primary);background:var(--primary);color:var(--on-primary);text-align:left;cursor:pointer;box-shadow:var(--shadow)}
+.qa:hover{background:var(--primary-hover)}
+.qa .i{width:36px;height:36px}
+.qa b{display:block;font-size:19px;line-height:1.2}.qa small{display:block;font-size:15px;opacity:.9;margin-top:2px}
+.qa .plus{margin-left:auto;width:26px;height:26px}
+.cols2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.alist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.arow{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);text-align:left;cursor:pointer}
+.arow:hover{border-color:var(--primary)}
+.arow-t{flex:1;min-width:0}.arow-t b{display:block;font-size:16.5px}.arow-t small{display:block;color:var(--ink-2);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arow .chev{color:var(--ink-2)}
+.syncsum{flex-direction:row;align-items:center;gap:16px}
+.syncsum > .i{width:36px;height:36px;color:var(--warn)}
+.syncsum.ok > .i{color:var(--ok)}
+.syncsum p{flex:1}
+.mini-act{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.mini-act:last-child{border-bottom:0}
+.mini-act .when{width:92px;flex:none;font-weight:700;font-size:15.5px;font-variant-numeric:tabular-nums}
+.mini-act .when small{display:block;font-weight:400;color:var(--ink-2)}
+.mini-act .what{flex:1;min-width:0}.mini-act .what b{display:block;font-size:16px;line-height:1.25}.mini-act .what small{display:block;font-size:14.5px}
+.gres{display:flex;flex-direction:column;gap:6px}
+
+/* ---------- Lists ---------- */
+.list{display:flex;flex-direction:column;gap:10px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto 24px;gap:16px;align-items:center;width:100%;padding:14px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface);text-align:left;cursor:pointer;box-shadow:var(--shadow)}
+.row:hover{border-color:var(--primary)}
+.row-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:15.5px;color:var(--ink-2)}
+.code{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.tipo{display:inline-flex;gap:6px;align-items:center}.tipo .i{width:20px;height:20px}
+.row-parties{font-size:18px;margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.role{font-size:14px;font-weight:700;padding:2px 8px;border-radius:6px}
+.role.sol{background:var(--primary-soft);color:var(--primary)}.role.inv{background:var(--c-vis-soft);color:var(--c-vis)}.role.tes{background:var(--neutral-soft);color:var(--neutral)}
+.row-desc{color:var(--ink-2);font-size:16px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-side{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.row-side .next{font-size:15px;color:var(--ink-2)}
+.empty{padding:30px;text-align:center;color:var(--ink-2)}
+
+/* ---------- Detail ---------- */
+.dhead{flex-direction:row;align-items:flex-start;gap:16px}
+.big-ic{width:48px!important;height:48px!important;padding:10px;border-radius:14px;background:var(--primary-soft);color:var(--primary)}
+.dhead .dh-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.dhead h2{font-size:24px}
+.dh-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+.dcol{display:flex;flex-direction:column;gap:18px;min-width:0}
+.parties{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.party{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--surface-2)}
+.party .pname{font-size:18px}
+.party dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:15.5px}
+.party dt{color:var(--ink-2)}.party dd{margin:0}
+.timeline{list-style:none;margin:0;padding:0 0 0 8px;display:flex;flex-direction:column}
+.timeline li{position:relative;padding:0 0 16px 26px;border-left:3px solid var(--line)}
+.timeline li:last-child{border-left-color:transparent;padding-bottom:4px}
+.timeline li::before{content:"";position:absolute;left:-10px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--surface);border:3px solid var(--primary)}
+.timeline li.last::before{background:var(--primary)}
+.timeline time{font-weight:700;font-size:15.5px;font-variant-numeric:tabular-nums}
+.timeline p{font-size:17px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:16.5px}
+.kv dt{color:var(--ink-2)}.kv dd{margin:0}
+.editing{border:2px solid var(--warn)}
+.changed{display:inline-flex;gap:6px;align-items:center;font-size:14.5px;font-weight:700;color:var(--warn);background:var(--warn-soft);padding:2px 8px;border-radius:6px;margin-left:6px}
+.inline-form{border:2px solid var(--primary);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px;background:var(--primary-soft)}
+.doclist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.doclist li{display:flex;gap:10px;align-items:center;font-size:16px}
+
+/* ---------- Forms ---------- */
+.wiz{display:flex;flex-direction:column;gap:16px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.steps li > *{display:flex;align-items:center;gap:10px;width:100%;min-height:56px;padding:6px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-size:16px;text-align:left}
+.steps li button{cursor:pointer;color:var(--ok)}
+.steps .sn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--surface-2);border:2px solid var(--line-strong);font-size:16px}
+.steps .sn .i{width:18px;height:18px}
+.steps .done > *{border-color:var(--ok);background:var(--ok-soft)}
+.steps .done .sn{background:var(--ok);border-color:var(--ok);color:var(--on-primary)}
+.steps .cur > *{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+.steps .cur .sn{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.steps .todo > *{color:var(--ink-2)}
+.wiz-body{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:18px;align-items:start}
+.wiz-form{display:flex;flex-direction:column;gap:16px;min-width:0}
+.wiz-form > h2{font-size:23px}
+.wiz-aside{position:sticky;top:96px;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;font-size:15.5px}
+.wiz-aside h3{font-size:17px}
+.wiz-aside ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.wiz-aside .sec{border-top:1px solid var(--line);padding-top:8px}
+.wiz-aside .lbl2{color:var(--ink-2);font-size:14px;font-weight:700}
+.fset{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:14px 18px 16px;margin:0;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);min-width:0}
+.fset legend{font-weight:700;font-size:15px;color:var(--ink-2);padding:0 6px}
+.fset-h{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.prow{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-start}
+.prow > .field{flex:1 1 190px}.prow > .field.doc{flex:0 0 auto}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.lbl{font-weight:700;font-size:16.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.req,.opt{font-style:normal;font-size:13px;font-weight:700;padding:2px 8px;border-radius:6px;letter-spacing:.02em}
+.req{background:var(--primary-soft);color:var(--primary)}
+.opt{color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line)}
+.inp{width:100%;min-height:54px;padding:10px 14px;border:2px solid var(--line-strong);border-radius:12px;background:var(--surface);font-size:18px}
+textarea.inp{min-height:96px;resize:vertical;line-height:1.4}
+.inp:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
+.has-err .inp{border-color:var(--bad);background:var(--bad-soft)}
+.help{font-size:14.5px;color:var(--ink-2)}
+.err{font-size:15px;color:var(--bad);font-weight:700;display:flex;gap:6px;align-items:center;min-height:0}
+.err:empty{display:none}
+.err .i{width:18px;height:18px}
+.counter{font-size:14px;color:var(--ink-2);text-align:right;font-variant-numeric:tabular-nums}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:0 16px;border:2px solid var(--line-strong);border-radius:12px;background:var(--surface);font-weight:700;font-size:16.5px;cursor:pointer}
+.seg label.on{border-color:var(--primary);background:var(--primary);color:var(--on-primary)}
+.seg label .i{width:20px;height:20px}
+.seg input,.tiles input{position:absolute;opacity:0;pointer-events:none}
+.seg label:focus-within,.tile:focus-within{outline:3px solid var(--primary);outline-offset:2px}
+.seg.desc label{flex-direction:column;align-items:flex-start;justify-content:center;gap:0;padding:8px 16px;flex:1 1 180px}
+.seg.desc label small{font-weight:400;font-size:14.5px;opacity:.9}
+.seg.desc label span{display:flex;gap:8px;align-items:center}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tile{position:relative;display:flex;flex-direction:column;gap:6px;padding:14px;min-height:118px;border:2px solid var(--line-strong);border-radius:14px;background:var(--surface);cursor:pointer}
+.tile .ti{width:32px;height:32px;color:var(--primary)}
+.tile b{font-size:17px;line-height:1.2}
+.tile small{font-size:14.5px;color:var(--ink-2);line-height:1.3}
+.tile.on{border:3px solid var(--primary);background:var(--primary-soft);padding:13px}
+.tile .tick{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center}
+.tile .tick .i{width:18px;height:18px}
+.tiles.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.tiles.five .tile{min-height:92px;align-items:center;text-align:center;justify-content:center}
+.alert{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;border:2px solid}
+.alert > .i{width:28px;height:28px;margin-top:1px}
+.alert .body{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+.alert .acts{display:flex;gap:10px;flex-wrap:wrap}
+.alert.warn{background:var(--warn-soft);border-color:var(--warn);color:var(--ink)}.alert.warn > .i{color:var(--warn)}
+.alert.bad{background:var(--bad-soft);border-color:var(--bad)}.alert.bad > .i{color:var(--bad)}
+.alert.ok{background:var(--ok-soft);border-color:var(--ok)}.alert.ok > .i{color:var(--ok)}
+.alert.info{background:var(--info-soft);border-color:var(--info)}.alert.info > .i{color:var(--info)}
+.alert ul{margin:0;padding-left:20px}
+.alert a{color:var(--bad);font-weight:700}
+.check{display:flex;gap:12px;align-items:center;min-height:52px;font-weight:700;cursor:pointer}
+.check input{width:26px;height:26px;accent-color:var(--primary)}
+.reqlist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.reqlist li{display:flex;gap:8px;align-items:flex-start;font-size:16px;background:var(--surface);border-radius:10px;padding:8px 10px;border:1px solid var(--line)}
+.reqlist .i{color:var(--ok);width:22px;height:22px}
+.review{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.review .card h3{justify-content:space-between}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.quickdates{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- Confirmation ---------- */
+.confirm{max-width:760px;margin:10px auto;align-items:center;text-align:center;gap:14px;padding:30px}
+.confirm .bigok{width:84px;height:84px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:grid;place-items:center}
+.confirm .bigok .i{width:52px;height:52px;stroke-width:2.5}
+.confirm h2{font-size:30px}
+.confirm .codebig{font-size:34px;font-weight:700;letter-spacing:.03em;font-variant-numeric:tabular-nums;background:var(--surface-2);border:2px dashed var(--line-strong);border-radius:12px;padding:6px 18px}
+.confirm .acts{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+
+/* ---------- Agenda ---------- */
+.ag{display:grid;grid-template-columns:minmax(0,2.15fr) minmax(290px,1fr);gap:18px;align-items:start}
+.cal-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cal-h h2{font-size:23px;min-width:210px;text-align:center}
+.iconbtn{width:52px;height:52px;display:grid;place-items:center;border-radius:12px;border:2px solid var(--line-strong);background:var(--surface);cursor:pointer;color:var(--primary)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.cal .dow{font-size:14px;font-weight:700;color:var(--ink-2);text-align:center;padding:4px 0;text-transform:capitalize}
+.day{min-height:92px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:3px;display:flex;flex-direction:column;gap:3px;text-align:left;cursor:pointer;min-width:0}
+.day.out{background:var(--surface-2);opacity:.55}
+.day .dn{font-weight:700;font-size:15px;display:flex;align-items:center;gap:4px;padding:1px 3px}
+.day.today .dn span{background:var(--primary);color:var(--on-primary);border-radius:999px;padding:0 7px}
+.day.today .dn em{font-style:normal;font-size:12.5px;color:var(--primary)}
+.day.sel{border:3px solid var(--primary);padding:2px}
+.chip{display:flex;align-items:center;gap:3px;border-radius:6px;padding:1px 3px;font-size:12.5px;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;min-width:0}
+.chip .i{width:14px;height:14px;stroke-width:2.4}
+.chip span{overflow:hidden;text-overflow:ellipsis}
+.chip.cx span{text-decoration:line-through}
+.chip.done{opacity:.62}
+.chip.more{color:var(--ink-2);font-weight:700}
+.c-aud{background:var(--c-aud-soft);color:var(--c-aud)}.c-reu{background:var(--c-reu-soft);color:var(--c-reu)}.c-vis{background:var(--c-vis-soft);color:var(--c-vis)}.c-not{background:var(--c-not-soft);color:var(--c-not)}.c-otr{background:var(--c-otr-soft);color:var(--c-otr)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 10px;font-size:14.5px}
+.legend .chip{font-size:14px;padding:3px 8px}
+.act{display:grid;grid-template-columns:78px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.act:last-child{border-bottom:0}
+.act .t{font-weight:700;font-variant-numeric:tabular-nums;font-size:17px}.act .t small{display:block;color:var(--ink-2);font-weight:400;font-size:15px}
+.act .b{display:flex;flex-direction:column;gap:6px;min-width:0}
+.act .b > b{font-size:17.5px;line-height:1.25}
+.act .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.act .place{display:flex;gap:6px;align-items:center;color:var(--ink-2);font-size:15.5px}
+.act .place .i{width:18px;height:18px}
+.act.new{background:var(--ok-soft);border-radius:12px;padding:12px 10px}
+.act.cancel .b > b{text-decoration:line-through;color:var(--ink-2)}
+.act .acts{display:flex;gap:8px;flex-wrap:wrap}
+.cat{display:inline-flex;align-items:center;gap:6px;border-radius:8px;padding:3px 10px 3px 8px;font-size:15px;font-weight:700}
+.cat .i{width:18px;height:18px}
+.upcoming{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--primary-soft);color:var(--primary);font-weight:700;font-size:16px}
+
+/* ---------- Sync ---------- */
+.sgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
+.shero{flex-direction:row;gap:18px;align-items:flex-start;padding:22px}
+.shero > .i{width:56px;height:56px;padding:12px;border-radius:16px;flex:none}
+.shero.warn > .i{background:var(--warn-soft);color:var(--warn)}.shero.ok > .i{background:var(--ok-soft);color:var(--ok)}.shero.info > .i{background:var(--info-soft);color:var(--info)}.shero.bad > .i{background:var(--bad-soft);color:var(--bad)}
+.shero.warn{border:2px solid var(--warn)}.shero.ok{border:2px solid var(--ok)}.shero.info{border:2px solid var(--info)}
+.shero .body{display:flex;flex-direction:column;gap:10px;flex:1;min-width:0}
+.shero h2{font-size:25px}
+.steps-how{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+.bar{height:16px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--info);transition:width .3s}
+.shero.ok .bar span{background:var(--ok)}.shero.warn .bar span{background:var(--warn)}
+.pctbig{font-size:56px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--info)}
+.pctbig span{font-size:28px;margin-left:4px}
+.shero.ok .pctbig{color:var(--ok)}.shero.warn .pctbig{color:var(--warn)}
+.banner .bar.mini{width:180px;height:12px;flex:none}
+.pctsm{font-size:20px;font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
+.olist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.olist li{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2)}
+.olist li .t{flex:1;min-width:0}.olist li .t b{display:block;font-size:16.5px}.olist li .t small{color:var(--ink-2);font-size:14.5px}
+.reason{font-size:15px;color:var(--ink-2)}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:calc(220px + (100% - 220px)/2);transform:translateX(-50%);bottom:104px;z-index:60;display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--surface);padding:12px 12px 12px 18px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:min(760px,calc(100% - 260px))}
+.toast .i{color:var(--ok-soft)}
+.toast p{flex:1}
+.toast button{min-height:48px;padding:0 16px;border-radius:10px;border:2px solid var(--surface);background:none;color:var(--surface);font-weight:700;cursor:pointer}
+
+/* ---------- Anotaciones para el informe ---------- */
+.nmark{position:absolute;top:-13px;right:-11px;z-index:80;background:var(--note);color:var(--note-ink);font:700 14px/1 var(--font);padding:5px 7px;border-radius:999px;border:2px solid var(--note-ink);box-shadow:0 2px 6px rgba(0,0,0,.35);pointer-events:none;letter-spacing:.02em}
+.n-on{outline:3px dashed var(--note)!important;outline-offset:3px}
+
+/* ---------- Computadora ---------- */
+@media (min-width:1400px){ .view{max-width:1240px;width:100%;margin:0 auto} .shell{grid-template-columns:240px minmax(0,1fr)} .toast{left:calc(240px + (100% - 240px)/2)} }
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+  .rail{order:2;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));overflow-x:auto;gap:4px}
+  .brand,.rail-foot .who{display:none}
+  .nav{flex-direction:row;flex:1}
+  .nav button{flex-direction:column;gap:2px;font-size:12px;min-height:56px;padding:4px;justify-content:center;text-align:center}
+  .nav button span:not(.count){display:none}.nav button .count{margin:0}
+  .rail-foot{margin:0;padding:0}.demo{padding:4px;border-width:1px}.demo p,.demo .linkish{display:none}.switch{font-size:12px;padding:4px 8px 4px 4px}
+  .top{flex-wrap:wrap;padding:8px 16px}.pill{margin-left:0;width:100%}
+  .view{padding:16px}
+  .quick,.cols2,.dgrid,.wiz-body,.ag,.sgrid,.review,.g2,.g3,.parties,.reqlist{grid-template-columns:minmax(0,1fr)}
+  .tiles,.tiles.five{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:repeat(4,minmax(0,1fr))}.steps .sl{display:none}
+  .wiz-aside{display:none}
+  .row{grid-template-columns:minmax(0,1fr)}.row-side{align-items:flex-start}.row > .i{display:none}
+  .day{min-height:58px}.chip span{display:none}
+  .toast{left:50%;max-width:calc(100% - 32px);bottom:90px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast-root"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></symbol>
+  <symbol id="i-stamp" viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 1 3 3c0 1.6-1 2.6-1 4.5h-4C10 8.6 9 7.6 9 6a3 3 0 0 1 3-3z"/><path d="M5 14.5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2V17H5z"/><path d="M4 21h16"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-14.3 4.9"/><path d="M4 12a8 8 0 0 1 14.3-4.9"/><path d="M18.5 3v4.5H14"/><path d="M5.5 21v-4.5H10"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5 12a10.5 10.5 0 0 1 14 0"/><path d="M8.5 15.5a5.5 5.5 0 0 1 7 0"/><path d="M12 19.2v.1"/></symbol>
+  <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M8.5 15.5a5.5 5.5 0 0 1 6-1"/><path d="M5 12a10.5 10.5 0 0 1 3.3-2.1"/><path d="M2 8.5a15 15 0 0 1 4.2-2.7"/><path d="M11 5.1A15 15 0 0 1 22 8.5"/><path d="M15.6 10.2A10.5 10.5 0 0 1 19 12"/><path d="M12 19.2v.1"/></symbol>
+  <symbol id="i-tablet" viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="2"/><path d="M10.5 18.5h3"/></symbol>
+  <symbol id="i-cloud-check" viewBox="0 0 24 24"><path d="M7 18.5a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9.5z"/><path d="m9 13.5 2 2 4-4"/></symbol>
+  <symbol id="i-cloud-up" viewBox="0 0 24 24"><path d="M7 18.5a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9.5"/><path d="M12 12v8M9 15l3-3 3 3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.5"/><path d="M12 17.3v.1"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.8v.1"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0z"/><path d="M19 7l-3 7a3 3 0 0 0 6 0z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+  <symbol id="i-chev-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-chev-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 5l-7 7 7 7"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17z"/><path d="m14.5 7.5 3 3"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20v-3"/></symbol>
+  <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 12c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></symbol>
+  <symbol id="i-fence" viewBox="0 0 24 24"><path d="M5 21V6l2-2.5L9 6v15M15 21V6l2-2.5L19 6v15"/><path d="M3 10h18M3 16h18"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.8 9.3c-.4-1-1.5-1.7-2.8-1.7-1.7 0-3 .9-3 2.2 0 3 6 1.6 6 4.6 0 1.3-1.3 2.2-3 2.2-1.4 0-2.6-.7-3-1.8M12 5.8v1.8M12 16.6v1.8"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-8-4.5-8-10.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 2.5C20 15.5 12 20 12 20z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 8 7.5 9.5 4.3-1.5 7.5-5 7.5-9.5V6z"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><path d="M6 12h.1M12 12h.1M18 12h.1" stroke-width="3.2"/></symbol>
+  <symbol id="i-sign" viewBox="0 0 24 24"><path d="M3 17c3-6 5-9 6-9s-1 7 1 7 3-4 4-4 0 3 1.5 3S19 12 21 12"/><path d="M3 21h18"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="1.5"/><path d="M16 8V4.5A1.5 1.5 0 0 0 14.5 3h-9A1.5 1.5 0 0 0 4 4.5v11A1.5 1.5 0 0 0 5.5 17H8"/></symbol>
+  <symbol id="i-land" viewBox="0 0 24 24"><path d="M2.5 20 9 9l4 6 3-4 5.5 9z"/><circle cx="17" cy="5.5" r="2"/></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h15l-3.5-3.5M20 16H5l3.5 3.5"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h11l-1.5 4L16 12H5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.5"/><path d="M8 20.5h8M12 16.5v4"/></symbol>
+  <symbol id="i-shield-check" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 8 7.5 9.5 4.3-1.5 7.5-5 7.5-9.5V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14"/></symbol>
+</svg>
+
+<script>
+'use strict';
+/* =============== Utilidades de fecha y texto =============== */
+const pad = n => String(n).padStart(2,'0');
+const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const TODAY = startOfDay(new Date());
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
+const TODAY_ISO = iso(TODAY);
+const YEAR = TODAY.getFullYear();
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre'];
+const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const DIAS_C = ['dom','lun','mar','mié','jue','vie','sáb'];
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+const fmt = s => { if(!s) return ''; const d = parse(s); return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`; };
+const fmtLargo = s => { const d = parse(s); return `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]}`; };
+const fmtCorto = s => { const d = parse(s); return `${DIAS_C[d.getDay()]} ${pad(d.getDate())}/${pad(d.getMonth()+1)}`; };
+const diffDays = s => Math.round((parse(s) - TODAY)/86400000);
+const rel = s => { const n = diffDays(s); if(n===0) return 'Hoy'; if(n===1) return 'Mañana'; if(n===-1) return 'Ayer'; if(n>1 && n<7) return `En ${n} días`; if(n<0 && n>-15) return `Hace ${-n} días`; return cap(fmtCorto(s)); };
+const nowISO = () => { const d = new Date(); return `${iso(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const fmtDT = s => s ? `${cap(fmtLargo(s.slice(0,10)))} a las ${s.slice(11,16)}` : 'nunca';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+const plural = (n,a,b) => n===1 ? a : b;
+const icon = (n, cls='') => `<svg class="i ${cls}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const fmtTel = t => t ? t.replace(/(\d{3})(\d{3})(\d{3})/,'$1 $2 $3') : '';
+
+/* =============== Catálogos (lenguaje llano) =============== */
+const COMUNIDADES = ['Pampa Alta','Rumichaca','Ccollpa','Huancapata','San Juan de Pampa'];
+const TIPOS_CONFLICTO = [
+  {id:'linderos', label:'Linderos y terrenos', icon:'fence', desc:'Cercos y límites de chacras'},
+  {id:'danos', label:'Daños a cultivos o animales', icon:'sprout', desc:'Animales que dañan sembríos'},
+  {id:'deudas', label:'Deudas', icon:'coin', desc:'Préstamos o pagos pendientes'},
+  {id:'vecinos', label:'Problemas entre vecinos', icon:'users', desc:'Agua, paso, ruidos'},
+  {id:'alimentos', label:'Pensión de alimentos', icon:'heart', desc:'Apoyo para hijas e hijos'},
+  {id:'familia', label:'Violencia familiar', icon:'shield', desc:'Pide medidas de protección'},
+  {id:'faltas', label:'Faltas y ofensas', icon:'alert', desc:'Peleas o amenazas leves'},
+  {id:'otro', label:'Otro', icon:'dots', desc:'Escriba de qué se trata'},
+];
+const ESTADOS_CASO = {
+  tramite:{label:'En trámite', icon:'clock', cls:'info', desc:'El caso sigue abierto'},
+  concluido:{label:'Concluido', icon:'check-circle', cls:'ok', desc:'Hubo acuerdo o decisión final'},
+  derivado:{label:'Derivado', icon:'arrow-right', cls:'neutral', desc:'Pasó a otra autoridad'},
+};
+const TIPOS_NOTARIAL = [
+  {id:'posesion', label:'Constancia de posesión', icon:'land', desc:'Que una persona ocupa y trabaja un terreno', req:['DNI de quien lo pide','2 testigos: vecinos del terreno','Ubicación y medidas del terreno']},
+  {id:'domicilio', label:'Constancia domiciliaria', icon:'home', desc:'Dónde vive una persona', req:['DNI de quien lo pide','Dirección o referencia de la casa','1 testigo (si no tiene recibos)']},
+  {id:'convivencia', label:'Constancia de convivencia', icon:'users', desc:'Que dos personas viven juntas', req:['DNI de las dos personas','2 testigos','Desde cuándo viven juntas']},
+  {id:'supervivencia', label:'Constancia de supervivencia', icon:'pulse', desc:'Que una persona vive (para pensiones)', req:['La persona debe estar presente','Su DNI','Para qué institución es']},
+  {id:'firmas', label:'Legalización de firmas', icon:'sign', desc:'Certificar que una firma es de quien firmó', req:['El documento a firmar','DNI de quienes firman','Firmar delante de la jueza']},
+  {id:'copia', label:'Copia certificada', icon:'copy', desc:'Que una copia es igual al original', req:['El documento original','La copia a certificar','DNI de quien lo pide']},
+  {id:'transferencia', label:'Transferencia de bienes', icon:'swap', desc:'Venta o cesión de animales u otros bienes', req:['DNI de quien vende y de quien compra','Qué se transfiere (ej. 2 vacas)','Precio o acuerdo']},
+  {id:'otro', label:'Otro trámite', icon:'dots', desc:'Escriba cuál es', req:['DNI de quien lo pide']},
+];
+const ESTADOS_NOT = {
+  pendiente:{label:'Pendiente', icon:'clock', cls:'warn', desc:'Lo pidió y aún no se atiende'},
+  atendida:{label:'Atendida', icon:'stamp', cls:'info', desc:'Se atendió; falta entregar'},
+  concluida:{label:'Concluida', icon:'check-circle', cls:'ok', desc:'El documento ya se entregó'},
+};
+const TIPOS_ACT = {
+  audiencia:{label:'Audiencia', icon:'scale', c:'aud'},
+  reunion:{label:'Reunión', icon:'users', c:'reu'},
+  visita:{label:'Visita', icon:'pin', c:'vis'},
+  notarial:{label:'Trámite notarial', short:'Notarial', icon:'stamp', c:'not'},
+  otra:{label:'Otra', icon:'flag', c:'otr'},
+};
+const ESTADOS_ACT = {
+  programada:{label:'Programada', icon:'clock', cls:'info'},
+  realizada:{label:'Realizada', icon:'check', cls:'ok'},
+  cancelada:{label:'Cancelada', icon:'x', cls:'bad'},
+};
+const ROLES = { caso:['Solicitante','Invitado','Testigo'], not:['Solicitante','Declarante','Testigo'] };
+const roleCls = r => r==='Solicitante' ? 'sol' : (r==='Invitado' || r==='Declarante') ? 'inv' : 'tes';
+
+/* =============== Datos de ejemplo =============== */
+function seed(){
+  const d = n => iso(addDays(TODAY, n));
+  const personas = [
+    {id:'p1', nombres:'Juana', apellidos:'Mamani Quispe', docTipo:'DNI', docNum:'41256378', tel:'987654321', comunidad:'Pampa Alta', dir:'Frente a la posta', idioma:'Quechua'},
+    {id:'p2', nombres:'Teodoro', apellidos:'Huamán Ccori', docTipo:'DNI', docNum:'40981234', tel:'', comunidad:'Pampa Alta', dir:'Sector Chacapampa', idioma:'Quechua'},
+    {id:'p3', nombres:'Lucía', apellidos:'Condori Apaza', docTipo:'DNI', docNum:'45123987', tel:'965432187', comunidad:'Rumichaca', dir:'', idioma:'Castellano'},
+    {id:'p4', nombres:'Marcelino', apellidos:'Quispe Rojas', docTipo:'No tiene', docNum:'', tel:'', comunidad:'Rumichaca', dir:'Parte alta, junto al reservorio', idioma:'Quechua'},
+    {id:'p5', nombres:'Felícita', apellidos:'Ccahuana Luque', docTipo:'DNI', docNum:'42785561', tel:'951870224', comunidad:'Ccollpa', dir:'', idioma:'Castellano'},
+    {id:'p6', nombres:'Andrés', apellidos:'Yupanqui Soto', docTipo:'DNI', docNum:'43390112', tel:'951223344', comunidad:'Huancapata', dir:'', idioma:'Castellano'},
+    {id:'p7', nombres:'Gregorio', apellidos:'Soto Huamaní', docTipo:'DNI', docNum:'44018876', tel:'983110452', comunidad:'Huancapata', dir:'Camino a la laguna', idioma:'Castellano'},
+    {id:'p8', nombres:'Hilario', apellidos:'Challco Pari', docTipo:'DNI', docNum:'46677889', tel:'', comunidad:'Ccollpa', dir:'', idioma:'Quechua'},
+    {id:'p9', nombres:'Nicanor', apellidos:'Apaza Ttito', docTipo:'DNI', docNum:'47120933', tel:'', comunidad:'Huancapata', dir:'', idioma:'Quechua'},
+  ];
+  const casos = [
+    {id:'c13', codigo:`C-${YEAR}-0013`, fecha:d(0), tipo:'vecinos', desc:'Cerraron con piedras el paso hacia el camino comunal que usa la familia Soto.', estado:'tramite', obs:'', resultado:'', partes:[{pid:'p7',rol:'Solicitante'},{pid:'p9',rol:'Invitado'}], seguimiento:[{fecha:d(0), texto:'Registro del caso. Se entrega citación al invitado.'}], proxima:d(6), docs:[], docRef:'', sync:'pendiente', hist:[]},
+    {id:'c12', codigo:`C-${YEAR}-0012`, fecha:d(-52), tipo:'deudas', desc:'Préstamo de S/ 800 para la campaña de papa que no fue devuelto.', estado:'tramite', obs:'', resultado:'', partes:[{pid:'p5',rol:'Solicitante'},{pid:'p8',rol:'Invitado'}], seguimiento:[{fecha:d(-52), texto:'Registro del caso.'},{fecha:d(-38), texto:'Audiencia: el invitado se compromete a pagar en 30 días.'}], proxima:'', docs:[], docRef:'Libro de actas de conciliación N° 2, folio 17', sync:'ok', hist:[]},
+    {id:'c11', codigo:`C-${YEAR}-0011`, fecha:d(-12), tipo:'danos', desc:'Ovejas ingresaron a la chacra de maíz y dañaron parte del sembrío.', estado:'tramite', obs:'Pedir que el invitado venga con su hijo, que cuidaba las ovejas.', resultado:'', partes:[{pid:'p3',rol:'Solicitante'},{pid:'p4',rol:'Invitado'}], seguimiento:[{fecha:d(-12), texto:'Registro del caso.'},{fecha:d(-5), texto:'Audiencia: se acuerda inspeccionar la chacra antes de decidir.'}], proxima:d(3), docs:[{nombre:'Foto de la chacra dañada.jpg'}], docRef:'', sync:'ok', hist:[]},
+    {id:'c10', codigo:`C-${YEAR}-0010`, fecha:d(-40), tipo:'vecinos', desc:'Desacuerdo por los turnos del agua de riego del canal.', estado:'concluido', obs:'', resultado:'Riego por turnos: lunes y jueves para la familia Yupanqui; martes y viernes para la familia Challco.', partes:[{pid:'p6',rol:'Solicitante'},{pid:'p8',rol:'Invitado'}], seguimiento:[{fecha:d(-40), texto:'Registro del caso.'},{fecha:d(-9), texto:'Audiencia de conciliación. Se firma el acta de acuerdo.'}], proxima:'', docs:[{nombre:'Acta de conciliación firmada.jpg'}], docRef:'Libro de actas de conciliación N° 2, folio 21', sync:'ok', hist:[]},
+    {id:'c9', codigo:`C-${YEAR}-0009`, fecha:d(-27), tipo:'linderos', desc:'Discusión por el cerco que separa las chacras de ambas familias.', estado:'tramite', obs:'', resultado:'', partes:[{pid:'p1',rol:'Solicitante'},{pid:'p2',rol:'Invitado'}], seguimiento:[{fecha:d(-27), texto:'Registro del caso. Se cita a ambas partes.'},{fecha:d(-13), texto:'Primera audiencia: el invitado no asistió. Se le vuelve a citar.'}], proxima:d(1), docs:[{nombre:'Croquis del terreno.jpg'}], docRef:'', sync:'ok', hist:[]},
+    {id:'c8', codigo:`C-${YEAR}-0008`, fecha:d(-70), tipo:'deudas', desc:'Deuda de S/ 25 000 por venta de ganado.', estado:'derivado', obs:'', resultado:'El monto supera lo que puede ver el juzgado de paz. Se orientó a acudir al Juzgado de Paz Letrado de la provincia.', partes:[{pid:'p6',rol:'Solicitante'},{pid:'p9',rol:'Invitado'}], seguimiento:[{fecha:d(-70), texto:'Registro del caso.'},{fecha:d(-69), texto:'Se deriva al Juzgado de Paz Letrado.'}], proxima:'', docs:[], docRef:'', sync:'ok', hist:[]},
+  ];
+  const actuaciones = [
+    {id:'n23', codigo:`N-${YEAR}-0023`, tipo:'domicilio', tipoOtro:'', personas:[{pid:'p3',rol:'Solicitante'}], fechaSol:d(0), fechaAt:'', asunto:'Constancia de domicilio para inscribir a su hija en el colegio.', estado:'pendiente', obs:'', resultado:'', fechaEntrega:'', docs:[], libro:'', folio:'', sync:'pendiente', hist:[]},
+    {id:'n22', codigo:`N-${YEAR}-0022`, tipo:'firmas', tipoOtro:'', personas:[{pid:'p6',rol:'Solicitante'},{pid:'p7',rol:'Declarante'}], fechaSol:d(-3), fechaAt:d(-3), asunto:'Legalización de firmas en contrato de alquiler de terreno.', estado:'atendida', obs:'Recoge el documento hoy por la tarde.', resultado:'', fechaEntrega:'', docs:[], libro:'3', folio:'44', sync:'ok', hist:[]},
+    {id:'n21', codigo:`N-${YEAR}-0021`, tipo:'posesion', tipoOtro:'', personas:[{pid:'p1',rol:'Solicitante'},{pid:'p6',rol:'Testigo'},{pid:'p9',rol:'Testigo'}], fechaSol:d(-19), fechaAt:d(-18), asunto:'Posesión de la chacra "Ccochapata" (0.5 ha) en Pampa Alta.', estado:'concluida', obs:'', resultado:'Constancia de posesión emitida y entregada.', fechaEntrega:d(-17), docs:[{nombre:'Constancia escaneada.pdf'}], libro:'3', folio:'41', sync:'ok', hist:[]},
+    {id:'n20', codigo:`N-${YEAR}-0020`, tipo:'transferencia', tipoOtro:'', personas:[{pid:'p8',rol:'Solicitante'},{pid:'p5',rol:'Declarante'},{pid:'p6',rol:'Testigo'}], fechaSol:d(-30), fechaAt:d(-30), asunto:'Venta de 2 vacas Brown Swiss de Hilario Challco a Felícita Ccahuana por S/ 4 800.', estado:'concluida', obs:'', resultado:'Acta de transferencia firmada y entregada a ambas partes.', fechaEntrega:d(-29), docs:[], libro:'3', folio:'38', sync:'ok', hist:[]},
+  ];
+  const A = (id,dd,ini,fin,tipo,titulo,lugar,estado,caso,sync,desc) => ({id, fecha:d(dd), inicio:ini, fin, tipo, titulo, lugar, estado, caso:caso||'', desc:desc||'', aviso:true, sync:sync||'ok'});
+  const actividades = [
+    A('a1',-23,'10:00','12:00','reunion','Reunión con autoridades comunales','Ccollpa','realizada'),
+    A('a2',-13,'09:00','10:00','audiencia','Audiencia caso C-'+YEAR+'-0009','Pampa Alta · Local comunal','realizada','c9'),
+    A('a3',-9,'10:00','11:30','audiencia','Conciliación caso C-'+YEAR+'-0010','Huancapata','realizada','c10'),
+    A('a4',-5,'09:00','10:00','audiencia','Audiencia caso C-'+YEAR+'-0011','Juzgado de paz','realizada','c11'),
+    A('a5',-3,'15:00','15:30','notarial','Legalización de firmas A. Yupanqui','Juzgado de paz','realizada'),
+    A('a6',0,'08:30','12:30','otra','Atención al público','Juzgado de paz','programada'),
+    A('a7',0,'16:00','16:30','notarial','Entregar documento N-'+YEAR+'-0022','Juzgado de paz','programada'),
+    A('a8',1,'09:00','10:30','audiencia','Conciliación caso C-'+YEAR+'-0009','Pampa Alta · Local comunal','programada','c9'),
+    A('a9',3,'10:00','12:00','visita','Inspección de la chacra dañada','Rumichaca','programada','c11'),
+    A('a10',6,'09:00','10:00','audiencia','Audiencia caso C-'+YEAR+'-0013','Juzgado de paz','programada','c13','pendiente'),
+    A('a11',8,'15:00','17:00','reunion','Asamblea comunal: informe del juzgado','Ccollpa','programada'),
+    A('a12',10,'07:00','','otra','Viaje a la sede judicial: sincronizar e informe mensual','Sede judicial de la provincia','programada'),
+    A('a13',12,'11:00','12:00','reunion','Reunión con el teniente gobernador','Huancapata','cancelada'),
+    A('a14',-17,'09:30','11:00','visita','Visita a la chacra "Ccochapata"','Pampa Alta','realizada'),
+    A('a15',-20,'14:00','15:00','notarial','Transferencia de ganado','Juzgado de paz','realizada'),
+  ];
+  const t = `${TODAY_ISO}T`;
+  const outbox = [
+    {id:'o1', tipo:'caso', ref:'c13', accion:'Nuevo', etiqueta:`Caso C-${YEAR}-0013 · Problemas entre vecinos`, at:t+'09:12'},
+    {id:'o2', tipo:'actividad', ref:'a10', accion:'Nuevo', etiqueta:`Audiencia caso C-${YEAR}-0013 · ${fmtCorto(d(6))}`, at:t+'09:14'},
+    {id:'o3', tipo:'actuacion', ref:'n23', accion:'Nuevo', etiqueta:`Actuación N-${YEAR}-0023 · Constancia domiciliaria`, at:t+'10:05'},
+  ];
+  return {v:1, online:false, lastSync:`${d(-4)}T17:10`, seq:{caso:14, not:24}, personas, casos, actuaciones, actividades, outbox, drafts:{}};
+}
+
+/* =============== Almacenamiento local (la tableta) =============== */
+const KEY = 'justicia-cercana-v1';
+function load(){ try{ const raw = localStorage.getItem(KEY); if(raw) return JSON.parse(raw); }catch(e){} return null; }
+function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(db)); }catch(e){} }
+let db = load() || seed();
+const ui = { route:'inicio', params:{}, errors:{}, stepErrors:[], toast:null, sync:{status:'idle'}, q:{casos:'', not:'', g:''}, filtro:{casos:'todos', not:'todas'}, edit:null, avance:null, confirmCancel:null, notes:null };
+
+/* =============== Consultas =============== */
+const P = id => db.personas.find(p => p.id===id);
+const nombre = p => p ? `${p.nombres} ${p.apellidos}` : '';
+const tipoCaso = id => TIPOS_CONFLICTO.find(t => t.id===id) || TIPOS_CONFLICTO[TIPOS_CONFLICTO.length-1];
+const tipoNot = id => TIPOS_NOTARIAL.find(t => t.id===id) || TIPOS_NOTARIAL[TIPOS_NOTARIAL.length-1];
+const casoById = id => db.casos.find(c => c.id===id);
+const actById = id => db.actuaciones.find(a => a.id===id);
+const partesTexto = c => c.partes.filter(x=>x.rol!=='Testigo').map(x => nombre(P(x.pid))).join(' y ');
+function atencionCaso(c){
+  if(c.estado!=='tramite') return '';
+  if(c.proxima){ const n = diffDays(c.proxima); if(n<0) return 'Cita vencida: registre qué pasó'; if(n===0) return 'Cita hoy'; if(n===1) return 'Cita mañana'; if(n===2) return 'Cita en 2 días'; return ''; }
+  const last = (c.seguimiento[c.seguimiento.length-1]||{}).fecha || c.fecha; const n = -diffDays(last);
+  return n>=30 ? `Sin avance hace ${n} días` : '';
+}
+function atencionNot(a){ if(a.estado==='pendiente') return 'Falta atender'; if(a.estado==='atendida') return 'Falta entregar el documento'; return ''; }
+const byFH = (a,b) => (a.fecha+(a.inicio||'00:00')).localeCompare(b.fecha+(b.inicio||'00:00'));
+function apariciones(pid){
+  const c = db.casos.filter(x => x.partes.some(p => p.pid===pid)).length;
+  const n = db.actuaciones.filter(x => x.personas.some(p => p.pid===pid)).length;
+  const parts = []; if(c) parts.push(`${c} ${plural(c,'caso','casos')}`); if(n) parts.push(`${n} ${plural(n,'actuación','actuaciones')}`);
+  return parts.join(' y ') || 'sin registros';
+}
+
+/* =============== Piezas de interfaz =============== */
+function syncBadge(rec){ return rec.sync==='pendiente' ? `<span class="badge warn">${icon('tablet')}En la tableta · por enviar</span>` : `<span class="badge ok">${icon('cloud-check')}Enviado</span>`; }
+function estadoBadge(map,key){ const e = map[key]; return `<span class="badge ${e.cls}">${icon(e.icon)}${e.label}</span>`; }
+function catTag(tipo){ const t = TIPOS_ACT[tipo]; return `<span class="cat c-${t.c}">${icon(t.icon)}${t.label}</span>`; }
+function statusPill(){
+  const n = db.outbox.length, s = ui.sync.status; let cls, ic, t1, t2, spin = '';
+  if(s==='running'){ cls='info'; ic='sync'; spin='spin'; t1=`Sincronizando… ${syncPct()} %`; t2=`${ui.sync.done} de ${ui.sync.total} cambios enviados`; }
+  else if(!db.online){ cls = n ? 'warn' : 'neutral'; ic='wifi-off'; t1='Sin Internet'; t2 = n ? `${n} ${plural(n,'cambio','cambios')} en la tableta · se enviarán solos` : 'Todo está guardado en la tableta'; }
+  else if(n){ cls='info'; ic='wifi'; t1='Con Internet'; t2='Empezando el envío automático…'; }
+  else { cls='ok'; ic='cloud-check'; t1='Sincronizado 100 %'; t2=`Con Internet · última vez a las ${db.lastSync.slice(11,16)}`; }
+  return `<button class="pill ${cls}" data-go="sincronizar" data-n="D1" aria-live="polite">${icon(ic,spin)}<span><b>${t1}</b><small>${t2}</small></span></button>`;
+}
+function field(o){
+  const id = o.id, v = o.value ?? '', err = ui.errors[id];
+  const attrs = `id="${id}" data-bind="${o.bind}" ${o.rule?`data-rule="${o.rule}" data-what="${esc(o.what||o.label.toLowerCase())}" data-ctx="${esc(o.ctx||o.label)}"`:''} ${o.inputmode?`inputmode="${o.inputmode}"`:''} ${o.maxlength?`maxlength="${o.maxlength}"`:''} ${o.list?`list="${o.list}"`:''} ${o.min?`min="${o.min}"`:''} ${o.max?`max="${o.max}"`:''} ${o.placeholder?`placeholder="${esc(o.placeholder)}"`:''} ${o.auto?`autocomplete="${o.auto}"`:'autocomplete="off"'} ${err?'aria-invalid="true"':''} aria-describedby="e-${id}${o.help?` h-${id}`:''}"`;
+  const input = o.type==='textarea'
+    ? `<textarea class="inp" ${attrs} rows="${o.rows||3}">${esc(v)}</textarea>${o.maxlength?`<p class="counter" id="cnt-${id}">${String(v).length} / ${o.maxlength}</p>`:''}`
+    : `<input class="inp" type="${o.type||'text'}" value="${esc(v)}" ${attrs}>`;
+  const tag = o.req===null ? '' : o.req ? '<em class="req">Obligatorio</em>' : '<em class="opt">Opcional</em>';
+  return `<div class="field ${o.cls||''} ${err?'has-err':''}" id="f-${id}" ${o.n?`data-n="${o.n}"`:''}>
+    <label class="lbl" for="${id}">${o.label} ${tag}${o.extra||''}</label>${input}
+    ${o.help?`<p class="help" id="h-${id}">${o.help}</p>`:''}<p class="err" id="e-${id}" role="alert">${err?icon('alert')+esc(err):''}</p></div>`;
+}
+function seg(bind, name, opts, sel, o={}){
+  return `<div class="seg ${o.desc?'desc':''}" role="radiogroup" ${o.label?`aria-label="${esc(o.label)}"`:''}>${opts.map(x=>{ const val = typeof x==='string'?x:x.v; const lab = typeof x==='string'?x:x.l; const on = sel===val;
+    return `<label class="${on?'on':''}"><input type="radio" name="${name}" value="${esc(val)}" data-bind="${bind}" data-rerender="1" ${on?'checked':''}>${o.desc?`<span>${on?icon('check'):(x.i?icon(x.i):'')}${lab}</span><small>${x.d||''}</small>`:`${on?icon('check'):(x.i?icon(x.i):'')}${lab}`}</label>`; }).join('')}</div>`;
+}
+function tiles(bind, name, opts, sel, cls=''){
+  return `<div class="tiles ${cls}" role="radiogroup">${opts.map(o=>`<label class="tile ${sel===o.id?'on':''}"><input type="radio" name="${name}" value="${o.id}" data-bind="${bind}" data-rerender="1" ${sel===o.id?'checked':''}>${icon(o.icon,'ti')}<b>${o.label}</b>${o.desc?`<small>${o.desc}</small>`:''}${sel===o.id?`<span class="tick">${icon('check')}</span>`:''}</label>`).join('')}</div>`;
+}
+const datalist = `<datalist id="dl-com">${COMUNIDADES.map(c=>`<option value="${c}">`).join('')}</datalist>`;
+
+/* =============== Vistas =============== */
+function vInicio(){
+  const h = new Date().getHours(); const saludo = h<12 ? 'Buenos días' : h<19 ? 'Buenas tardes' : 'Buenas noches';
+  const aten = [
+    ...db.casos.filter(c=>atencionCaso(c)).map(c=>({go:'caso', id:c.id, ic:tipoCaso(c.tipo).icon, t:`Caso ${c.codigo}`, s:partesTexto(c), r:atencionCaso(c)})),
+    ...db.actuaciones.filter(a=>atencionNot(a)).map(a=>({go:'actuacion', id:a.id, ic:'stamp', t:`${tipoNot(a.tipo).label}`, s:nombre(P(a.personas[0].pid)), r:atencionNot(a)})),
+  ];
+  const prox = db.actividades.filter(a=>{ const n = diffDays(a.fecha); return n>=0 && n<=1 && a.estado!=='cancelada'; }).sort(byFH);
+  return { title:`${saludo}, jueza Elena`, crumb:cap(fmtLargo(TODAY_ISO))+` de ${YEAR}`, html:`
+  <div class="cols2">
+    <section class="card" data-n="D13"><div class="card-h"><h3>${icon('alert')}Requieren su atención <span class="n">${aten.length}</span></h3></div>
+      <ul class="alist">${aten.map(x=>`<li><button class="arow" data-go="${x.go}" data-id="${x.id}">${icon(x.ic)}<span class="arow-t"><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span><span class="badge warn">${icon('alert')}${x.r}</span>${icon('chev-right','chev')}</button></li>`).join('') || '<li class="empty">Nada pendiente. Todo al día.</li>'}</ul></section>
+    <section class="card" data-n="D25"><div class="card-h"><h3>${icon('calendar')}Hoy y mañana</h3><button class="btn secondary sm" data-go="agenda">Ver agenda</button></div>
+      <div>${prox.map(a=>`<div class="mini-act"><span class="when">${rel(a.fecha)}<small>${a.inicio||'Todo el día'}</small></span><span class="what"><b>${esc(a.titulo)}</b><small class="muted">${esc(a.lugar)}</small></span>${catTag(a.tipo)}</div>`).join('') || '<p class="empty">No tiene actividades hoy ni mañana.</p>'}</div></section>
+  </div>` };
+}
+
+/* ----- Casos ----- */
+function casosFiltrados(){
+  const f = ui.filtro.casos, q = norm(ui.q.casos);
+  return db.casos.filter(c => {
+    if(f==='atencion' && !atencionCaso(c)) return false;
+    if(['tramite','concluido','derivado'].includes(f) && c.estado!==f) return false;
+    if(!q) return true;
+    return norm(c.codigo).includes(q) || norm(c.desc).includes(q) || norm(tipoCaso(c.tipo).label).includes(q) || c.partes.some(x=>{ const p = P(x.pid); return norm(nombre(p)).includes(q) || (p.docNum||'').includes(q); });
+  });
+}
+function casoRow(c){
+  const t = tipoCaso(c.tipo), at = atencionCaso(c);
+  return `<button class="row" data-go="caso" data-id="${c.id}">
+    <div><div class="row-top"><span class="code">${c.codigo}</span><span class="tipo">${icon(t.icon)}${t.label}</span><span>· ${fmt(c.fecha)}</span></div>
+      <div class="row-parties">${c.partes.filter(x=>x.rol!=='Testigo').map(x=>`<b>${esc(nombre(P(x.pid)))}</b><span class="role ${roleCls(x.rol)}">${x.rol}</span>`).join('')}</div>
+      <div class="row-desc">${esc(c.desc)}</div></div>
+    <div class="row-side">${estadoBadge(ESTADOS_CASO,c.estado)}${at?`<span class="badge warn">${icon('alert')}${at}</span>`:c.proxima?`<span class="next">Próxima cita: ${fmtCorto(c.proxima)}</span>`:''}${syncBadge(c)}</div>${icon('chev-right')}</button>`;
+}
+function vCasos(){
+  const f = ui.filtro.casos;
+  const cnt = k => k==='todos' ? db.casos.length : k==='atencion' ? db.casos.filter(atencionCaso).length : db.casos.filter(c=>c.estado===k).length;
+  const chips = [['todos','Todos'],['atencion','Requieren atención','alert'],['tramite','En trámite','clock'],['concluido','Concluidos','check-circle'],['derivado','Derivados','arrow-right']];
+  return { title:'Casos', crumb:'Registro de casos del juzgado', html:`
+  <div class="toolbar"><label class="search" data-n="D15">${icon('search')}<span class="sr">Buscar casos</span><input type="search" data-q="casos" placeholder="Buscar por nombre, DNI, código o tema" value="${esc(ui.q.casos)}"></label>
+    <button class="btn primary" data-act="newCaso">${icon('plus')}Nuevo caso</button></div>
+  <div class="chips" role="group" aria-label="Filtrar por estado" data-n="D13">${chips.map(([k,l,ic])=>`<button class="fchip ${f===k?'on':''}" data-act="filtro" data-kind="casos" data-arg="${k}" aria-pressed="${f===k}">${ic?icon(ic):''}${l}<span class="c">${cnt(k)}</span></button>`).join('')}</div>
+  <div class="list" id="list-casos">${listCasos()}</div>` };
+}
+function listCasos(){ const r = casosFiltrados(); return r.map(casoRow).join('') || `<p class="empty">No hay casos con ese filtro o búsqueda.</p>`; }
+
+function vCaso(){
+  const c = casoById(ui.params.id); if(!c) return vCasos();
+  const t = tipoCaso(c.tipo), at = atencionCaso(c), ed = ui.edit && ui.edit.id===c.id ? ui.edit : null;
+  const party = x => { const p = P(x.pid); return `<article class="party"><span><span class="role ${roleCls(x.rol)}">${x.rol}</span></span><b class="pname">${esc(nombre(p))}</b><dl>
+      <dt>Documento</dt><dd>${p.docTipo==='No tiene'?'No tiene':`${p.docTipo} ${p.docNum}`}</dd>${p.tel?`<dt>Celular</dt><dd>${fmtTel(p.tel)}</dd>`:''}<dt>Comunidad</dt><dd>${esc(p.comunidad)}${p.dir?` · ${esc(p.dir)}`:''}</dd>${p.idioma?`<dt>Idioma</dt><dd>${p.idioma}</dd>`:''}</dl></article>`; };
+  const av = ui.avance && ui.avance.id===c.id ? ui.avance : null;
+  const avForm = av ? `<div class="inline-form" id="avance-form">
+      <div class="g2">${field({id:'av-fecha', bind:'avance.fecha', label:'Fecha', type:'date', value:av.fecha, req:true, rule:'req nofuture', what:'la fecha', max:TODAY_ISO})}
+      ${field({id:'av-prox', bind:'avance.proxima', label:'Próxima cita', type:'date', value:av.proxima, req:false, rule:'nopast', min:TODAY_ISO, help:'Si la pone, se agrega a su agenda.'})}</div>
+      ${field({id:'av-texto', bind:'avance.texto', label:'¿Qué pasó?', type:'textarea', value:av.texto, req:true, rule:'req', what:'qué pasó', maxlength:400, rows:2, placeholder:'Ej.: Audiencia. Las partes acuerdan medir el terreno con el presidente comunal.'})}
+      <div class="acts" style="display:flex;gap:10px;justify-content:flex-end"><button class="btn ghost" data-act="avanceCancel">Cancelar</button><button class="btn primary" data-act="avanceSave">${icon('check')}Guardar avance</button></div></div>` : '';
+  let datos;
+  if(ed){
+    const d = ed.draft, o = ed.orig;
+    const mark = k => d[k]!==o[k] ? `<span class="changed" id="ch-${k}">${icon('edit')}Modificado · antes: «${esc(k==='estado'?ESTADOS_CASO[o[k]].label:(o[k]||'vacío')).slice(0,40)}»</span>` : `<span id="ch-${k}"></span>`;
+    datos = `<section class="card editing" data-n="D17"><h3>${icon('edit')}Modificando datos del caso</h3>
+      <div class="field"><span class="lbl">Estado <em class="req">Obligatorio</em>${mark('estado')}</span>${seg('edit.draft.estado','ed-estado',Object.entries(ESTADOS_CASO).map(([v,e])=>({v,l:e.label,i:e.icon,d:e.desc})),d.estado,{desc:true})}</div>
+      ${field({id:'ed-desc', bind:'edit.draft.desc', label:'Motivo del caso', type:'textarea', value:d.desc, req:true, rule:'req min10', what:'el motivo', maxlength:300, rows:2, extra:mark('desc')})}
+      ${d.estado!=='tramite' ? field({id:'ed-res', bind:'edit.draft.resultado', label:d.estado==='concluido'?'Resultado o acuerdo':'A dónde se derivó y por qué', type:'textarea', value:d.resultado, req:true, rule:'req', what:'el resultado', maxlength:400, rows:2, extra:mark('resultado')}) : ''}
+      ${field({id:'ed-obs', bind:'edit.draft.obs', label:'Observaciones', type:'textarea', value:d.obs, req:false, maxlength:400, rows:2, extra:mark('obs')})}</section>`;
+  } else {
+    datos = `<section class="card"><div class="card-h"><h3>Datos del caso</h3><button class="btn secondary sm" data-act="editCaso" data-id="${c.id}">${icon('edit')}Editar</button></div>
+      <dl class="kv"><dt>Código</dt><dd><b>${c.codigo}</b></dd><dt>Registrado</dt><dd>${fmt(c.fecha)}</dd><dt>Tipo</dt><dd>${t.label}${c.tipoOtro?`: ${esc(c.tipoOtro)}`:''}</dd><dt>Estado</dt><dd>${estadoBadge(ESTADOS_CASO,c.estado)}</dd>
+      ${c.resultado?`<dt>${c.estado==='derivado'?'Derivado':'Acuerdo'}</dt><dd>${esc(c.resultado)}</dd>`:''}${c.obs?`<dt>Observaciones</dt><dd>${esc(c.obs)}</dd>`:''}</dl></section>`;
+  }
+  const html = `
+  ${ed?`<div class="banner edit" data-n="D17b">${icon('edit')}<p><b>Está modificando el caso ${c.codigo}.</b> Los cambios se guardan solo al tocar «Guardar cambios». Si se arrepiente, toque «Cancelar».</p></div>`:''}
+  <button class="back" data-go="casos">${icon('arrow-left')}Volver a la lista de casos</button>
+  <section class="card dhead">${icon(t.icon,'big-ic')}<div class="dh-main"><p class="eyebrow">Caso ${c.codigo} · registrado el ${fmt(c.fecha)}</p><h2>${t.label}</h2><p>${esc(c.desc)}</p></div>
+    <div class="dh-right">${estadoBadge(ESTADOS_CASO,c.estado)}${at?`<span class="badge warn">${icon('alert')}${at}</span>`:''}${syncBadge(c)}</div></section>
+  <div class="dgrid"><div class="dcol">
+    <section class="card" data-n="D14"><h3>${icon('users')}Personas</h3><div class="parties">${c.partes.map(party).join('')}</div></section>
+    <section class="card" data-n="D16"><div class="card-h"><h3>${icon('clock')}Seguimiento</h3>${av?'':`<button class="btn secondary sm" data-act="avance" data-id="${c.id}">${icon('plus')}Registrar avance</button>`}</div>
+      <ol class="timeline">${c.seguimiento.map((s,i,a)=>`<li class="${i===a.length-1?'last':''}"><time>${fmt(s.fecha)} · ${rel(s.fecha)}</time><p>${esc(s.texto)}</p></li>`).join('')}</ol>${avForm}</section>
+  </div><div class="dcol">
+    ${datos}
+    <section class="card"><h3>${icon('calendar')}Próxima cita</h3>${c.proxima?`<p><b>${cap(fmtLargo(c.proxima))}</b> · ${rel(c.proxima)}</p>`:'<p class="muted">Sin cita programada.</p>'}</section>
+    <section class="card"><h3>${icon('book')}Documentos</h3>
+      <ul class="doclist">${c.docs.map(d=>`<li>${icon('camera')}${esc(d.nombre)}</li>`).join('')}${c.docRef?`<li>${icon('book')}En papel: ${esc(c.docRef)}</li>`:''}${!c.docs.length&&!c.docRef?'<li class="muted">Sin documentos.</li>':''}</ul>
+      <label class="btn secondary sm filebtn">${icon('camera')}Tomar foto o adjuntar<input type="file" accept="image/*,application/pdf" data-act-file="caso" data-id="${c.id}"></label></section>
+  </div></div>`;
+  const foot = ed ? `<footer class="foot"><button class="btn secondary" data-act="editCancel" data-n="D12b">${icon('x')}Cancelar</button><span class="grow muted">${icon('tablet')} Se guardará en la tableta</span><button class="btn primary" data-act="editSave">${icon('check')}Guardar cambios</button></footer>` : '';
+  return { title:`Caso ${c.codigo}`, crumb:'Casos ›', html, foot };
+}
+
+/* ----- Asistentes (casos y actuaciones) ----- */
+function newPersona(rol){ return {rol, nombres:'', apellidos:'', docTipo:'DNI', docNum:'', tel:'', comunidad:'', dir:'', idioma:'', pid:null, dupNo:false}; }
+function newDraft(kind){
+  if(kind==='caso') return {personas:[newPersona('Solicitante'), newPersona('Invitado')], fecha:TODAY_ISO, tipo:'', tipoOtro:'', desc:'', estado:'tramite', obs:'', resultado:'', cita:'', citaFecha:'', citaHora:'09:00', citaLugar:'Juzgado de paz', docs:[], docRef:'', savedAt:null};
+  return {tipo:'', tipoOtro:'', personas:[newPersona('Solicitante')], fechaSol:TODAY_ISO, fechaAt:'', asunto:'', estado:'pendiente', obs:'', resultado:'', fechaEntrega:'', docs:[], libro:'', folio:'', dupActOk:false, savedAt:null};
+}
+const hasContent = d => d && (d.personas.some(p=>p.nombres||p.apellidos||p.docNum) || d.tipo || d.desc || d.asunto);
+function findDup(p){
+  if(p.pid || p.dupNo) return null;
+  if(p.docTipo==='DNI' && /^\d{8}$/.test(p.docNum)){ const x = db.personas.find(z=>z.docNum===p.docNum); if(x) return x; }
+  const full = norm(p.nombres+' '+p.apellidos);
+  if(p.nombres && p.apellidos.length>3) return db.personas.find(z=>norm(nombre(z))===full) || null;
+  return null;
+}
+function dupHtml(kind,i){
+  const p = db.drafts[kind].personas[i]; const x = findDup(p);
+  if(p.pid) return `<div class="alert ok">${icon('check-circle')}<div class="body"><p><b>Se usan los datos ya registrados de ${esc(nombre(P(p.pid)))}</b> (aparece en ${apariciones(p.pid)}). No se creará un registro repetido.</p><div class="acts"><button class="btn ghost" data-act="dupUnlink" data-kind="${kind}" data-arg="${i}">Quitar y escribir otra persona</button></div></div></div>`;
+  if(!x) return '';
+  return `<div class="alert warn" data-n="D9">${icon('info')}<div class="body"><p><b>Esta persona ya está registrada:</b> ${esc(nombre(x))} · ${x.docTipo==='DNI'?'DNI '+x.docNum:'sin documento'} · ${esc(x.comunidad)}. Aparece en ${apariciones(x.id)}.</p>
+    <div class="acts"><button class="btn primary sm" data-act="dupUse" data-kind="${kind}" data-arg="${i}" data-id="${x.id}">${icon('check')}Sí, usar sus datos</button><button class="btn secondary sm" data-act="dupNo" data-kind="${kind}" data-arg="${i}">No, es otra persona</button></div></div></div>`;
+}
+function personaCard(kind, i){
+  const d = db.drafts[kind], p = d.personas[i], b = `drafts.${kind}.personas.${i}`, k = `${kind}-p${i}`, ctx = `Persona ${i+1}`;
+  const locked = !!p.pid;
+  return `<fieldset class="fset" id="pcard-${i}"><legend>Persona ${i+1}</legend>
+    <div class="fset-h"><div class="field" data-n="${i===0?'D14b':''}"><span class="lbl">Rol <em class="req">Obligatorio</em></span>${seg(b+'.rol',`rol-${k}`,ROLES[kind].map(r=>({v:r,l:r})),p.rol,{label:'Rol'})}</div>
+    ${d.personas.length>1?`<button class="btn ghost" data-act="personaDel" data-kind="${kind}" data-arg="${i}">${icon('trash')}Quitar persona</button>`:''}</div>
+    <div class="prow">
+      <div class="field doc"><span class="lbl">Documento <em class="opt">Si tiene</em></span>${seg(b+'.docTipo',`doc-${k}`,[{v:'DNI',l:'DNI'},{v:'Otro',l:'Otro'},{v:'No tiene',l:'No tiene'}],p.docTipo)}</div>
+      ${p.docTipo==='No tiene' ? `<div class="field"><span class="lbl">Número</span><p class="help" style="padding-top:12px">${icon('info')} Puede continuar sin documento. Anote una referencia en «Dirección».</p></div>`
+        : field({id:`${k}-doc`, bind:b+'.docNum', label:p.docTipo==='DNI'?'Número de DNI':'Número de documento', value:p.docNum, req:true, rule:p.docTipo==='DNI'?'req dni':'req', what:'el número de documento', ctx:`${ctx} · Documento`, inputmode:p.docTipo==='DNI'?'numeric':'', maxlength:p.docTipo==='DNI'?8:15, placeholder:p.docTipo==='DNI'?'8 números':'', n:i===0?'D8':'', help:i===0&&!p.pid?'Empiece por aquí: si ya vino antes, se completan sus datos.':''})}
+    </div>
+    <div id="dup-${i}">${dupHtml(kind,i)}</div>
+    <div class="g3">
+      ${field({id:`${k}-nom`, bind:b+'.nombres', label:'Nombres', value:p.nombres, req:true, rule:'req nombre', what:'los nombres', ctx:`${ctx} · Nombres`, auto:'off'})}
+      ${field({id:`${k}-ape`, bind:b+'.apellidos', label:'Apellidos', value:p.apellidos, req:true, rule:'req nombre', what:'los apellidos', ctx:`${ctx} · Apellidos`})}
+      ${field({id:`${k}-tel`, bind:b+'.tel', label:'Celular', value:p.tel, req:false, rule:'tel', ctx:`${ctx} · Celular`, inputmode:'numeric', maxlength:9, placeholder:'9 números', n:i===0?'D7':''})}
+    </div>
+    <div class="g2">
+      ${field({id:`${k}-com`, bind:b+'.comunidad', label:'Comunidad o localidad', value:p.comunidad, req:true, rule:'req', what:'la comunidad', ctx:`${ctx} · Comunidad`, list:'dl-com', placeholder:'Elija o escriba'})}
+      ${field({id:`${k}-dir`, bind:b+'.dir', label:'Dirección o referencia', value:p.dir, req:false, placeholder:'Ej.: frente a la posta'})}
+    </div>
+    <div class="g2">
+      <div class="field" style="grid-column:span 2"><span class="lbl">Idioma en que prefiere ser atendida/o <em class="opt">Opcional</em></span>${seg(b+'.idioma',`idi-${k}`,['Castellano','Quechua','Aimara','Otro'].map(v=>({v,l:v})),p.idioma)}</div>
+    </div>
+    </fieldset>`;
+}
+function casoStep(paso){
+  const d = db.drafts.caso;
+  if(paso===1) return `<h2>¿Quiénes participan?</h2><p class="lead">Registre a quien pide la atención (<b>solicitante</b>) y a quien se va a citar (<b>invitado</b>). Si la persona ya vino antes, la aplicación la reconocerá por su DNI o nombre.</p>
+    ${d.personas.map((_,i)=>personaCard('caso',i)).join('')}
+    <button class="btn secondary" data-act="personaAdd" data-kind="caso">${icon('plus')}Agregar otra persona (testigo u otro invitado)</button>`;
+  if(paso===2) return `<h2>¿De qué se trata el caso?</h2><p class="lead">Elija el tipo que más se parezca. Luego cuente con sus palabras qué pasó.</p>
+    <div class="field ${ui.errors['g-tipo']?'has-err':''}" id="f-g-tipo" data-n="D19b"><span class="lbl">Tipo de conflicto <em class="req">Obligatorio</em></span>${tiles('drafts.caso.tipo','tipo-caso',TIPOS_CONFLICTO,d.tipo)}<p class="err" id="e-g-tipo">${ui.errors['g-tipo']?icon('alert')+ui.errors['g-tipo']:''}</p></div>
+    ${d.tipo==='otro'?field({id:'c-tipoOtro', bind:'drafts.caso.tipoOtro', label:'¿De qué tipo es?', value:d.tipoOtro, req:true, rule:'req', what:'el tipo de conflicto'}):''}
+    <div class="g2">
+      ${field({id:'c-desc', bind:'drafts.caso.desc', label:'Motivo del caso (breve)', type:'textarea', value:d.desc, req:true, rule:'req min10', what:'el motivo', ctx:'Motivo del caso', maxlength:300, rows:3, placeholder:'Ej.: Las ovejas del vecino entraron a la chacra y dañaron el maíz.', cls:''})}
+      <div style="display:flex;flex-direction:column;gap:12px">${field({id:'c-fecha', bind:'drafts.caso.fecha', label:'Fecha de registro', type:'date', value:d.fecha, req:true, rule:'req nofuture', what:'la fecha', max:TODAY_ISO, help:'Es hoy. Cámbiela solo si registra un caso de otro día.'})}
+      <div class="field"><span class="lbl">Código del caso</span><p><b>C-${YEAR}-${String(db.seq.caso).padStart(4,'0')}</b> <span class="muted">· lo pone la aplicación</span></p></div></div>
+    </div>
+    <div class="field"><span class="lbl">Estado <em class="req">Obligatorio</em></span>${seg('drafts.caso.estado','est-caso',Object.entries(ESTADOS_CASO).map(([v,e])=>({v,l:e.label,i:e.icon,d:e.desc})),d.estado,{desc:true})}</div>
+    ${d.estado!=='tramite'?field({id:'c-res', bind:'drafts.caso.resultado', label:d.estado==='concluido'?'Resultado o acuerdo':'A dónde se derivó y por qué', type:'textarea', value:d.resultado, req:true, rule:'req', what:'el resultado', maxlength:400, rows:2}):''}
+    ${field({id:'c-obs', bind:'drafts.caso.obs', label:'Observaciones', type:'textarea', value:d.obs, req:false, maxlength:400, rows:2})}`;
+  if(paso===3) return `<h2>¿Cuándo vuelven a venir?</h2><p class="lead">Si ya acordó una fecha de audiencia, la aplicación la agrega a su agenda. Los documentos son opcionales.</p>
+    <fieldset class="fset"><legend>Próxima cita</legend>
+      <div class="field"><span class="lbl">¿Quiere citar a las partes a una audiencia? <em class="opt">Opcional</em></span>${seg('drafts.caso.cita','cita',[{v:'si',l:'Sí, agendar audiencia',i:'calendar'},{v:'no',l:'Todavía no',i:'clock'}],d.cita)}</div>
+      ${d.cita==='si'?`<div class="g3">${field({id:'c-cf', bind:'drafts.caso.citaFecha', label:'Fecha', type:'date', value:d.citaFecha, req:true, rule:'req nopast', what:'la fecha de la cita', min:TODAY_ISO})}${field({id:'c-ch', bind:'drafts.caso.citaHora', label:'Hora', type:'time', value:d.citaHora, req:true, rule:'req', what:'la hora'})}${field({id:'c-cl', bind:'drafts.caso.citaLugar', label:'Lugar', value:d.citaLugar, req:true, rule:'req', what:'el lugar', list:'dl-com'})}</div>
+        <p class="help">${icon('calendar')} Se creará la actividad «Audiencia» en su agenda.</p>`:''}
+    </fieldset>
+    <fieldset class="fset"><legend>Documentos o evidencias</legend>
+      <div class="field"><span class="lbl">Fotos o archivos <em class="opt">Opcional</em></span>
+        <ul class="doclist">${d.docs.map(x=>`<li>${icon('camera')}${esc(x.nombre)}</li>`).join('') || '<li class="muted">Aún no agrega documentos.</li>'}</ul>
+        <label class="btn secondary filebtn" style="align-self:flex-start">${icon('camera')}Tomar foto o adjuntar archivo<input type="file" accept="image/*,application/pdf" data-act-file="draft-caso"></label></div>
+      ${field({id:'c-docref', bind:'drafts.caso.docRef', label:'¿Hay un documento en papel? Anote dónde está', value:d.docRef, req:false, placeholder:'Ej.: Libro de actas N° 2, folio 23', n:'D22b'})}
+    </fieldset>`;
+  const t = tipoCaso(d.tipo);
+  return `<h2>Revise antes de guardar</h2><p class="lead">Si algo está mal, toque «Cambiar». Al guardar, el caso queda en esta tableta aunque no haya Internet.</p>
+    <div class="review">
+      <section class="card"><h3>Personas <button class="btn ghost" data-act="wizGo" data-kind="caso" data-arg="1">Cambiar</button></h3>${d.personas.map(p=>`<p><span class="role ${roleCls(p.rol)}">${p.rol}</span> <b>${esc(p.nombres)} ${esc(p.apellidos)}</b><br><span class="muted">${p.docTipo==='No tiene'?'Sin documento':`${p.docTipo} ${esc(p.docNum)}`} · ${esc(p.comunidad)}</span></p>`).join('')}</section>
+      <section class="card"><h3>El caso <button class="btn ghost" data-act="wizGo" data-kind="caso" data-arg="2">Cambiar</button></h3><p><b>${t.label}</b>${d.tipoOtro?': '+esc(d.tipoOtro):''}</p><p>${esc(d.desc)}</p><p>${estadoBadge(ESTADOS_CASO,d.estado)} · ${fmt(d.fecha)}</p></section>
+      <section class="card"><h3>Cita y documentos <button class="btn ghost" data-act="wizGo" data-kind="caso" data-arg="3">Cambiar</button></h3><p>${d.cita==='si'?`Audiencia: <b>${cap(fmtLargo(d.citaFecha))}, ${d.citaHora}</b> · ${esc(d.citaLugar)}`:'Sin cita por ahora.'}</p><p class="muted">${d.docs.length} ${plural(d.docs.length,'documento','documentos')}${d.docRef?' · Papel: '+esc(d.docRef):''}</p></section>
+      <section class="card" style="background:var(--warn-soft)"><h3>${icon('tablet')}Dónde se guarda</h3><p>En <b>esta tableta</b>. Se enviará solo al servidor cuando la tableta tenga Internet.</p></section>
+    </div>`;
+}
+function notStep(paso){
+  const d = db.drafts.not, t = d.tipo ? tipoNot(d.tipo) : null;
+  if(paso===1) return `<h2>¿Qué trámite necesita la persona?</h2><p class="lead">Toque el trámite. Debajo verá qué se necesita para hacerlo.</p>
+    <div class="field ${ui.errors['g-ntipo']?'has-err':''}" id="f-g-ntipo" data-n="D19"><span class="lbl">Tipo de actuación <em class="req">Obligatorio</em></span>${tiles('drafts.not.tipo','tipo-not',TIPOS_NOTARIAL,d.tipo)}<p class="err" id="e-g-ntipo">${ui.errors['g-ntipo']?icon('alert')+ui.errors['g-ntipo']:''}</p></div>
+    ${d.tipo==='otro'?field({id:'n-tipoOtro', bind:'drafts.not.tipoOtro', label:'¿Qué trámite es?', value:d.tipoOtro, req:true, rule:'req', what:'el trámite'}):''}
+    ${t?`<div class="alert info" data-n="D20">${icon('info')}<div class="body"><p><b>Para «${t.label}» normalmente se necesita:</b></p><ul class="reqlist">${t.req.map(r=>`<li>${icon('check-circle')}${r}</li>`).join('')}</ul><p class="help">Es una guía. Si falta algo, puede registrar el pedido como «Pendiente» y completarlo después.</p></div></div>`:''}`;
+  if(paso===2){
+    const dup = dupActuacion();
+    return `<h2>¿Quiénes participan?</h2><p class="lead">Registre a quien pide el trámite (<b>solicitante</b>) y, si hace falta, a quien declara y a los testigos.</p>
+    ${dup && !d.dupActOk ? `<div class="alert warn" id="dupact" tabindex="-1" data-n="D9b">${icon('alert')}<div class="body"><p><b>Ya existe un trámite igual para esta persona:</b> ${dup.codigo} · ${tipoNot(dup.tipo).label} · pedido el ${fmt(dup.fechaSol)} · ${ESTADOS_NOT[dup.estado].label.toLowerCase()}.</p><p>¿Es el mismo pedido? Si es así, no lo registre otra vez.</p>
+      <div class="acts"><button class="btn primary sm" data-go="actuacion" data-id="${dup.id}">Ver ese registro</button><button class="btn secondary sm" data-act="dupActOk">Es un trámite nuevo, continuar</button></div></div></div>`:''}
+    ${d.personas.map((_,i)=>personaCard('not',i)).join('')}
+    <button class="btn secondary" data-act="personaAdd" data-kind="not">${icon('plus')}Agregar persona (declarante o testigo)</button>`;
+  }
+  if(paso===3) return `<h2>Detalle y resultado</h2><p class="lead">Escriba el asunto con palabras simples. Si todavía no se entrega el documento, deje el estado en «Pendiente» o «Atendida».</p>
+    ${field({id:'n-asunto', bind:'drafts.not.asunto', label:'Asunto: ¿qué se hace constar?', type:'textarea', value:d.asunto, req:true, rule:'req min10', what:'el asunto', maxlength:300, rows:2, placeholder:t&&t.id==='posesion'?'Ej.: Posesión de la chacra «Ccochapata» de 0.5 ha en Pampa Alta.':'Ej.: Constancia para inscribir a su hija en el colegio.'})}
+    <div class="g2">${field({id:'n-fsol', bind:'drafts.not.fechaSol', label:'Fecha en que lo pidió', type:'date', value:d.fechaSol, req:true, rule:'req nofuture', what:'la fecha del pedido', max:TODAY_ISO})}
+      ${field({id:'n-fat', bind:'drafts.not.fechaAt', label:'Fecha en que se atendió', type:'date', value:d.fechaAt, req:false, rule:'afterSol', help:'Déjela vacía si aún no se atiende.'})}</div>
+    <div class="field" data-n="D21"><span class="lbl">Estado de la atención <em class="req">Obligatorio</em></span>${seg('drafts.not.estado','est-not',Object.entries(ESTADOS_NOT).map(([v,e])=>({v,l:e.label,i:e.icon,d:e.desc})),d.estado,{desc:true})}</div>
+    ${d.estado==='concluida'?`<div class="g2">${field({id:'n-res', bind:'drafts.not.resultado', label:'Resultado', type:'textarea', value:d.resultado, req:true, rule:'req', what:'el resultado', rows:2, placeholder:'Ej.: Constancia emitida y entregada.'})}${field({id:'n-fent', bind:'drafts.not.fechaEntrega', label:'Fecha de entrega', type:'date', value:d.fechaEntrega, req:true, rule:'req nofuture', what:'la fecha de entrega', max:TODAY_ISO})}</div>`:''}
+    <fieldset class="fset" data-n="D22"><legend>Documentos</legend>
+      <div class="g3">${field({id:'n-libro', bind:'drafts.not.libro', label:'Libro notarial N°', value:d.libro, req:false, inputmode:'numeric', placeholder:'Ej.: 3'})}${field({id:'n-folio', bind:'drafts.not.folio', label:'Folio', value:d.folio, req:false, inputmode:'numeric', placeholder:'Ej.: 45'})}
+      <div class="field"><span class="lbl">Foto del documento <em class="opt">Opcional</em></span><label class="btn secondary filebtn">${icon('camera')}${d.docs.length?esc(d.docs[0].nombre):'Tomar foto'}<input type="file" accept="image/*,application/pdf" data-act-file="draft-not"></label></div></div>
+      <p class="help">${icon('book')} Anotar libro y folio ayuda a encontrar el acta en papel más adelante.</p></fieldset>
+    ${field({id:'n-obs', bind:'drafts.not.obs', label:'Observaciones', type:'textarea', value:d.obs, req:false, maxlength:400, rows:2})}`;
+  return `<h2>Revise antes de guardar</h2><p class="lead">Si algo está mal, toque «Cambiar». Al guardar, queda en esta tableta aunque no haya Internet.</p>
+    <div class="review">
+      <section class="card"><h3>Trámite <button class="btn ghost" data-act="wizGo" data-kind="not" data-arg="1">Cambiar</button></h3><p><b>${t?t.label:''}</b>${d.tipoOtro?': '+esc(d.tipoOtro):''}</p></section>
+      <section class="card"><h3>Personas <button class="btn ghost" data-act="wizGo" data-kind="not" data-arg="2">Cambiar</button></h3>${d.personas.map(p=>`<p><span class="role ${roleCls(p.rol)}">${p.rol}</span> <b>${esc(p.nombres)} ${esc(p.apellidos)}</b> <span class="muted">· ${p.docTipo==='No tiene'?'sin documento':esc(p.docNum)}</span></p>`).join('')}</section>
+      <section class="card"><h3>Detalle <button class="btn ghost" data-act="wizGo" data-kind="not" data-arg="3">Cambiar</button></h3><p>${esc(d.asunto)}</p><p>${estadoBadge(ESTADOS_NOT,d.estado)} · pedido el ${fmt(d.fechaSol)}</p>${d.libro?`<p class="muted">Libro ${esc(d.libro)}, folio ${esc(d.folio)}</p>`:''}</section>
+      <section class="card" style="background:var(--warn-soft)"><h3>${icon('tablet')}Dónde se guarda</h3><p>En <b>esta tableta</b>. Se enviará solo al servidor cuando la tableta tenga Internet.</p></section>
+    </div>`;
+}
+function dupActuacion(){
+  const d = db.drafts.not; if(!d || !d.tipo) return null;
+  const sol = d.personas.find(p=>p.rol==='Solicitante'); if(!sol) return null;
+  const pid = sol.pid || (findDup(sol)||{}).id || (sol.docNum && (db.personas.find(z=>z.docNum===sol.docNum)||{}).id);
+  if(!pid) return null;
+  return db.actuaciones.find(a => a.tipo===d.tipo && a.personas.some(x=>x.pid===pid && x.rol==='Solicitante') && -diffDays(a.fechaSol) <= 90) || null;
+}
+const WIZ = {
+  caso:{ steps:['Personas','El caso','Cita y documentos','Revisar y guardar'], title:'Nuevo caso', crumb:'Casos ›', exit:'casos', save:'Guardar caso', step:casoStep },
+  not:{ steps:['Tipo de trámite','Personas','Detalle y resultado','Revisar y guardar'], title:'Nueva actuación notarial', crumb:'Actuaciones notariales ›', exit:'notarial', save:'Guardar actuación', step:notStep },
+};
+function wizAside(kind){
+  const d = db.drafts[kind];
+  const pers = d.personas.filter(p=>p.nombres||p.apellidos).map(p=>`<li><b>${esc(p.nombres)} ${esc(p.apellidos)}</b> · ${p.rol}</li>`).join('');
+  const tipo = kind==='caso' ? (d.tipo?tipoCaso(d.tipo).label:'') : (d.tipo?tipoNot(d.tipo).label:'');
+  return `<h3>Lo que lleva registrado</h3>
+    <div class="sec"><p class="lbl2">${kind==='caso'?'Tipo de conflicto':'Trámite'}</p><p>${tipo||'<span class="muted">Falta elegir</span>'}</p></div>
+    <div class="sec"><p class="lbl2">Personas</p>${pers?`<ul>${pers}</ul>`:'<p class="muted">Aún no hay personas.</p>'}</div>
+    ${kind==='caso'?`<div class="sec"><p class="lbl2">Motivo</p><p>${d.desc?esc(d.desc.slice(0,90))+(d.desc.length>90?'…':''):'<span class="muted">Falta escribir</span>'}</p></div>`:`<div class="sec"><p class="lbl2">Asunto</p><p>${d.asunto?esc(d.asunto.slice(0,90)):'<span class="muted">Falta escribir</span>'}</p></div>`}
+    <div class="sec" data-n="D6"><p class="lbl2">Borrador</p><p id="draft-status">${draftStatus(d)}</p></div>`;
+}
+const draftStatus = d => d.savedAt ? `${icon('tablet')} Guardado en la tableta a las ${d.savedAt.slice(11,16)}` : `${icon('tablet')} Se guarda solo mientras escribe`;
+function vWizard(kind){
+  const w = WIZ[kind], paso = +ui.params.paso || 1;
+  if(!db.drafts[kind]) db.drafts[kind] = newDraft(kind);
+  const errs = ui.stepErrors.length ? `<div class="alert bad" role="alert" id="errsum" tabindex="-1" data-n="D8b">${icon('alert')}<div class="body"><p><b>Revise ${ui.stepErrors.length} ${plural(ui.stepErrors.length,'dato','datos')} antes de continuar:</b></p><ul>${ui.stepErrors.map(e=>`<li><a href="#${e.id}" data-act="focus" data-arg="${e.id}">${esc(e.msg)}</a></li>`).join('')}</ul></div></div>` : '';
+  const resume = ui.params.resumed ? `<div class="alert info">${icon('undo')}<div class="body"><p>Continúa el borrador que dejó${db.drafts[kind].savedAt?` a las ${db.drafts[kind].savedAt.slice(11,16)}`:''}. Nada se perdió.</p><div class="acts"><button class="btn secondary sm" data-act="wizReset" data-kind="${kind}">Empezar uno nuevo</button></div></div></div>` : '';
+  const html = `<div class="wiz"><ol class="steps" data-n="D5">${w.steps.map((s,i)=>{ const n = i+1, st = n<paso?'done':n===paso?'cur':'todo';
+      const inner = `<span class="sn">${n<paso?icon('check'):n}</span><span class="sl">${n===paso?`Paso ${n} de 4<br>`:''}${s}</span>`;
+      return `<li class="${st}">${n<paso?`<button data-act="wizGo" data-kind="${kind}" data-arg="${n}">${inner}</button>`:`<span ${n===paso?'aria-current="step"':''}>${inner}</span>`}</li>`; }).join('')}</ol>
+    <div class="wiz-body"><div class="wiz-form">${resume}${errs}${w.step(paso)}</div><aside class="wiz-aside">${wizAside(kind)}</aside></div></div>${datalist}`;
+  const foot = `<footer class="foot">${paso>1?`<button class="btn secondary" data-act="wizPrev" data-kind="${kind}">${icon('arrow-left')}Anterior</button>`:''}
+    <button class="btn ghost" data-go="${w.exit}" data-n="D12">Salir · el borrador queda guardado</button>
+    ${paso<4?`<button class="btn primary grow" data-act="wizNext" data-kind="${kind}">Siguiente: ${w.steps[paso]}${icon('arrow-right')}</button>`:`<button class="btn primary lg grow" data-act="wizSave" data-kind="${kind}">${icon('check')}${w.save}</button>`}</footer>`;
+  return { title:w.title, crumb:w.crumb, html, foot };
+}
+function vGuardado(kind){
+  const rec = kind==='caso' ? casoById(ui.params.id) : actById(ui.params.id); if(!rec) return vInicio();
+  const act = ui.params.act ? db.actividades.find(a=>a.id===ui.params.act) : null;
+  const label = kind==='caso' ? `${tipoCaso(rec.tipo).label}` : `${tipoNot(rec.tipo).label}`;
+  const quien = kind==='caso' ? partesTexto(rec) : nombre(P(rec.personas[0].pid));
+  return { title: kind==='caso'?'Caso guardado':'Actuación guardada', crumb: kind==='caso'?'Casos ›':'Actuaciones notariales ›', html:`
+  <section class="card confirm" data-n="D10"><span class="bigok">${icon('check')}</span>
+    <h2>${kind==='caso'?'El caso quedó guardado':'La actuación quedó guardada'}</h2>
+    <p class="muted">Anote este código en el cuaderno o entrégueselo a la persona:</p><p class="codebig">${rec.codigo}</p>
+    <p><b>${label}</b> · ${esc(quien)}</p>
+    ${rec.sync==='pendiente' ? `<span class="badge warn" data-n="D28">${icon('tablet')}Guardado en esta tableta · se enviará solo cuando haya Internet</span>` : `<span class="badge ok" data-n="D28">${icon('cloud-check')}Guardado en la tableta y enviado al servidor</span>`}
+    ${act?`<div class="alert ok" style="text-align:left">${icon('calendar')}<div class="body"><p>También se agregó a su agenda: <b>Audiencia, ${fmtLargo(act.fecha)} a las ${act.inicio}</b> · ${esc(act.lugar)}.</p></div></div>`:''}
+    <div class="acts"><button class="btn primary" data-go="${kind==='caso'?'caso':'actuacion'}" data-id="${rec.id}">Ver ${kind==='caso'?'el caso':'la actuación'}</button><button class="btn secondary" data-act="${kind==='caso'?'newCasoFresh':'newNotFresh'}">${icon('plus')}Registrar ${kind==='caso'?'otro caso':'otra'}</button><button class="btn secondary" data-go="inicio">${icon('home')}Ir al inicio</button></div></section>` };
+}
+
+/* ----- Actuaciones notariales ----- */
+function vNotarial(){
+  const f = ui.filtro.not, q = norm(ui.q.not);
+  const cnt = k => k==='todas' ? db.actuaciones.length : db.actuaciones.filter(a=>a.estado===k).length;
+  const chips = [['todas','Todas'],['pendiente','Pendientes','clock'],['atendida','Atendidas','stamp'],['concluida','Concluidas','check-circle']];
+  return { title:'Actuaciones notariales', crumb:'Constancias, firmas, copias y transferencias', html:`
+  <div class="toolbar"><label class="search" data-n="D15">${icon('search')}<span class="sr">Buscar</span><input type="search" data-q="not" placeholder="Buscar por nombre, DNI, código o trámite" value="${esc(ui.q.not)}"></label>
+    <button class="btn primary" data-act="newNot">${icon('plus')}Nueva actuación</button></div>
+  <div class="chips" role="group" aria-label="Filtrar por estado">${chips.map(([k,l,ic])=>`<button class="fchip ${f===k?'on':''}" data-act="filtro" data-kind="not" data-arg="${k}" aria-pressed="${f===k}">${ic?icon(ic):''}${l}<span class="c">${cnt(k)}</span></button>`).join('')}</div>
+  <div class="list" id="list-not">${listNot()}</div>` };
+}
+function listNot(){
+  const f = ui.filtro.not, q = norm(ui.q.not);
+  const r = db.actuaciones.filter(a => (f==='todas' || a.estado===f) && (!q || norm(a.codigo).includes(q) || norm(a.asunto).includes(q) || norm(tipoNot(a.tipo).label).includes(q) || a.personas.some(x=>{ const p = P(x.pid); return norm(nombre(p)).includes(q) || (p.docNum||'').includes(q); })));
+  return r.map(a => { const t = tipoNot(a.tipo), at = atencionNot(a); return `<button class="row" data-go="actuacion" data-id="${a.id}"><div>
+      <div class="row-top"><span class="code">${a.codigo}</span><span class="tipo">${icon(t.icon)}${t.label}</span><span>· pedido el ${fmt(a.fechaSol)}</span></div>
+      <div class="row-parties">${a.personas.filter(x=>x.rol!=='Testigo').map(x=>`<b>${esc(nombre(P(x.pid)))}</b><span class="role ${roleCls(x.rol)}">${x.rol}</span>`).join('')}</div>
+      <div class="row-desc">${esc(a.asunto)}</div></div>
+      <div class="row-side">${estadoBadge(ESTADOS_NOT,a.estado)}${at?`<span class="badge warn">${icon('alert')}${at}</span>`:''}${syncBadge(a)}</div>${icon('chev-right')}</button>`; }).join('') || '<p class="empty">No hay actuaciones con ese filtro.</p>';
+}
+function vActuacion(){
+  const a = actById(ui.params.id); if(!a) return vNotarial();
+  const t = tipoNot(a.tipo), ed = ui.edit && ui.edit.id===a.id ? ui.edit : null;
+  let estado;
+  if(ed){
+    const d = ed.draft, o = ed.orig;
+    const mark = k => d[k]!==o[k] ? `<span class="changed" id="ch-${k}">${icon('edit')}Modificado · antes: «${esc(k==='estado'?ESTADOS_NOT[o[k]].label:(o[k]?(k.startsWith('fecha')?fmt(o[k]):o[k]):'vacío')).slice(0,40)}»</span>` : `<span id="ch-${k}"></span>`;
+    estado = `<section class="card editing"><h3>${icon('edit')}Actualizar la atención</h3>
+      <div class="field"><span class="lbl">Estado <em class="req">Obligatorio</em>${mark('estado')}</span>${seg('edit.draft.estado','ed-nest',Object.entries(ESTADOS_NOT).map(([v,e])=>({v,l:e.label,i:e.icon,d:e.desc})),d.estado,{desc:true})}</div>
+      ${d.estado!=='pendiente'?field({id:'ed-fat', bind:'edit.draft.fechaAt', label:'Fecha de atención', type:'date', value:d.fechaAt, req:true, rule:'req nofuture', what:'la fecha de atención', max:TODAY_ISO, extra:mark('fechaAt')}):''}
+      ${d.estado==='concluida'?field({id:'ed-nres', bind:'edit.draft.resultado', label:'Resultado', type:'textarea', value:d.resultado, req:true, rule:'req', what:'el resultado', rows:2, extra:mark('resultado')})+field({id:'ed-fent', bind:'edit.draft.fechaEntrega', label:'Fecha de entrega', type:'date', value:d.fechaEntrega, req:true, rule:'req nofuture', what:'la fecha de entrega', max:TODAY_ISO, extra:mark('fechaEntrega')}):''}</section>`;
+  } else {
+    estado = `<section class="card"><div class="card-h"><h3>Atención</h3><button class="btn secondary sm" data-act="editNot" data-id="${a.id}">${icon('edit')}Actualizar</button></div>
+      <dl class="kv"><dt>Estado</dt><dd>${estadoBadge(ESTADOS_NOT,a.estado)}</dd><dt>Pedido</dt><dd>${fmt(a.fechaSol)}</dd><dt>Atendido</dt><dd>${a.fechaAt?fmt(a.fechaAt):'—'}</dd><dt>Entregado</dt><dd>${a.fechaEntrega?fmt(a.fechaEntrega):'—'}</dd>${a.resultado?`<dt>Resultado</dt><dd>${esc(a.resultado)}</dd>`:''}</dl></section>`;
+  }
+  const html = `${ed?`<div class="banner edit">${icon('edit')}<p><b>Está modificando la actuación ${a.codigo}.</b> Los cambios se guardan solo al tocar «Guardar cambios».</p></div>`:''}
+  <button class="back" data-go="notarial">${icon('arrow-left')}Volver a actuaciones</button>
+  <section class="card dhead">${icon(t.icon,'big-ic')}<div class="dh-main"><p class="eyebrow">${a.codigo} · pedido el ${fmt(a.fechaSol)}</p><h2>${t.label}</h2><p>${esc(a.asunto)}</p></div><div class="dh-right">${estadoBadge(ESTADOS_NOT,a.estado)}${syncBadge(a)}</div></section>
+  <div class="dgrid"><div class="dcol"><section class="card"><h3>${icon('users')}Personas</h3><div class="parties">${a.personas.map(x=>{ const p = P(x.pid); return `<article class="party"><span><span class="role ${roleCls(x.rol)}">${x.rol}</span></span><b class="pname">${esc(nombre(p))}</b><dl><dt>Documento</dt><dd>${p.docTipo==='No tiene'?'No tiene':p.docTipo+' '+p.docNum}</dd><dt>Comunidad</dt><dd>${esc(p.comunidad)}</dd></dl></article>`; }).join('')}</div></section>
+    ${a.obs?`<section class="card"><h3>Observaciones</h3><p>${esc(a.obs)}</p></section>`:''}</div>
+  <div class="dcol">${estado}<section class="card"><h3>${icon('book')}Documentos</h3><ul class="doclist">${a.libro?`<li>${icon('book')}Libro notarial N° ${esc(a.libro)}, folio ${esc(a.folio)}</li>`:''}${a.docs.map(d=>`<li>${icon('camera')}${esc(d.nombre)}</li>`).join('')}${!a.libro&&!a.docs.length?'<li class="muted">Sin documentos.</li>':''}</ul></section></div></div>`;
+  const foot = ed ? `<footer class="foot"><button class="btn secondary" data-act="editCancel" data-n="D12b">${icon('x')}Cancelar</button><span class="grow muted">${icon('tablet')} Se guardará en la tableta</span><button class="btn primary" data-act="editSave">${icon('check')}Guardar cambios</button></footer>` : '';
+  return { title:a.codigo, crumb:'Actuaciones notariales ›', html, foot };
+}
+
+/* ----- Agenda ----- */
+function vAgenda(){
+  const sel = ui.params.fecha || TODAY_ISO; const mes = ui.params.mes || sel.slice(0,7);
+  const [y,m] = mes.split('-').map(Number); const first = new Date(y,m-1,1); const off = (first.getDay()+6)%7; const start = addDays(first,-off);
+  const dim = new Date(y,m,0).getDate(); const weeks = Math.ceil((off+dim)/7);
+  const acts = db.actividades.slice().sort(byFH);
+  const cells = []; for(let i=0;i<weeks*7;i++){ const dt = addDays(start,i), s = iso(dt), list = acts.filter(a=>a.fecha===s);
+    cells.push(`<button class="day ${dt.getMonth()!==m-1?'out':''} ${s===TODAY_ISO?'today':''} ${s===sel?'sel':''}" data-act="selDay" data-arg="${s}" aria-label="${fmtLargo(s)}: ${list.length} ${plural(list.length,'actividad','actividades')}">
+      <span class="dn"><span>${dt.getDate()}</span>${s===TODAY_ISO?'<em>Hoy</em>':''}</span>
+      ${list.slice(0,2).map(a=>{ const t = TIPOS_ACT[a.tipo]; return `<span class="chip c-${t.c} ${a.estado==='cancelada'?'cx':''} ${a.estado==='realizada'?'done':''}" title="${esc(a.titulo)}">${icon(t.icon)}<span>${t.short||t.label}</span></span>`; }).join('')}
+      ${list.length>2?`<span class="chip more">+${list.length-2} más</span>`:''}</button>`); }
+  const dayActs = acts.filter(a=>a.fecha===sel);
+  const next7 = acts.filter(a=>{ const n = diffDays(a.fecha); return n>=0 && n<=7 && a.estado==='programada'; }).length;
+  const actHtml = a => { const cc = ui.confirmCancel===a.id; const caso = a.caso ? casoById(a.caso) : null;
+    return `<article class="act ${ui.params.nuevo===a.id?'new':''} ${a.estado==='cancelada'?'cancel':''}"><div class="t">${a.inicio||'Todo el día'}${a.fin?`<small>a ${a.fin}</small>`:''}</div><div class="b">
+      <div class="meta">${catTag(a.tipo)}${estadoBadge(ESTADOS_ACT,a.estado)}${a.sync==='pendiente'?`<span class="badge warn">${icon('tablet')}Por enviar</span>`:''}</div>
+      <b>${esc(a.titulo)}</b><span class="place">${icon('pin')}${esc(a.lugar)}</span>
+      ${cc?`<div class="alert warn">${icon('alert')}<div class="body"><p><b>¿Cancelar esta actividad?</b> Quedará marcada como cancelada (no se borra).</p><div class="acts"><button class="btn danger sm" data-act="actCancelYes" data-id="${a.id}">Sí, cancelar</button><button class="btn secondary sm" data-act="actCancelNo">No</button></div></div></div>`
+        : a.estado==='programada'?`<div class="acts"><button class="btn secondary sm" data-act="actDone" data-id="${a.id}">${icon('check')}Marcar realizada</button><button class="btn ghost" data-act="actCancel" data-id="${a.id}">Cancelar</button>${caso?`<button class="btn ghost" data-go="caso" data-id="${caso.id}">Ver caso</button>`:''}</div>`:caso?`<div class="acts"><button class="btn ghost" data-go="caso" data-id="${caso.id}">Ver caso ${caso.codigo}</button></div>`:''}
+    </div></article>`; };
+  const prev = iso(new Date(y,m-2,1)).slice(0,7), nxt = iso(new Date(y,m,1)).slice(0,7);
+  return { title:'Agenda', crumb:'Audiencias, reuniones y visitas', html:`
+  <div class="toolbar"><div class="cal-h"><button class="iconbtn" data-act="mes" data-arg="${prev}" aria-label="Mes anterior">${icon('chev-left')}</button><h2>${cap(MESES[m-1])} ${y}</h2><button class="iconbtn" data-act="mes" data-arg="${nxt}" aria-label="Mes siguiente">${icon('chev-right')}</button><button class="btn secondary sm" data-act="selDay" data-arg="${TODAY_ISO}">Hoy</button></div>
+    <button class="btn primary grow" data-act="newAct" data-arg="${sel}" style="margin-left:auto">${icon('plus')}Nueva actividad</button></div>
+  <div class="legend" data-n="D24">${Object.values(TIPOS_ACT).map(t=>`<span class="chip c-${t.c}">${icon(t.icon)}<span>${t.label}</span></span>`).join('')}<span class="muted" style="margin-left:6px">·</span><span class="chip c-otr done">${icon('check')}<span>Realizada (tenue)</span></span><span class="chip c-otr cx">${icon('x')}<span>Cancelada</span></span></div>
+  <div class="ag"><section class="card" style="padding:12px" data-n="D23"><div class="cal">${['lun','mar','mié','jue','vie','sáb','dom'].map(d=>`<span class="dow">${d}</span>`).join('')}${cells.join('')}</div></section>
+    <section class="card"><div class="upcoming" data-n="D25b">${icon('bell')}Próximos 7 días: ${next7} ${plural(next7,'actividad programada','actividades programadas')}</div>
+      <div class="card-h"><h3>${cap(fmtLargo(sel))}${diffDays(sel)>=-1&&diffDays(sel)<=1?` · ${rel(sel)}`:''}</h3></div>
+      <div>${dayActs.map(actHtml).join('') || `<p class="muted">No hay actividades este día.</p><button class="btn secondary" data-act="newAct" data-arg="${sel}">${icon('plus')}Agendar en este día</button>`}</div></section></div>` };
+}
+function vActNueva(){
+  if(!db.drafts.act) db.drafts.act = {tipo:'reunion', titulo:'', tituloAuto:true, fecha:ui.params.fecha||TODAY_ISO, todoDia:false, inicio:'10:00', fin:'11:00', lugar:'', desc:'', caso:'', aviso:true, savedAt:null};
+  const d = db.drafts.act;
+  if(d.tituloAuto){ const c = d.caso ? casoById(d.caso) : null; d.titulo = c ? `${TIPOS_ACT[d.tipo].label} caso ${c.codigo}` : ''; }
+  const mismos = db.actividades.filter(a=>a.fecha===d.fecha).sort(byFH);
+  const cruce = conflicto(d);
+  const q = [[TODAY_ISO,'Hoy'],[iso(addDays(TODAY,1)),'Mañana'],[iso(addDays(TODAY,((8-TODAY.getDay())%7)||7)),'Lunes próximo']];
+  return { title:'Nueva actividad', crumb:'Agenda ›', html:`
+  <div class="wiz-body"><div class="wiz-form">${ui.stepErrors.length?`<div class="alert bad" role="alert" id="errsum" tabindex="-1">${icon('alert')}<div class="body"><p><b>Revise ${ui.stepErrors.length} ${plural(ui.stepErrors.length,'dato','datos')}:</b></p><ul>${ui.stepErrors.map(e=>`<li><a href="#${e.id}" data-act="focus" data-arg="${e.id}">${esc(e.msg)}</a></li>`).join('')}</ul></div></div>`:''}
+    <div class="field"><span class="lbl">Tipo de actividad <em class="req">Obligatorio</em></span>${tiles('drafts.act.tipo','tipo-act',Object.entries(TIPOS_ACT).map(([id,t])=>({id,label:t.label,icon:t.icon})),d.tipo,'five')}</div>
+    <div class="g2">${field({id:'a-caso', bind:'drafts.act.caso', label:'¿Es de un caso?', value:d.caso, req:false, type:'text', n:'D27'}).replace(/<input[^>]*>/, `<select class="inp" id="a-caso" data-bind="drafts.act.caso" data-rerender="1"><option value="">No, no es de un caso</option>${db.casos.filter(c=>c.estado==='tramite').map(c=>`<option value="${c.id}" ${d.caso===c.id?'selected':''}>${c.codigo} · ${esc(partesTexto(c))}</option>`).join('')}</select>`)}
+      ${field({id:'a-titulo', bind:'drafts.act.titulo', label:'Nombre de la actividad', value:d.titulo, req:true, rule:'req', what:'el nombre', placeholder:'Ej.: Reunión con la directiva comunal', help:d.caso?'Se completó con el caso. Puede cambiarlo.':''})}</div>
+    <div class="g3">
+      <div class="field">${field({id:'a-fecha', bind:'drafts.act.fecha', label:'Fecha', type:'date', value:d.fecha, req:true, rule:'req', what:'la fecha'})}<div class="quickdates">${q.map(([v,l])=>`<button class="fchip ${d.fecha===v?'on':''}" data-act="qdate" data-arg="${v}">${l}</button>`).join('')}</div></div>
+      ${d.todoDia?`<div class="field"><span class="lbl">Horario</span><p class="help" style="padding-top:12px">Todo el día</p></div>`:field({id:'a-ini', bind:'drafts.act.inicio', label:'Hora de inicio', type:'time', value:d.inicio, req:true, rule:'req', what:'la hora de inicio'})}
+      ${d.todoDia?'<span></span>':field({id:'a-fin', bind:'drafts.act.fin', label:'Hora de término', type:'time', value:d.fin, req:false, rule:'afterIni', n:'D26'})}
+    </div>
+    <label class="check"><input type="checkbox" data-bind="drafts.act.todoDia" data-rerender="1" ${d.todoDia?'checked':''}>Dura todo el día (no tiene hora fija)</label>
+    ${cruce?`<div class="alert warn" data-n="D26b">${icon('alert')}<div class="body"><p><b>Se cruza con otra actividad:</b> ${cruce.inicio}–${finDe(cruce)} ${esc(cruce.titulo)}.</p><p>Puede cambiar la hora o guardar igual.</p></div></div>`:''}
+    <div class="g2">${field({id:'a-lugar', bind:'drafts.act.lugar', label:'Lugar o comunidad', value:d.lugar, req:true, rule:'req', what:'el lugar', list:'dl-com', placeholder:'Elija o escriba'})}
+      ${field({id:'a-desc', bind:'drafts.act.desc', label:'Motivo o descripción', value:d.desc, req:false, placeholder:'Ej.: Tratar el uso del local comunal'})}</div>
+    <label class="check"><input type="checkbox" data-bind="drafts.act.aviso" ${d.aviso?'checked':''}>${icon('bell')}Avisarme un día antes (funciona sin Internet)</label>
+  </div>
+  <aside class="wiz-aside"><h3>${cap(fmtLargo(d.fecha))}</h3><p class="lbl2">Ese día ya tiene:</p>${mismos.map(a=>`<div class="mini-act"><span class="when">${a.inicio||'Todo el día'}</span><span class="what"><b>${esc(a.titulo)}</b></span></div>`).join('') || '<p class="muted">Nada agendado. Día libre.</p>'}
+    <div class="sec"><p class="lbl2">Estado al guardar</p><p>${estadoBadge(ESTADOS_ACT,'programada')}</p></div></aside></div>${datalist}`,
+  foot:`<footer class="foot"><button class="btn secondary" data-act="actNuevaCancel">${icon('x')}Cancelar</button><button class="btn primary lg grow" data-act="actSave">${icon('check')}Agendar actividad</button></footer>` };
+}
+const plusHour = t => { const [h,m] = t.split(':').map(Number); return `${pad(Math.min(h+1,23))}:${pad(m)}`; };
+const finDe = a => a.fin && a.fin > a.inicio ? a.fin : plusHour(a.inicio);
+function conflicto(d){
+  if(d.todoDia || !d.inicio) return null; const fin = finDe(d);
+  return db.actividades.find(a => a.fecha===d.fecha && a.estado!=='cancelada' && a.inicio && a.inicio < fin && finDe(a) > d.inicio) || null;
+}
+
+/* ----- Sincronización ----- */
+function vSync(){
+  const n = db.outbox.length, s = ui.sync;
+  const icons = {caso:'folder', actuacion:'stamp', actividad:'calendar'};
+  const items = (s.status!=='idle' && s.items) ? s.items : db.outbox.map(o=>({...o, st:'wait'}));
+  let hero;
+  const pct = syncPct();
+  const bar = p => `<div class="pctbig">${p}<span>%</span></div><div class="bar" role="progressbar" aria-label="Avance del envío" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><span style="width:${p}%"></span></div>`;
+  if(s.status==='running'){
+    hero = `<section class="card shero info" data-n="D29b">${icon('sync','spin')}<div class="body"><h2>Enviando sus cambios automáticamente</h2>${bar(pct)}<p>${s.done} de ${s.total} cambios enviados. No apague la tableta. No tiene que tocar nada.</p></div></section>`; }
+  else if(s.status==='done'){
+    hero = `<section class="card shero ok" data-n="D29c">${icon('check-circle')}<div class="body"><h2>Sincronización completa</h2>${bar(100)}<p>Se enviaron <b>${s.done} de ${s.total}</b> cambios. Ya están guardados también en el servidor.</p>
+      <dl class="kv"><dt>Fecha y hora</dt><dd>${fmtDT(db.lastSync)}</dd><dt>Constancia</dt><dd><b>${s.receipt}</b></dd></dl>
+      <p class="help">${icon('monitor')} Desde ahora también puede ver esta información en una computadora con Internet.</p><div><button class="btn primary" data-act="syncClose">${icon('home')}Volver al inicio</button></div></div></section>`; }
+  else if(s.status==='partial'){
+    hero = `<section class="card shero warn" data-n="D29d">${icon('alert')}<div class="body"><h2>Se cortó la conexión durante el envío</h2>${bar(pct)}<p>Se enviaron ${s.done} de ${s.total} cambios. <b>Lo que falta no se perdió:</b> sigue guardado en esta tableta y se enviará solo cuando vuelva Internet.</p></div></section>`; }
+  else if(!db.online){
+    hero = `<section class="card shero warn" data-n="D29">${icon('wifi-off')}<div class="body"><h2>No hay Internet en este momento</h2><p>Puede seguir trabajando. <b>Todo lo que registra se guarda en esta tableta</b> y no se pierde aunque la apague.</p>
+      <p><b>¿Cómo se envían sus cambios?</b></p><ol class="steps-how"><li>Lleve la tableta a la sede judicial o conéctela al Wi-Fi de su comunidad.</li><li>Apenas haya Internet, el envío empieza solo. Verá el avance de 0 a 100 %.</li><li>Al llegar a 100 % verá «Sincronización completa».</li></ol></div></section>`; }
+  else if(n){ hero = `<section class="card shero info">${icon('wifi')}<div class="body"><h2>Hay Internet: el envío empieza en un momento</h2>${bar(0)}<p>Tiene ${n} ${plural(n,'cambio','cambios')} en la tableta. Se enviarán automáticamente.</p></div></section>`; }
+  else { hero = `<section class="card shero ok">${icon('cloud-check')}<div class="body"><h2>Todo está sincronizado</h2>${bar(100)}<p>No hay cambios pendientes. Última sincronización: ${fmtDT(db.lastSync)}.</p></div></section>`; }
+  const stIcon = st => st==='ok' ? `<span class="badge ok">${icon('check')}Enviado</span>` : st==='sending' ? `<span class="badge info">${icon('sync','spin')}Enviando</span>` : `<span class="badge warn">${icon('tablet')}En la tableta</span>`;
+  const totals = `${db.casos.length} casos, ${db.actuaciones.length} actuaciones y ${db.actividades.length} actividades`;
+  return { title:'Sincronización', crumb:'Envío automático de lo guardado en la tableta', html:`
+  <div class="sgrid"><div class="dcol">${hero}
+    <section class="card" data-n="D28c"><h3>${icon('tablet')}${s.status==='idle'?`Cambios que faltan enviar (${n})`:'Cambios de este envío'}</h3>
+      ${items.length?`<ul class="olist">${items.map(o=>`<li>${icon(icons[o.tipo])}<span class="t"><b>${esc(o.etiqueta)}</b><small>${o.accion==='Nuevo'?'Registro nuevo':'Cambio'} · guardado ${o.at.slice(0,10)===TODAY_ISO?'hoy':'el '+fmt(o.at.slice(0,10))} a las ${o.at.slice(11,16)}</small></span>${stIcon(o.st)}</li>`).join('')}</ul>`:'<p class="muted">No hay nada pendiente.</p>'}</section></div>
+  <div class="dcol">
+    <section class="card"><h3>${icon('clock')}Última sincronización</h3><p><b>${fmtDT(db.lastSync)}</b></p><p class="muted">Si pasa muchos días sin Internet, lleve la tableta a la sede judicial: el envío empezará solo.</p></section>
+    <section class="card"><h3>${icon('shield-check')}En esta tableta</h3><p>${totals}. Se guardan cifrados y protegidos con su clave.</p></section>
+    <section class="card" data-n="D31"><h3>${icon('monitor')}Desde una computadora</h3><p>Si su comunidad tiene Internet, entre a la misma dirección web con su usuario. Verá lo último que sincronizó y podrá registrar con teclado y ratón.</p></section>
+  </div></div>` };
+}
+/* Envío automático: empieza solo cuando hay Internet y cambios en la tableta */
+const syncPct = () => ui.sync.total ? Math.round(100*ui.sync.done/ui.sync.total) : 0;
+let syncTimer = null;
+function scheduleSync(ms=800){ clearTimeout(syncTimer); syncTimer = setTimeout(startSync, ms); }
+function refreshSyncUI(){
+  const typing = document.activeElement && document.activeElement.matches('input,textarea,select');
+  const hasForm = ['casoNuevo','notNueva','actNueva'].includes(ui.route) || ui.edit || ui.avance || typing;
+  if(!hasForm) return render();
+  const p = document.querySelector('.pill'); if(p) p.outerHTML = statusPill();
+  const b = document.getElementById('sync-banner'); if(b) b.innerHTML = syncBanner();
+  const r = document.querySelector('.rail'); if(r) r.outerHTML = rail();
+  if(ui.notes) applyNotes(ui.notes);
+}
+function startSync(){
+  if(!db.online || !db.outbox.length || ui.sync.status==='running') return;
+  const items = db.outbox.map(o=>({...o, st:'wait'}));
+  ui.sync = {status:'running', done:0, total:items.length, items};
+  refreshSyncUI(); let k = 0;
+  const tick = () => {
+    if(!db.online) return finish();
+    const it = items[k]; it.st = 'sending'; refreshSyncUI();
+    setTimeout(() => {
+      it.st = 'ok'; ui.sync.done++; markSynced(it);
+      k++; if(k<items.length){ refreshSyncUI(); setTimeout(tick, 250); } else finish();
+    }, 650);
+  };
+  function finish(){
+    if(ui.sync.done) db.lastSync = nowISO();
+    const complete = ui.sync.done===ui.sync.total;
+    ui.sync.status = complete ? 'done' : 'partial';
+    ui.sync.receipt = `SYNC-${db.lastSync.replace(/[-:T]/g,'').slice(0,12)}`;
+    persist(); refreshSyncUI();
+    if(complete && ui.route!=='sincronizar') toast(`<b>Sincronización completa: 100 %.</b> Se enviaron ${ui.sync.total} ${plural(ui.sync.total,'cambio','cambios')}.`, {icon:'cloud-check', ms:5000});
+    if(db.online && db.outbox.length) scheduleSync(1200);
+  }
+  setTimeout(tick, 300);
+}
+function syncBanner(){
+  if(ui.sync.status!=='running' || ui.route==='sincronizar') return '';
+  const p = syncPct();
+  return `<div class="banner info" data-n="D30">${icon('sync','spin')}<p><b>Hay Internet: enviando sus cambios automáticamente.</b> ${ui.sync.done} de ${ui.sync.total} enviados.</p><div class="bar mini" aria-hidden="true"><span style="width:${p}%"></span></div><b class="pctsm">${p} %</b></div>`;
+}
+function undoQueue(tipo, rec, hadOut, prevSync, etiqueta){
+  const still = db.outbox.some(o=>o.ref===rec.id);
+  if(still && !hadOut){ db.outbox = db.outbox.filter(o=>o.ref!==rec.id); rec.sync = prevSync; }
+  else if(!still) queue(tipo, rec, 'Cambio', etiqueta);
+}
+function markSynced(it){
+  db.outbox = db.outbox.filter(o=>o.id!==it.id);
+  const col = it.tipo==='caso' ? db.casos : it.tipo==='actuacion' ? db.actuaciones : db.actividades;
+  const r = col.find(x=>x.id===it.ref); if(r && !db.outbox.some(o=>o.ref===r.id)) r.sync='ok';
+  persist();
+}
+function queue(tipo, rec, accion, etiqueta){
+  rec.sync = 'pendiente';
+  const ex = db.outbox.find(o=>o.ref===rec.id);
+  if(ex){ ex.at = nowISO(); if(ex.accion!=='Nuevo') ex.accion = accion; ex.etiqueta = etiqueta; }
+  else db.outbox.push({id:'o'+Date.now()+Math.random().toString(36).slice(2,6), tipo, ref:rec.id, accion, etiqueta, at:nowISO()});
+  if(db.online) scheduleSync(900);
+}
+
+/* =============== Render =============== */
+const app = document.getElementById('app');
+function currentView(){
+  switch(ui.route){
+    case 'casos': return vCasos(); case 'caso': return vCaso(); case 'casoNuevo': return vWizard('caso'); case 'casoGuardado': return vGuardado('caso');
+    case 'notarial': return vNotarial(); case 'actuacion': return vActuacion(); case 'notNueva': return vWizard('not'); case 'notGuardada': return vGuardado('not');
+    case 'agenda': return vAgenda(); case 'actNueva': return vActNueva(); case 'sincronizar': return vSync();
+    default: return vInicio();
+  }
+}
+const SECTION = {inicio:'inicio', casos:'casos', caso:'casos', casoNuevo:'casos', casoGuardado:'casos', notarial:'notarial', actuacion:'notarial', notNueva:'notarial', notGuardada:'notarial', agenda:'agenda', actNueva:'agenda', sincronizar:'sincronizar'};
+function rail(){
+  const sec = SECTION[ui.route] || 'inicio'; const n = db.outbox.length;
+  const items = [['inicio','home','Inicio'],['casos','folder','Casos'],['notarial','stamp','Actuaciones notariales'],['agenda','calendar','Agenda'],['sincronizar','sync','Sincronización']];
+  return `<nav class="rail" aria-label="Menú principal">
+    <div class="brand"><span class="logo">${icon('scale')}</span><span><b>Justicia Cercana</b><small>Juzgado de Paz de San Juan de Pampa</small></span></div>
+    <div class="nav" data-n="D2">${items.map(([k,ic,l])=>`<button class="${sec===k?'on':''}" data-go="${k}" ${sec===k?'aria-current="page"':''}>${icon(ic)}<span>${l}</span>${k==='sincronizar'&&n?`<span class="count" aria-label="${n} por enviar">${n}</span>`:''}</button>`).join('')}</div>
+    <div class="rail-foot"><div class="who">${icon('user')}<span><b>Elena Villca Torres</b><small>Jueza de paz</small></span></div>
+      <div class="demo"><p>Solo para probar el prototipo</p><button class="switch ${db.online?'on':''}" data-act="toggleNet" role="switch" aria-checked="${db.online}"><span class="knob"></span>${db.online?'Internet: Sí':'Internet: No'}</button><button class="linkish" data-act="reset">Reiniciar datos de ejemplo</button></div></div></nav>`;
+}
+function render(keepScroll=true){
+  const main = document.querySelector('.main'); const st = keepScroll && main ? main.scrollTop : 0;
+  const v = currentView();
+  app.innerHTML = `<div class="shell">${rail()}<div class="main"><header class="top"><div class="ttl">${v.crumb?`<div class="crumb">${v.crumb}</div>`:''}<h1>${v.title}</h1></div>${statusPill()}</header>
+    <div id="sync-banner">${syncBanner()}</div>
+    <main class="view">${v.html}</main>${v.foot||''}</div></div>`;
+  const m2 = document.querySelector('.main'); if(m2){ m2.style.scrollBehavior='auto'; m2.scrollTop = st; m2.style.scrollBehavior=''; }
+  if(ui.notes) applyNotes(ui.notes);
+}
+function go(route, params={}){
+  ui.route = route; ui.params = params; ui.errors = {}; ui.stepErrors = []; ui.confirmCancel = null;
+  if(route!=='caso' && route!=='actuacion'){ ui.edit = null; ui.avance = null; }
+  render(false);
+}
+function paintToast(){ const t = ui.toast; document.getElementById('toast-root').innerHTML = t ? `<div class="toast" role="status">${icon(t.icon||'check-circle')}<p>${t.msg}</p>${t.undo?`<button data-act="undo">${icon('undo')} Deshacer</button>`:''}<button data-act="toastClose" aria-label="Cerrar aviso">${icon('x')}</button></div>` : ''; }
+function toast(msg, o={}){ ui.toast = {msg, ...o}; paintToast(); clearTimeout(toast.t); toast.t = setTimeout(()=>{ ui.toast = null; paintToast(); }, o.ms||7000); }
+
+/* =============== Enlaces de datos =============== */
+function getPath(path){ return path.split('.').reduce((o,k)=>o==null?o:o[k], path.startsWith('edit.')||path.startsWith('avance.') ? ui : db); }
+function setPath(path, val){
+  const root = path.startsWith('edit.')||path.startsWith('avance.') ? ui : db;
+  const ks = path.split('.'); let o = root; for(let i=0;i<ks.length-1;i++) o = o[ks[i]]; o[ks[ks.length-1]] = val;
+}
+function touchDraft(path){
+  const m = path.match(/^drafts\.(\w+)/); if(!m) return;
+  const d = db.drafts[m[1]]; d.savedAt = nowISO(); persist();
+  const el = document.getElementById('draft-status'); if(el) el.innerHTML = draftStatus(d);
+}
+const RULES = {
+  req: (v,el) => v ? '' : `Falta escribir ${el.dataset.what}.`,
+  nombre: v => !v || /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]{2,}$/.test(v) ? '' : 'Use solo letras, sin números ni símbolos.',
+  dni: v => !v || /^\d{8}$/.test(v) ? '' : `El DNI tiene 8 números. Escribió ${v.replace(/\D/g,'').length}${/\D/.test(v)?' y otros signos':''}.`,
+  tel: v => !v || /^9\d{8}$/.test(v) ? '' : 'El celular tiene 9 números y empieza con 9.',
+  nofuture: v => !v || v <= TODAY_ISO ? '' : 'Esta fecha no puede ser después de hoy.',
+  nopast: v => !v || v >= TODAY_ISO ? '' : 'Elija hoy o una fecha próxima.',
+  min10: v => !v || v.length>=10 ? '' : 'Escriba un poco más (al menos 10 letras).',
+  afterSol: v => { const s = db.drafts.not && db.drafts.not.fechaSol; return !v || !s || v>=s ? (v && v>TODAY_ISO ? 'Esta fecha no puede ser después de hoy.' : '') : 'La atención no puede ser antes del pedido.'; },
+  afterIni: v => { const d = db.drafts.act; return !v || !d || v > d.inicio ? '' : 'La hora de término debe ser después de la hora de inicio.'; },
+};
+function validateField(el){
+  if(!el.dataset.rule) return '';
+  const v = (el.value||'').trim(); let msg = '';
+  for(const r of el.dataset.rule.split(' ')){ msg = RULES[r](v, el); if(msg) break; }
+  if(msg) ui.errors[el.id] = msg; else delete ui.errors[el.id];
+  const e = document.getElementById('e-'+el.id), f = document.getElementById('f-'+el.id);
+  if(e) e.innerHTML = msg ? icon('alert')+esc(msg) : '';
+  if(f) f.classList.toggle('has-err', !!msg);
+  el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  return msg;
+}
+function validateStep(kind, paso){
+  const errs = [];
+  document.querySelectorAll('.wiz-form [data-rule]').forEach(el => { const m = validateField(el); if(m) errs.push({id:el.id, msg:`${el.dataset.ctx}: ${m}`}); });
+  const d = db.drafts[kind];
+  if(kind==='caso' && paso===1 && !d.personas.some(p=>p.rol==='Solicitante')) errs.unshift({id:'pcard-0', msg:'Debe haber al menos una persona con el rol «Solicitante».'});
+  if(kind==='caso' && paso===2 && !d.tipo){ ui.errors['g-tipo'] = 'Elija una opción.'; errs.unshift({id:'f-g-tipo', msg:'Tipo de conflicto: elija una opción.'}); }
+  if(kind==='not' && paso===1 && !d.tipo){ ui.errors['g-ntipo'] = 'Elija una opción.'; errs.unshift({id:'f-g-ntipo', msg:'Tipo de actuación: elija el trámite.'}); }
+  if(kind==='not' && paso===2){ if(!d.personas.some(p=>p.rol==='Solicitante')) errs.unshift({id:'pcard-0', msg:'Debe haber al menos una persona con el rol «Solicitante».'}); if(dupActuacion() && !d.dupActOk) errs.unshift({id:'dupact', msg:'Confirme si es un trámite nuevo o si ya existe.'}); }
+  return errs;
+}
+
+/* =============== Acciones =============== */
+function upsertPersona(p){
+  if(p.pid){ const x = P(p.pid); ['tel','dir','idioma','comunidad'].forEach(k=>{ if(p[k]) x[k]=p[k]; }); return p.pid; }
+  const id = 'p'+Date.now()+Math.random().toString(36).slice(2,5);
+  db.personas.push({id, nombres:p.nombres.trim(), apellidos:p.apellidos.trim(), docTipo:p.docTipo, docNum:p.docTipo==='No tiene'?'':p.docNum.trim(), tel:p.tel, comunidad:p.comunidad.trim(), dir:p.dir, idioma:p.idioma});
+  return id;
+}
+function saveCaso(){
+  const d = db.drafts.caso; const codigo = `C-${YEAR}-${String(db.seq.caso++).padStart(4,'0')}`; const id = 'c'+Date.now();
+  const caso = {id, codigo, fecha:d.fecha, tipo:d.tipo, tipoOtro:d.tipoOtro, desc:d.desc.trim(), estado:d.estado, obs:d.obs, resultado:d.resultado, partes:d.personas.map(p=>({pid:upsertPersona(p), rol:p.rol})), seguimiento:[{fecha:TODAY_ISO, texto:'Registro del caso.'}], proxima:d.cita==='si'?d.citaFecha:'', docs:d.docs, docRef:d.docRef, sync:'pendiente', hist:[]};
+  db.casos.unshift(caso); queue('caso', caso, 'Nuevo', `Caso ${codigo} · ${tipoCaso(d.tipo).label}`);
+  let actId = '';
+  if(d.cita==='si'){ actId = 'a'+Date.now(); const a = {id:actId, fecha:d.citaFecha, inicio:d.citaHora, fin:'', tipo:'audiencia', titulo:`Audiencia caso ${codigo}`, lugar:d.citaLugar, estado:'programada', caso:id, desc:'', aviso:true, sync:'pendiente'}; db.actividades.push(a); queue('actividad', a, 'Nuevo', `Audiencia caso ${codigo} · ${fmtCorto(d.citaFecha)}`); }
+  db.drafts.caso = null; persist(); go('casoGuardado', {id, act:actId});
+}
+function saveNot(){
+  const d = db.drafts.not; const codigo = `N-${YEAR}-${String(db.seq.not++).padStart(4,'0')}`; const id = 'n'+Date.now();
+  const a = {id, codigo, tipo:d.tipo, tipoOtro:d.tipoOtro, personas:d.personas.map(p=>({pid:upsertPersona(p), rol:p.rol})), fechaSol:d.fechaSol, fechaAt:d.fechaAt, asunto:d.asunto.trim(), estado:d.estado, obs:d.obs, resultado:d.resultado, fechaEntrega:d.fechaEntrega, docs:d.docs, libro:d.libro, folio:d.folio, sync:'pendiente', hist:[]};
+  db.actuaciones.unshift(a); queue('actuacion', a, 'Nuevo', `Actuación ${codigo} · ${tipoNot(d.tipo).label}`);
+  db.drafts.not = null; persist(); go('notGuardada', {id});
+}
+function startWizard(kind, fresh){
+  const route = kind==='caso' ? 'casoNuevo' : 'notNueva';
+  if(fresh || !hasContent(db.drafts[kind])){ db.drafts[kind] = newDraft(kind); persist(); go(route, {paso:1}); }
+  else go(route, {paso:1, resumed:1});
+}
+const ACTIONS = {
+  newCaso: () => startWizard('caso'), newCasoFresh: () => startWizard('caso', true),
+  newNot: () => startWizard('not'), newNotFresh: () => startWizard('not', true),
+  newAct: (arg) => { db.drafts.act = null; go('actNueva', {fecha: arg || TODAY_ISO}); },
+  wizReset: (_,el) => startWizard(el.dataset.kind, true),
+  wizGo: (arg,el) => go(el.dataset.kind==='caso'?'casoNuevo':'notNueva', {paso:+arg}),
+  wizPrev: (_,el) => go(el.dataset.kind==='caso'?'casoNuevo':'notNueva', {paso:(+ui.params.paso||1)-1}),
+  wizNext: (_,el) => { const kind = el.dataset.kind, paso = +ui.params.paso||1; const errs = validateStep(kind, paso);
+    if(errs.length){ ui.stepErrors = errs; render(false); const s = document.getElementById('errsum'); if(s) s.focus(); return; }
+    go(kind==='caso'?'casoNuevo':'notNueva', {paso:paso+1}); },
+  wizSave: (_,el) => el.dataset.kind==='caso' ? saveCaso() : saveNot(),
+  personaAdd: (_,el) => { const k = el.dataset.kind; db.drafts[k].personas.push(newPersona('Testigo')); persist(); render(); },
+  personaDel: (arg,el) => { const k = el.dataset.kind; const removed = db.drafts[k].personas.splice(+arg,1)[0]; persist(); render(); toast(`Se quitó a la persona ${+arg+1}.`, {icon:'trash', undo:()=>{ db.drafts[k].personas.splice(+arg,0,removed); persist(); }}); },
+  dupUse: (arg,el) => { const k = el.dataset.kind, p = db.drafts[k].personas[+arg], x = P(el.dataset.id); Object.assign(p, {nombres:x.nombres, apellidos:x.apellidos, docTipo:x.docTipo, docNum:x.docNum, tel:x.tel, comunidad:x.comunidad, dir:x.dir, idioma:x.idioma, pid:x.id}); ui.errors = {}; touchDraft(`drafts.${k}`); render(); },
+  dupNo: (arg,el) => { db.drafts[el.dataset.kind].personas[+arg].dupNo = true; persist(); render(); },
+  dupUnlink: (arg,el) => { db.drafts[el.dataset.kind].personas[+arg] = newPersona(db.drafts[el.dataset.kind].personas[+arg].rol); persist(); render(); },
+  dupActOk: () => { db.drafts.not.dupActOk = true; persist(); ui.stepErrors = ui.stepErrors.filter(e=>e.id!=='dupact'); render(); },
+  focus: (arg) => { const el = document.getElementById(arg); if(el){ el.scrollIntoView({block:'center'}); (el.matches('input,textarea,select')?el:el.querySelector('input,textarea,select,button')||el).focus(); } },
+  filtro: (arg,el) => { ui.filtro[el.dataset.kind] = arg; render(); },
+  toggleNet: () => setOnline(!db.online),
+  reset: () => { db = seed(); ui.sync = {status:'idle'}; ui.edit = null; ui.toast = null; paintToast(); persist(); go('inicio'); },
+  syncClose: () => { ui.sync = {status:'idle'}; go('inicio'); },
+  toastClose: () => { ui.toast = null; paintToast(); },
+  undo: () => { const u = ui.toast && ui.toast.undo; ui.toast = null; paintToast(); if(u) u(); render(); },
+  editCaso: (_,el) => { const c = casoById(el.dataset.id); const o = {estado:c.estado, desc:c.desc, obs:c.obs, resultado:c.resultado}; ui.edit = {kind:'caso', id:c.id, orig:{...o}, draft:{...o}}; render(); },
+  editNot: (_,el) => { const a = actById(el.dataset.id); const o = {estado:a.estado, fechaAt:a.fechaAt||'', resultado:a.resultado, fechaEntrega:a.fechaEntrega||''}; ui.edit = {kind:'not', id:a.id, orig:{...o}, draft:{...o}}; render(); },
+  editCancel: () => { ui.edit = null; ui.errors = {}; render(); toast('No se guardó ningún cambio.', {icon:'info', ms:4000}); },
+  editSave: () => {
+    const errs = []; document.querySelectorAll('.editing [data-rule]').forEach(el=>{ const m = validateField(el); if(m) errs.push(m); });
+    if(errs.length){ const f = document.querySelector('.editing .has-err .inp'); if(f) f.focus(); return; }
+    const e = ui.edit, rec = e.kind==='caso' ? casoById(e.id) : actById(e.id);
+    const changed = Object.keys(e.draft).filter(k=>e.draft[k]!==e.orig[k]);
+    if(!changed.length){ ui.edit = null; render(); return toast('No había cambios que guardar.', {icon:'info', ms:4000}); }
+    const before = {...e.orig}, prevSync = rec.sync, hadOut = db.outbox.find(o=>o.ref===rec.id);
+    Object.assign(rec, e.draft); rec.hist.push({at:nowISO(), campos:changed});
+    if(e.kind==='caso' && e.draft.estado!==e.orig.estado) rec.seguimiento.push({fecha:TODAY_ISO, texto:`Cambio de estado: ${ESTADOS_CASO[e.orig.estado].label} → ${ESTADOS_CASO[e.draft.estado].label}.`});
+    queue(e.kind==='caso'?'caso':'actuacion', rec, 'Cambio', e.kind==='caso' ? `Caso ${rec.codigo} · cambio de datos` : `Actuación ${rec.codigo} · cambio de estado`);
+    ui.edit = null; persist(); render();
+    toast(`<b>Cambios guardados en la tableta.</b> Se enviarán solos cuando haya Internet.`, {undo:()=>{ Object.assign(rec, before); rec.hist.pop(); if(e.kind==='caso' && e.draft.estado!==e.orig.estado) rec.seguimiento.pop(); undoQueue(e.kind==='caso'?'caso':'actuacion', rec, hadOut, prevSync, `${e.kind==='caso'?'Caso':'Actuación'} ${rec.codigo} · cambio deshecho`); persist(); }});
+  },
+  avance: (_,el) => { ui.avance = {id:el.dataset.id, fecha:TODAY_ISO, texto:'', proxima:''}; render(); const t = document.getElementById('av-texto'); if(t) t.focus(); },
+  avanceCancel: () => { ui.avance = null; ui.errors = {}; render(); },
+  avanceSave: () => {
+    let bad = false; document.querySelectorAll('#avance-form [data-rule]').forEach(el=>{ if(validateField(el)) bad = true; }); if(bad) return;
+    const av = ui.avance, c = casoById(av.id);
+    c.seguimiento.push({fecha:av.fecha, texto:av.texto.trim()}); c.seguimiento.sort((a,b)=>a.fecha.localeCompare(b.fecha));
+    if(av.proxima){ c.proxima = av.proxima; const a = {id:'a'+Date.now(), fecha:av.proxima, inicio:'09:00', fin:'', tipo:'audiencia', titulo:`Audiencia caso ${c.codigo}`, lugar:'Juzgado de paz', estado:'programada', caso:c.id, desc:'', aviso:true, sync:'pendiente'}; db.actividades.push(a); queue('actividad', a, 'Nuevo', `Audiencia caso ${c.codigo} · ${fmtCorto(av.proxima)}`); }
+    else if(c.proxima && c.proxima<=TODAY_ISO) c.proxima = '';
+    queue('caso', c, 'Cambio', `Caso ${c.codigo} · nuevo avance`); ui.avance = null; persist(); render();
+    toast(`<b>Avance guardado en la tableta.</b>${av.proxima?' La próxima cita se agregó a su agenda.':''}`);
+  },
+  selDay: (arg) => { ui.params = {...ui.params, fecha:arg, mes:arg.slice(0,7), nuevo:''}; ui.confirmCancel = null; render(); },
+  mes: (arg) => { ui.params = {...ui.params, mes:arg}; render(); },
+  qdate: (arg) => { db.drafts.act.fecha = arg; persist(); render(); },
+  actCancel: (_,el) => { ui.confirmCancel = el.dataset.id; render(); },
+  actCancelNo: () => { ui.confirmCancel = null; render(); },
+  actCancelYes: (_,el) => setActEstado(el.dataset.id, 'cancelada'),
+  actDone: (_,el) => setActEstado(el.dataset.id, 'realizada'),
+  actNuevaCancel: () => { const f = db.drafts.act.fecha; db.drafts.act = null; persist(); go('agenda', {fecha:f}); },
+  actSave: () => {
+    const errs = []; document.querySelectorAll('.wiz-form [data-rule]').forEach(el=>{ const m = validateField(el); if(m) errs.push({id:el.id, msg:`${el.dataset.ctx}: ${m}`}); });
+    if(errs.length){ ui.stepErrors = errs; render(false); const s = document.getElementById('errsum'); if(s) s.focus(); return; }
+    const d = db.drafts.act; const a = {id:'a'+Date.now(), fecha:d.fecha, inicio:d.todoDia?'':d.inicio, fin:d.todoDia?'':d.fin, tipo:d.tipo, titulo:d.titulo.trim(), lugar:d.lugar.trim(), estado:'programada', caso:d.caso, desc:d.desc, aviso:d.aviso, sync:'pendiente'};
+    db.actividades.push(a); if(d.caso){ const c = casoById(d.caso); if(c && (!c.proxima || c.proxima<TODAY_ISO || d.fecha<c.proxima)) c.proxima = d.fecha; }
+    queue('actividad', a, 'Nuevo', `${TIPOS_ACT[a.tipo].label}: ${a.titulo} · ${fmtCorto(a.fecha)}`); db.drafts.act = null; persist();
+    go('agenda', {fecha:a.fecha, mes:a.fecha.slice(0,7), nuevo:a.id}); toast(`<b>Actividad agendada</b> para el ${fmtLargo(a.fecha)}. Guardada en la tableta.`);
+  },
+};
+function setActEstado(id, estado){
+  const a = db.actividades.find(x=>x.id===id); const prev = a.estado, prevSync = a.sync, hadOut = db.outbox.find(o=>o.ref===id);
+  a.estado = estado; ui.confirmCancel = null; queue('actividad', a, 'Cambio', `${a.titulo} · ${ESTADOS_ACT[estado].label.toLowerCase()}`); persist(); render();
+  toast(`Actividad marcada como <b>${ESTADOS_ACT[estado].label.toLowerCase()}</b>.`, {icon:estado==='cancelada'?'x':'check-circle', undo:()=>{ a.estado = prev; undoQueue('actividad', a, hadOut, prevSync, `${a.titulo} · cambio deshecho`); persist(); }});
+}
+function setOnline(on){
+  db.online = on; persist();
+  refreshSyncUI();
+  if(!on) toast('<b>Se perdió la conexión a Internet.</b> Puede seguir trabajando: todo se guarda en la tableta y se enviará solo cuando vuelva la conexión.', {icon:'wifi-off'});
+  else { ui.toast = null; paintToast(); if(db.outbox.length) scheduleSync(700); }
+}
+
+/* =============== Eventos =============== */
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]');
+  if(g && !g.closest('[data-act]')){ e.preventDefault(); const {go:route, ...rest} = g.dataset; if(route==='sincronizar' && ui.sync.status!=='running' && ui.sync.status!=='idle') ui.sync = {status:'idle'}; go(route, rest); return; }
+  const a = e.target.closest('[data-act]'); if(!a) return;
+  if(a.tagName==='A') e.preventDefault();
+  const f = ACTIONS[a.dataset.act]; if(f) f(a.dataset.arg, a, e);
+});
+app.addEventListener('input', e => {
+  const el = e.target;
+  if(el.dataset.q){ ui.q[el.dataset.q] = el.value; const box = document.getElementById(el.dataset.q==='casos'?'list-casos':'list-not'); if(box) box.innerHTML = el.dataset.q==='casos' ? listCasos() : listNot(); if(ui.notes) applyNotes(ui.notes); return; }
+  if(!el.dataset.bind) return;
+  if(el.type==='radio' || el.type==='checkbox' || el.tagName==='SELECT') return;
+  let v = el.value;
+  if(el.inputMode==='numeric' && /docNum|tel|libro|folio/.test(el.dataset.bind)){ const clean = v.replace(/\D/g,''); if(clean!==v && /tel/.test(el.dataset.bind)){ v = clean; el.value = v; } }
+  setPath(el.dataset.bind, v); touchDraft(el.dataset.bind);
+  if(el.dataset.bind==='drafts.act.titulo') db.drafts.act.tituloAuto = false;
+  const cnt = document.getElementById('cnt-'+el.id); if(cnt) cnt.textContent = `${v.length} / ${el.maxLength}`;
+  if(ui.errors[el.id]) validateField(el);
+  const m = el.dataset.bind.match(/^drafts\.(caso|not)\.personas\.(\d+)\.(docNum|nombres|apellidos)$/);
+  if(m){ const box = document.getElementById('dup-'+m[2]); if(box && (m[3]==='docNum' ? v.length===8 || box.innerHTML : true)) box.innerHTML = dupHtml(m[1], +m[2]); }
+  const ed = el.dataset.bind.match(/^edit\.draft\.(\w+)$/);
+  if(ed){ const k = ed[1], o = ui.edit.orig[k], span = document.getElementById('ch-'+k); if(span){ span.className = v!==o ? 'changed' : ''; span.innerHTML = v!==o ? `${icon('edit')}Modificado · antes: «${esc(o||'vacío').slice(0,40)}»` : ''; } }
+});
+app.addEventListener('change', e => {
+  const el = e.target;
+  if(el.dataset.actFile){ const f = el.files && el.files[0]; if(!f) return; const k = el.dataset.actFile;
+    if(k==='caso'){ const c = casoById(el.dataset.id); c.docs.push({nombre:f.name}); queue('caso', c, 'Cambio', `Caso ${c.codigo} · documento nuevo`); persist(); render(); toast(`<b>${esc(f.name)}</b> se guardó en la tableta.`); }
+    else { const kind = k==='draft-caso'?'caso':'not'; db.drafts[kind].docs.push({nombre:f.name}); touchDraft(`drafts.${kind}`); render(); }
+    return; }
+  if(!el.dataset.bind) return;
+  const v = el.type==='checkbox' ? el.checked : el.value;
+  setPath(el.dataset.bind, v); touchDraft(el.dataset.bind);
+  if(el.dataset.bind.endsWith('.docTipo')){ const base = el.dataset.bind.replace(/\.docTipo$/,''); const p = getPath(base); if(v==='No tiene') p.docNum=''; }
+  if(el.dataset.bind==='drafts.act.caso') db.drafts.act.tituloAuto = !db.drafts.act.titulo || db.drafts.act.tituloAuto;
+  if(el.dataset.rerender || el.type==='date' || el.type==='time') render();
+});
+app.addEventListener('focusout', e => {
+  const el = e.target; if(!el.dataset || !el.dataset.rule) return;
+  if(el.value) validateField(el);
+});
+window.addEventListener('offline', () => { if(db.online) setOnline(false); });
+window.addEventListener('online', () => { if(!db.online) setOnline(true); });
+
+/* =============== Anotaciones (para el informe) =============== */
+function applyNotes(list){
+  document.querySelectorAll('.nmark').forEach(n=>n.remove()); document.querySelectorAll('.n-on').forEach(n=>n.classList.remove('n-on'));
+  list.forEach(id => { const el = document.querySelector(`[data-n="${id}"]`); if(!el) return; if(getComputedStyle(el).position==='static') el.style.position='relative'; el.classList.add('n-on'); const m = document.createElement('span'); m.className='nmark'; m.textContent = id.replace(/[a-z]$/,''); el.appendChild(m); });
+}
+window.JC = { clearToast:()=>{ ui.toast = null; paintToast(); }, get db(){ return db; }, set db(v){ db = v; }, ui, go, render, setOnline, seed, persist, startSync, ACTIONS, newDraft, showNotes:(l)=>{ ui.notes = l; applyNotes(l); }, hideNotes:()=>{ ui.notes = null; render(); } };
+render();
+if(db.online && db.outbox.length) scheduleSync(800);
+</script>
+</body>
+</html>

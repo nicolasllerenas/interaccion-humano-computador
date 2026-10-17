@@ -1,0 +1,1218 @@
+<meta charset="utf-8">
+<title>Heurísticas de Usabilidad — Lab 2.1</title>
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Informe Lab 2.1 — Heurísticas de usabilidad
+   Documento impreso A4. Un solo mundo visual, tinta sobre papel.
+   Azul marino = Tommy Hilfiger (caso que cumple).
+   Granate      = Zara (caso que no cumple).
+   Todo color se pinta explícito: el destino es un PDF.
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --papel:      #FFFFFF;
+  --papel-alt:  #F7F7F5;
+  --tinta:      #16181D;
+  --tinta-media:#4A5058;
+  --tinta-suave:#7C838C;
+  --linea:      #D8DAD6;
+  --linea-fina: #E8E9E6;
+
+  --navy:       #00174F;
+  --navy-luz:   #EEF1F7;
+  --granate:    #8E1C25;
+  --granate-luz:#FBEFEF;
+  --oro:        #9A6B00;
+
+  --serif: "Iowan Old Style","Charter","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:  "Avenir Next","Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:  "SF Mono",SFMono-Regular,Menlo,Consolas,"DejaVu Sans Mono",monospace;
+}
+
+@page{ size:A4; margin:18mm 16mm 20mm 16mm; }
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:var(--sans);
+  font-size:9.8pt;
+  line-height:1.58;
+  -webkit-font-smoothing:antialiased;
+  max-width:180mm;
+  margin:0 auto;
+  padding:10mm 0 20mm;
+}
+
+/* ── Portada ───────────────────────────────────────────── */
+.portada{ padding:6mm 0 8mm; border-bottom:2.5px solid var(--tinta); margin-bottom:9mm; }
+.curso{
+  font-family:var(--mono); font-size:8pt; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--tinta-suave); margin-bottom:6mm;
+}
+.portada h1{
+  font-family:var(--serif); font-size:27pt; line-height:1.1;
+  font-weight:400; letter-spacing:-.01em; margin-bottom:3mm;
+}
+.subtitulo{
+  font-size:11.5pt; color:var(--tinta-media); line-height:1.45;
+  max-width:135mm; margin-bottom:7mm;
+}
+.subtitulo strong{ color:var(--tinta); font-weight:600; }
+.meta{ display:flex; gap:14mm; flex-wrap:wrap; font-size:9pt; }
+.meta-b .et{
+  font-family:var(--mono); font-size:7.2pt; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--tinta-suave); display:block; margin-bottom:1.5mm;
+}
+.meta-b .va{ line-height:1.5; }
+
+/* ── Estructura ────────────────────────────────────────── */
+h2{
+  font-family:var(--serif); font-size:16.5pt; font-weight:400;
+  letter-spacing:-.005em; margin:0 0 4mm;
+  padding-bottom:2mm; border-bottom:1px solid var(--linea);
+}
+h3{ font-size:10.6pt; font-weight:650; margin:6mm 0 2.5mm; letter-spacing:-.005em; break-after:avoid; }
+h4{ font-size:9.3pt; font-weight:650; margin:4mm 0 1.5mm; break-after:avoid; }
+p{ margin-bottom:3mm; }
+p:last-child{ margin-bottom:0; }
+section{ margin-bottom:10mm; }
+.salto{ break-before:page; }
+.num{
+  font-family:var(--mono); font-size:8pt; letter-spacing:.12em;
+  color:var(--tinta-suave); display:block; margin-bottom:1.5mm;
+}
+strong{ font-weight:650; }
+em{ font-style:italic; }
+code, .dato{
+  font-family:var(--mono); font-size:8.6pt;
+  background:var(--papel-alt); padding:.5mm 1.2mm; border-radius:2px;
+  border:1px solid var(--linea-fina);
+}
+
+/* ── Cabecera de caso ──────────────────────────────────── */
+.caso-cab{ border-left:4px solid var(--tinta); padding-left:5mm; margin-bottom:6mm; }
+.caso-cab.bueno{ border-color:var(--navy); }
+.caso-cab.malo{ border-color:var(--granate); }
+.caso-et{
+  font-family:var(--mono); font-size:7.6pt; letter-spacing:.13em;
+  text-transform:uppercase; margin-bottom:2mm; font-weight:600;
+}
+.bueno .caso-et{ color:var(--navy); }
+.malo  .caso-et{ color:var(--granate); }
+.caso-cab h2{ border:none; padding:0; margin-bottom:2mm; }
+
+/* ── Fichas de heurística ──────────────────────────────── */
+.ficha{
+  border:1px solid var(--linea); border-radius:3px;
+  padding:3.8mm 4.5mm; margin-bottom:3.5mm;
+  break-inside:avoid;
+}
+.ficha-cab{
+  display:flex; align-items:baseline; gap:3mm;
+  padding-bottom:2.5mm; margin-bottom:3mm; border-bottom:1px solid var(--linea-fina);
+}
+.chapa{
+  font-family:var(--mono); font-size:7.6pt; font-weight:700;
+  letter-spacing:.06em; padding:.9mm 2.2mm; border-radius:2px;
+  color:#fff; white-space:nowrap;
+}
+.bueno .chapa{ background:var(--navy); }
+.malo  .chapa{ background:var(--granate); }
+.ficha-cab .titulo{ font-size:10.6pt; font-weight:650; line-height:1.3; }
+.bloque{ margin-bottom:2.5mm; }
+.bloque:last-child{ margin-bottom:0; }
+.bloque .et{
+  font-family:var(--mono); font-size:7.2pt; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--tinta-suave);
+  display:block; margin-bottom:1mm;
+}
+.bloque p{ margin-bottom:1.8mm; }
+
+/* ── Tablas ────────────────────────────────────────────── */
+table{ width:100%; border-collapse:collapse; font-size:8.8pt; margin:3mm 0; break-inside:avoid; }
+th{
+  text-align:left; font-family:var(--mono); font-size:7.2pt;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--tinta-suave);
+  font-weight:600; padding:2mm 2.5mm; border-bottom:1.5px solid var(--tinta);
+  vertical-align:bottom;
+}
+td{ padding:2mm 2.5mm; border-bottom:1px solid var(--linea-fina); vertical-align:top; line-height:1.45; }
+tbody tr:last-child td{ border-bottom:1px solid var(--linea); }
+td.crit{ font-weight:600; }
+td.z{ color:var(--granate); }
+td.t{ color:var(--navy); }
+.cifra{ font-family:var(--mono); font-size:8.4pt; }
+
+/* ── Figuras ───────────────────────────────────────────── */
+figure{ margin:4mm 0 5mm; break-inside:avoid; }
+figure img{
+  width:100%; max-width:150mm; margin:0 auto; display:block;
+  border:1px solid var(--linea); border-radius:2px;
+}
+figcaption{
+  font-size:8.2pt; color:var(--tinta-media); line-height:1.5;
+  margin-top:2mm; padding-left:3mm; border-left:2px solid var(--linea);
+}
+figcaption b{ color:var(--tinta); font-weight:650; }
+.fig-par{ display:grid; grid-template-columns:1fr 1fr; gap:4mm; margin:4mm 0 5mm; break-inside:avoid; }
+.fig-par figure{ margin:0; }
+.fig-estrecha img{ max-width:76mm; }
+
+/* ── Cajas de nota ─────────────────────────────────────── */
+.nota{
+  background:var(--papel-alt); border-left:3px solid var(--tinta-suave);
+  padding:3.5mm 4.5mm; margin:4mm 0; font-size:9.2pt; break-inside:avoid;
+}
+.nota .et{
+  font-family:var(--mono); font-size:7.2pt; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--tinta-suave); display:block; margin-bottom:1.5mm;
+}
+
+/* ── Rediseño ──────────────────────────────────────────── */
+.rd{ border:1px solid var(--linea); border-radius:3px; margin-bottom:4mm; break-inside:avoid; }
+.rd-cab{ background:var(--granate-luz); padding:2.6mm 4.5mm; border-bottom:1px solid var(--linea); break-after:avoid; }
+.rd-cab .et{
+  font-family:var(--mono); font-size:7.2pt; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--granate); font-weight:600;
+}
+.rd-cab .titulo{ font-size:10.4pt; font-weight:650; margin-top:.8mm; }
+.rd-cuerpo{ padding:3.5mm 4.5mm 3.8mm; }
+.rd-fila{ margin-bottom:3mm; }
+.rd-fila:last-child{ margin-bottom:0; }
+.rd-fila .et{
+  font-family:var(--mono); font-size:7.2pt; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--tinta-suave); display:block; margin-bottom:1mm;
+}
+.rd-fila.sol .et{ color:var(--navy); }
+
+ul{ margin:1.5mm 0 2.5mm 4.5mm; }
+li{ margin-bottom:1.2mm; line-height:1.55; }
+
+/* ── Wireframes SVG ────────────────────────────────────── */
+.wf{ margin:4mm 0 5mm; break-inside:avoid; }
+.wf svg{ width:100%; height:auto; display:block; }
+
+/* ── Referencias ───────────────────────────────────────── */
+.refs{ font-size:8.8pt; line-height:1.6; }
+.refs li{ margin-bottom:2mm; }
+.refs a{ color:var(--tinta); text-decoration:none; border-bottom:1px solid var(--linea); word-break:break-word; }
+
+.pie{
+  margin-top:10mm; padding-top:3mm; border-top:1px solid var(--linea);
+  font-size:8pt; color:var(--tinta-suave); font-family:var(--mono); letter-spacing:.05em;
+}
+</style>
+
+<div class="portada">
+  <div class="curso">UTEC · Departamento de Ciencia de la Computación · CS2H01 Interacción Humano-Computador · Laboratorio 2.1</div>
+  <h1>Dos maneras de dejar entrar<br>a alguien a una tienda</h1>
+  <p class="subtitulo">
+    Evaluación heurística del <strong>menú de navegación y del filtrado de catálogo</strong>
+    en dos tiendas de moda que venden al mismo comprador limeño:
+    <strong>Tommy Hilfiger Perú</strong> y <strong>Zara Perú</strong>.
+  </p>
+  <div class="meta">
+    <div class="meta-b">
+      <span class="et">Integrantes</span>
+      <span class="va">José Daniel Huamán Rosales<br>Nicolás Alejandro Llerena Silva<br>Mauricio Gabriel Gonzalez Kremer</span>
+    </div>
+    <div class="meta-b">
+      <span class="et">Profesor</span>
+      <span class="va">Teófilo Chambilla</span>
+    </div>
+    <div class="meta-b">
+      <span class="et">Fecha</span>
+      <span class="va">19 de agosto de 2026</span>
+    </div>
+    <div class="meta-b">
+      <span class="et">Marco</span>
+      <span class="va">10 heurísticas de<br>Jakob Nielsen (NN/g)</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <h2>Qué evaluamos y cómo</h2>
+  <p>
+    Elegimos el <strong>e-commerce de moda</strong> porque nos permite comparar dos tiendas que le venden
+    exactamente lo mismo, a la misma persona, en la misma ciudad: una casaca de invierno a alguien en Lima.
+    Cuando el producto y el comprador son idénticos, cualquier diferencia en la dificultad de encontrar
+    la prenda es atribuible al diseño de la interfaz y no al negocio.
+  </p>
+  <p>
+    No evaluamos la tienda completa. Nos concentramos en <strong>una sola tarea</strong>, la primera que
+    hace cualquier comprador y la que decide si llega o no al producto:
+    <strong>abrir el menú, llegar a una categoría y filtrar el listado por color o talla</strong>.
+    En Zara analizamos el menú principal y el listado <span class="dato">mujer-nuevo-l1180.html</span>;
+    en Tommy Hilfiger, el mega-menú y el listado <span class="dato">/mujer/ropa/vestidos</span>.
+  </p>
+
+  <div class="nota">
+    <span class="et">Método</span>
+    <p>
+      Cada afirmación de este informe está respaldada por una medición hecha sobre el sitio en vivo el
+      <strong>19 de agosto de 2026</strong>, en Chrome, con una ventana de <strong>1280 × 823 px</strong>.
+      Las cifras (áreas de clic, distancias, colores, pesos tipográficos, estados de los controles) se
+      obtuvieron consultando el DOM y los estilos computados de cada elemento, no estimando sobre la captura.
+      Evitamos deliberadamente adjetivos como «intuitivo» o «fácil de usar»: donde hay un juicio, hay un número
+      o una captura que lo sostiene.
+    </p>
+  </div>
+
+  <h3>Resumen de la comparación</h3>
+  <table>
+    <thead>
+      <tr><th style="width:37%">Criterio medido</th><th style="width:31.5%">Zara Perú</th><th style="width:31.5%">Tommy Hilfiger Perú</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="crit">Categorías de producto visibles al entrar</td>
+        <td class="z"><span class="cifra">0</span> de 7 controles en pantalla</td>
+        <td class="t"><span class="cifra">5</span> rotuladas, siempre visibles</td>
+      </tr>
+      <tr>
+        <td class="crit">Área de clic frente al ancho del texto (menú)</td>
+        <td class="z">220 px para 43 px de texto → <span class="cifra">5,1×</span></td>
+        <td class="t">52 px para 52 px de texto → <span class="cifra">1,0×</span></td>
+      </tr>
+      <tr>
+        <td class="crit">Separación entre áreas de clic contiguas</td>
+        <td class="z"><span class="cifra">0 px</span></td>
+        <td class="t"><span class="cifra">6 px</span></td>
+      </tr>
+      <tr>
+        <td class="crit">Distancia del disparador de filtros al panel</td>
+        <td class="z"><span class="cifra">833 px</span> (65 % del ancho)</td>
+        <td class="t"><span class="cifra">0 px</span> — columna fija, siempre abierta</td>
+      </tr>
+      <tr>
+        <td class="crit">¿El panel de filtros tapa los resultados?</td>
+        <td class="z">Sí, se superpone a la grilla</td>
+        <td class="t">No: filtros 40–290 px, grilla desde 364 px</td>
+      </tr>
+      <tr>
+        <td class="crit">Señales de que un filtro está activo</td>
+        <td class="z"><span class="cifra">1</span>: peso de fuente 300 → 500</td>
+        <td class="t"><span class="cifra">4</span>: casilla, bloque, ruta y URL</td>
+      </tr>
+      <tr>
+        <td class="crit">Conteo de resultados</td>
+        <td class="z">No se muestra</td>
+        <td class="t">«7 PRODUCTOS», se actualiza</td>
+      </tr>
+      <tr>
+        <td class="crit">Ruta de migas (breadcrumb)</td>
+        <td class="z">Ausente</td>
+        <td class="t">Inicio / Mujer / Ropa / Vestidos / Azul</td>
+      </tr>
+      <tr>
+        <td class="crit">¿El filtro queda en la URL?</td>
+        <td class="z">No: la URL no cambia</td>
+        <td class="t">Sí: <span class="dato">/mujer/ropa/vestidos/azul</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="bueno">
+  <div class="caso-cab bueno">
+    <div class="caso-et">Caso A · Cumple las heurísticas</div>
+    <h2>Tommy Hilfiger Perú</h2>
+  </div>
+
+  <p>
+    <strong>pe.tommy.com</strong> es la tienda oficial de Tommy Hilfiger en el Perú, operada por Valditex S.A.
+    Vende ropa, calzado y accesorios de la marca con entrega a domicilio y recojo en tienda en Lima Metropolitana.
+    La funcionalidad que analizamos es la <strong>navegación del catálogo</strong>: la barra superior permanente,
+    el mega-menú de dos niveles que se despliega al posar el cursor sobre una categoría, y la
+    <strong>columna de filtros del listado de productos</strong>, donde el comprador acota por género, color,
+    condición, estilo y calce. Concretamente recorrimos la ruta que sigue cualquiera que busca un vestido azul:
+    entrar, abrir «Mujer», llegar a Vestidos y marcar el color.
+  </p>
+
+  <figure>
+    <img src="capturas/tommy-01-home-nav-visible.jpg" alt="Portada de Tommy Hilfiger Perú con la barra de navegación superior visible">
+    <figcaption>
+      <b>Figura 1.</b> Primera pantalla de pe.tommy.com. Las cinco entradas del catálogo —Nuevo, Mujer, Hombre,
+      Niños y Tommy Jeans— están rotuladas con palabras y visibles sin necesidad de ningún clic previo.
+      Al pie, las condiciones locales explícitas: cuotas con Diners Club y VISA BCP, recojo en Lima Metropolitana y el RUC del operador.
+    </figcaption>
+  </figure>
+
+  <figure>
+    <img src="capturas/tommy-02-megamenu-dos-niveles.jpg" alt="Mega-menú de Tommy con dos niveles visibles simultáneamente">
+    <figcaption>
+      <b>Figura 2.</b> Mega-menú de «Mujer». Los dos niveles conviven en pantalla: a la izquierda las secciones
+      (Accesorios, Calzado, Ropa, Tommy Jeans) y a la derecha el contenido de la sección activa. «Accesorios»
+      aparece subrayado porque está seleccionado, y el chevron <b>›</b> a su derecha anuncia que tiene subcategorías.
+    </figcaption>
+  </figure>
+
+  <figure>
+    <img src="capturas/tommy-03-plp-breadcrumb-conteo-filtros.jpg" alt="Listado de vestidos de Tommy con breadcrumb, conteo de productos y columna de filtros">
+    <figcaption>
+      <b>Figura 3.</b> Listado de Vestidos con el filtro «Azul» aplicado. En una sola pantalla conviven la ruta
+      de migas, el título de la página, el conteo «7 PRODUCTOS», la columna de filtros a la izquierda, el bloque
+      «FILTRADO POR:» con el filtro activo y el enlace «Limpiar Filtros». La grilla de productos nunca queda tapada.
+    </figcaption>
+  </figure>
+
+  <figure class="fig-estrecha">
+    <img src="capturas/tommy-05-zoom-filtrado-por-checkbox.png" alt="Detalle del bloque Filtrado por de Tommy con la casilla marcada">
+    <figcaption>
+      <b>Figura 4.</b> Detalle del mismo listado, ampliado. La casilla marcada se rellena y muestra un check;
+      el bloque «FILTRADO POR:» reúne lo que está activo; la ruta de migas termina en «Azul» y el enlace
+      «Limpiar Filtros» queda a un clic. Compárese con la Figura 10, donde Zara comunica lo mismo con un
+      cambio de peso tipográfico.
+    </figcaption>
+  </figure>
+
+  <h3>Cinco razones por las que es un buen diseño</h3>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H6</span>
+      <span class="titulo">Reconocimiento en lugar de recordar</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Acierto</span>
+      <p>
+        El comprador nunca tiene que recordar dónde está guardado el catálogo, porque el catálogo está a la vista.
+        En la primera pantalla hay <strong>cinco categorías rotuladas con palabras</strong> (Nuevo, Mujer, Hombre,
+        Niños, Tommy Jeans) que permanecen fijas en la cabecera durante toda la sesión. Al entrar a un listado
+        aparecen además la ruta <span class="dato">Inicio / Mujer / Ropa / Vestidos</span> y el título «VESTIDOS»
+        en un bloque de 480 × 54 px. La columna de filtros vive desplegada de forma permanente en
+        <span class="dato">x = 40–290 px</span>: no hay que abrirla ni recordar que existe.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        Nielsen formula esta heurística como «minimizar la carga de memoria del usuario haciendo visibles los
+        elementos, las acciones y las opciones». El caso extremo de carga de memoria es una opción que solo existe
+        si el usuario recuerda invocarla. Aquí no ocurre en ningún punto de la tarea: las categorías, la posición
+        actual dentro de la jerarquía y los criterios de filtrado disponibles se reconocen leyendo la pantalla.
+        El único elemento que exige un gesto previo es el segundo nivel del mega-menú, y ese gesto se activa con
+        el cursor sobre una etiqueta ya visible, no sobre un ícono anónimo.
+      </p>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H4</span>
+      <span class="titulo">Coherencia y estándares</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Acierto</span>
+      <p>
+        Elementos que se ven iguales se comportan igual, y los que se comportan distinto se ven distinto.
+        Todos los ítems del menú son enlaces que navegan; el que además abre un submenú lo anuncia con un
+        chevron <strong>›</strong>, y el activo se subraya. Las áreas de clic siguen una sola regla en los dos
+        niveles: «Mujer» ocupa <span class="dato">34 × 24 px</span> y «Billeteras» <span class="dato">52 × 28 px</span>,
+        en ambos casos ajustadas al texto, con <strong>6 px de separación</strong> entre ítems contiguos.
+        En el panel de filtros, los cinco grupos usan el mismo control: una casilla de
+        <span class="dato">16 × 16 px</span> con borde de 2 px.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        La heurística exige que el usuario no tenga que preguntarse si palabras, situaciones o acciones distintas
+        significan lo mismo. El sitio respeta además la convención externa —la ley de Jakob— de que una casilla
+        cuadrada con borde es una selección múltiple: el comprador aplica el modelo que ya trae de cualquier otro
+        formulario y acierta. La separación de 6 px entre áreas contiguas cumple una función concreta de precisión:
+        un clic desviado uno o dos píxeles cae en el vacío y no ejecuta la acción del vecino, de modo que el
+        error se convierte en «no pasó nada» en lugar de «pasó lo que no quería».
+      </p>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H1</span>
+      <span class="titulo">Visibilidad del estado del sistema</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Acierto</span>
+      <p>
+        Al marcar el color «Azul», el sistema informa el cambio por <strong>cuatro vías independientes</strong>:
+        la casilla se rellena de azul marino <span class="dato">rgb(0, 23, 79)</span> y muestra un check;
+        aparece un bloque rotulado <strong>«FILTRADO POR:»</strong> con el filtro activo listado dentro;
+        la ruta de migas incorpora un cuarto nivel, «Azul»; y la URL pasa a
+        <span class="dato">/mujer/ropa/vestidos/azul</span>. En paralelo, el contador de la esquina superior
+        derecha se actualiza a <strong>«7 PRODUCTOS»</strong>.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        La heurística pide que el sistema mantenga informado al usuario mediante retroalimentación apropiada y
+        dentro de un tiempo razonable. Aquí la redundancia no es decorativa: cada canal responde a una pregunta
+        distinta. La casilla responde «¿marqué esto?»; el bloque «FILTRADO POR:» responde «¿qué tengo activo
+        en total?»; la ruta responde «¿dónde estoy?»; y el conteo responde «¿sirvió de algo filtrar?».
+        Ese último dato es el que permite decidir si conviene seguir acotando o aflojar un criterio, y es
+        precisamente el que se pierde cuando el sistema no lo publica.
+      </p>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H2</span>
+      <span class="titulo">Coincidencia entre el sistema y el mundo real</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Acierto</span>
+      <p>
+        La tienda habla como habla su comprador en Lima. Llama <strong>«Casacas y Chalecos»</strong> a lo que en
+        el Perú se llama casaca, <strong>«Poleras»</strong> a lo que aquí es polera y <strong>«Chompas»</strong>
+        a lo que aquí es chompa. Las direcciones son legibles en el mismo idioma:
+        <span class="dato">/mujer/ropa/vestidos</span>, <span class="dato">/mujer/calzado/zapatillas</span>.
+        Las condiciones comerciales también son locales y explícitas: cuotas sin intereses con Diners Club y
+        tarjeta VISA del BCP, y recojo en tienda válido para Lima Metropolitana.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        Nielsen pide que el sistema hable el lenguaje del usuario, con palabras y conceptos que le resulten
+        familiares, en lugar de términos orientados al sistema. Para un comprador peruano el término «casaca»
+        no es un sinónimo elegante: es <em>la</em> palabra. Que la etiqueta de la categoría coincida con la
+        palabra que la persona ya tiene en la cabeza elimina el paso de traducción entre el vocabulario de la
+        marca y el propio, que es exactamente el trabajo mental que esta heurística busca ahorrar.
+      </p>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H3</span>
+      <span class="titulo">Control y libertad del usuario</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Acierto</span>
+      <p>
+        Deshacer un filtro es tan barato como aplicarlo, y hay <strong>cuatro salidas distintas</strong>:
+        desmarcar la casilla, usar el enlace <strong>«Limpiar Filtros»</strong> que borra todo de una vez,
+        retroceder por la ruta de migas hasta «Vestidos», o pulsar el botón Atrás del navegador. Este último
+        funciona porque el estado filtrado vive en la URL, lo que además permite guardar el resultado en
+        marcadores o pasárselo a otra persona por WhatsApp y que lo abra tal cual.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        La heurística exige «salidas de emergencia claramente señalizadas» para abandonar un estado no deseado
+        sin pasar por un diálogo extendido. Reflejar el filtro en la URL convierte cada acción de filtrado en un
+        punto del historial, de modo que el mecanismo de deshacer que el usuario ya conoce —el botón Atrás—
+        pasa a funcionar dentro de la tienda sin que nadie tenga que programarlo como una función aparte.
+        Es la diferencia entre ofrecer un botón «deshacer» y hacer que el sistema sea reversible por construcción.
+      </p>
+    </div>
+  </div>
+
+  <div class="nota">
+    <span class="et">Para ser justos</span>
+    <p>
+      Tommy Hilfiger no es impecable. Los encabezados de los grupos de filtro aparecen sin tilde
+      («GENERO», «CONDICION»), y el sitio mezcla idiomas en etiquetas que el comprador sí tiene que leer:
+      el control de ordenamiento dice «FECHA DE RELEASE» y hay categorías rotuladas «T-Shirts»,
+      «Poleras y Sweatshirts» y «FIT». Son lapsos de la heurística 2, la misma que el sitio cumple bien en el
+      resto del catálogo. No cambian el balance —siguen siendo etiquetas visibles, estables y en el lugar
+      correcto—, pero conviene registrarlos: la evaluación heurística no reparte aprobados, señala defectos
+      donde los encuentra.
+    </p>
+  </div>
+</section>
+
+<section class="salto malo">
+  <div class="caso-cab malo">
+    <div class="caso-et">Caso B · No cumple las heurísticas</div>
+    <h2>Zara Perú</h2>
+  </div>
+
+  <p>
+    <strong>zara.com/pe</strong> es la tienda en línea de Zara para el Perú, del grupo Inditex. Vende la misma
+    clase de producto al mismo comprador que el caso anterior, lo que hace que la comparación sea limpia:
+    cualquier diferencia de esfuerzo proviene de la interfaz. Analizamos la misma funcionalidad:
+    el <strong>menú principal</strong> que se despliega desde el ícono de la esquina superior izquierda, y el
+    <strong>panel de filtros</strong> del listado de productos. La ruta recorrida es la equivalente: entrar,
+    abrir el menú, llegar a una categoría de mujer y filtrar por talla.
+  </p>
+
+  <div class="fig-par">
+    <figure>
+      <img src="capturas/zara-01-home-sin-navegacion.jpg" alt="Portada de Zara Perú sin ninguna categoría visible">
+      <figcaption>
+        <b>Figura 5.</b> Primera pantalla de zara.com/pe. Hay siete controles interactivos y ninguno nombra
+        una categoría de producto. El catálogo completo está detrás de las tres líneas de la esquina superior izquierda.
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="capturas/zara-02-menu-desplegado.jpg" alt="Menú principal de Zara desplegado">
+      <figcaption>
+        <b>Figura 6.</b> El menú abierto. Cuatro secciones raíz en serif de 24 px y una lista de subcategorías
+        en sans de 15 px. Arriba a la derecha, el bloque de accesos rápidos con las etiquetas superpuestas.
+      </figcaption>
+    </figure>
+  </div>
+
+  <figure class="fig-estrecha">
+    <img src="capturas/zara-03-etiquetas-solapadas.png" alt="Detalle de cuatro etiquetas del menú de Zara superpuestas e ilegibles">
+    <figcaption>
+      <b>Figura 7.</b> Detalle del bloque de accesos rápidos, ampliado. Deberían leerse cuatro etiquetas
+      —THE NEW, VESTIDOS, PUNTO y JEANS— pero se dibujan una encima de otra. Medido sobre el DOM:
+      «VESTIDOS» y «PUNTO» se solapan <b>32 px</b>; «PUNTO» y «JEANS», 14 px. Tres de las cuatro quedan ilegibles.
+    </figcaption>
+  </figure>
+
+  <div class="fig-par">
+    <figure>
+      <img src="capturas/zara-04-filtros-trigger-izq-panel-der.jpg" alt="Zara: el botón Filtros está a la izquierda y el panel se abre a la derecha">
+      <figcaption>
+        <b>Figura 8.</b> El disparador «FILTROS» está en <span class="dato">x = 32 px</span> y el panel se abre en
+        <span class="dato">x = 892 px</span>: <b>833 px de distancia</b> en una ventana de 1280 px.
+      </figcaption>
+    </figure>
+    <figure>
+      <img src="capturas/zara-05-filtro-aplicado-panel-tapa-grilla.jpg" alt="Zara: con el filtro aplicado el panel tapa la cuarta columna de productos">
+      <figcaption>
+        <b>Figura 9.</b> Con la talla M marcada, el rótulo pasa a «FILTROS 1» al otro extremo de la pantalla y el
+        panel se mantiene encima de la grilla que está filtrando.
+      </figcaption>
+    </figure>
+  </div>
+
+  <figure class="fig-estrecha">
+    <img src="capturas/zara-06-zoom-talla-M-solo-negrita.png" alt="Detalle del panel de filtros de Zara: la talla M solo se distingue por estar en negrita">
+    <figcaption>
+      <b>Figura 10.</b> El panel, ampliado. En COLOR hay muestras cuadradas; en TALLA no hay ningún control.
+      La talla M <b>está seleccionada</b>, y lo único que lo indica es que su peso tipográfico pasó de 300 a 500.
+      Mismo color, mismo fondo, sin casilla ni marca.
+    </figcaption>
+  </figure>
+
+  <h3>Cinco razones por las que es un mal diseño</h3>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H6</span>
+      <span class="titulo">Reconocimiento en lugar de recordar</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Problema</span>
+      <p>
+        El sitio esconde todo lo que el comprador necesita reconocer. En la primera pantalla existen siete
+        controles interactivos —el ícono de menú, Buscar, Cesta, Iniciar sesión, Ayuda y dos flechas del
+        carrusel— y <strong>ninguno nombra una categoría de producto</strong>. El catálogo entero depende de que
+        la persona recuerde que vive detrás de un ícono de tres líneas sin etiqueta, de 80 × 92 px, sobre una
+        fotografía. El mismo patrón se repite al filtrar: se pulsa <strong>«FILTROS» en el borde izquierdo</strong>
+        <span class="dato">(x = 32 px)</span> y el panel aparece <strong>en el borde derecho</strong>
+        <span class="dato">(x = 892 px)</span>, a 833 px de distancia, el 65 % del ancho de la ventana.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        La heurística pide hacer visibles los elementos y las opciones para minimizar la carga de memoria.
+        Aquí se hace lo contrario en los dos momentos de la tarea. Con el menú, la estructura del catálogo
+        —la información que permitiría decidir a dónde ir— solo es reconocible después de una acción que hay que
+        recordar. Con el filtro, la separación de 833 px rompe el vínculo entre la causa y el efecto: el
+        control que se pulsó y el panel que apareció no comparten campo visual, de modo que el usuario debe
+        sostener en memoria de trabajo qué pidió mientras su mirada cruza la pantalla, y luego repetir el
+        recorrido en sentido inverso para cerrar. La distancia también tiene un costo motriz medible: por la
+        ley de Fitts, el tiempo de apuntado crece con la distancia al objetivo, y aquí ese trayecto se paga
+        en cada apertura y cierre del panel.
+      </p>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H4</span>
+      <span class="titulo">Coherencia y estándares</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Problema</span>
+      <p>
+        Dentro de una misma lista, elementos idénticos hacen cosas distintas. En la columna de subcategorías de
+        Mujer, <span class="dato">CAZADORAS</span>, <span class="dato">ABRIGOS | TRENCH</span> y
+        <span class="dato">BLAZERS</span> navegan a un listado, pero <strong><span class="dato">VESTIDOS | MONOS</span>,
+        colocado entre ellos y con exactamente la misma clase, fuente, tamaño y área de clic, no tiene destino</strong>.
+        Lo mismo ocurre un nivel arriba: <span class="dato">|01| NOVEDADES</span> solo despliega, mientras
+        <span class="dato">|02| COLECCIÓN</span> despliega y además navega, pese a compartir el mismo formato numerado.
+      </p>
+      <p>
+        La incoherencia también es geométrica. El menú aplica <strong>dos reglas opuestas de área de clic</strong>:
+        en el primer nivel, «MUJER» ocupa <span class="dato">74 × 25 px</span>, es decir el tamaño exacto de su texto;
+        en el segundo, «JEANS» ocupa <span class="dato">220 × 36 px</span> para <strong>43 px de texto visible</strong>,
+        <strong>5,1 veces más ancho</strong> de lo que se ve, y las filas se tocan con <strong>0 px de separación</strong>.
+        Al barrer la columna verticalmente, el cursor se mantiene en forma de mano durante 200 px continuos sin
+        volver nunca a la flecha, de modo que nada indica dónde termina un botón y empieza el siguiente.
+        Y en el panel de filtros conviven dos lenguajes de control: COLOR usa muestras cuadradas y TALLA no usa
+        ningún control.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        Esta heurística existe para que el usuario no tenga que preguntarse si dos cosas que se ven iguales
+        significan lo mismo. Zara obliga a hacerse esa pregunta en cada clic del menú, y la respuesta no está
+        disponible antes de pulsar: la única forma de saber si «VESTIDOS | MONOS» lleva a algún lado es intentarlo.
+        La geometría agrava el asunto en lugar de compensarlo. Un área de clic cinco veces más ancha que su
+        etiqueta, pegada sin margen a la de arriba y a la de abajo, produce un espacio donde el usuario acierta
+        clics que no sabía que podía dar y falla clics que creía estar dando sobre el elemento correcto.
+        Las muestras blancas de «ANIMAL PRINT» y «BLANCOS», por su parte, son cuadrados con borde: la forma
+        universalmente convenida para una casilla de verificación, usada aquí para significar un color.
+      </p>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H1</span>
+      <span class="titulo">Visibilidad del estado del sistema</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Problema</span>
+      <p>
+        Cuando el comprador marca la talla M, el sistema modifica <strong>una sola propiedad visual</strong>:
+        el peso tipográfico pasa de 300 a 500. El color se mantiene en <span class="dato">rgb(0, 0, 0)</span>,
+        el fondo sigue siendo transparente y no aparece ninguna marca. Existe una casilla real en el documento
+        —verificamos que su estado interno es <span class="dato">checked = true</span>— pero está oculta y nunca
+        se dibuja. Además, <strong>el listado no informa cuántos productos quedaron</strong>, no hay ruta de migas
+        ni título de página visible, y el único recuento —«FILTROS 1»— se imprime a 833 px del panel donde se
+        está trabajando.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        La heurística exige retroalimentación apropiada sobre lo que está ocurriendo. Doscientas unidades de
+        peso tipográfico en un texto de 15 px es el margen más estrecho posible para comunicar un cambio de estado,
+        y es el único que existe: si el usuario no estaba mirando esa palabra en el instante del clic, no hay
+        forma de saber si la acción se registró. El problema se agrava porque la diferencia es puramente visual y
+        de grado, no de forma, de modo que se pierde por completo para quien navegue con poco contraste, con
+        zoom alto o con un lector de pantalla apoyado en lo que se dibuja. Y la ausencia del conteo elimina el
+        dato que da sentido a filtrar: sin saber si el resultado son 3 o 300 prendas, el usuario no puede juzgar
+        si le conviene seguir acotando, y el sistema le exige recorrer la grilla para averiguar lo que debería
+        haberle dicho en una línea.
+      </p>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H2</span>
+      <span class="titulo">Coincidencia entre el sistema y el mundo real</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Problema</span>
+      <p>
+        La tienda peruana usa el vocabulario de España. Llama <strong>«CAZADORAS»</strong> a lo que en Lima se
+        llama casaca, <strong>«PUNTO»</strong> a las chompas, <strong>«CAMISETAS»</strong> a los polos y
+        <strong>«CESTA»</strong> al carrito de compras. Debajo, las direcciones exponen la nomenclatura interna
+        del sistema: la etiqueta «CAZADORAS» apunta a <span class="dato">mujer-chaquetas-l1114.html</span>,
+        «ABRIGOS | TRENCH» a <span class="dato">mujer-prendas-exterior-l1184.html</span>, y el listado que
+        analizamos vive en <span class="dato">mujer-nuevo-l1180.html?v1=2544455</span>. Incluso las flechas del
+        carrusel de portada están rotuladas para lectores de pantalla como
+        <strong>«Moverse a PROYECTO»</strong> y <strong>«Moverse a MAN»</strong>: dos nombres de campañas internas,
+        uno de ellos en inglés dentro de una interfaz en español.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        Nielsen pide que el sistema use las palabras y los conceptos del usuario en vez de términos orientados
+        al sistema, y que la información aparezca en un orden natural y lógico. Un comprador limeño que busca
+        una casaca no escanea el menú buscando «cazadoras»: busca la palabra que usa, no la encuentra, y termina
+        recorriendo la lista completa o abandonando. La distancia es concreta y comprobable —la competencia
+        rotula esa misma categoría como «Casacas y Chalecos»—, de modo que no se trata de una preferencia
+        estilística sino de una traducción que el sitio le delega al cliente. Las etiquetas «PROYECTO» y «MAN»
+        son el caso puro que la heurística nombra: vocabulario del equipo que construyó el sistema, publicado
+        tal cual a quien no tiene por qué conocerlo.
+      </p>
+    </div>
+  </div>
+
+  <div class="ficha">
+    <div class="ficha-cab">
+      <span class="chapa">H3</span>
+      <span class="titulo">Control y libertad del usuario</span>
+    </div>
+    <div class="bloque">
+      <span class="et">Problema</span>
+      <p>
+        El estado del filtro no queda registrado en ningún lugar recuperable. Tras marcar la talla M, la dirección
+        del navegador <strong>sigue siendo exactamente la misma</strong>:
+        <span class="dato">mujer-nuevo-l1180.html?v1=2544455</span>. El resultado filtrado no se puede guardar en
+        marcadores, no se puede compartir y no queda como un paso del historial, de modo que el botón Atrás no
+        devuelve al listado sin filtrar sino que saca a la persona de la página. A esto se suma que el panel
+        <strong>se abre desde el borde izquierdo y se cierra desde el derecho</strong>: la aspa está en
+        <span class="dato">x = 1205 px</span>, a 1146 px del control que lo abrió.
+      </p>
+    </div>
+    <div class="bloque">
+      <span class="et">Justificación</span>
+      <p>
+        La heurística pide salidas de emergencia claramente señalizadas para abandonar un estado no deseado.
+        Aquí el usuario queda atrapado de dos maneras. La primera es de reversibilidad: el mecanismo de deshacer
+        que toda persona ya conoce —el botón Atrás— no funciona sobre la acción que acaba de realizar, porque el
+        sistema no registró esa acción como un estado. La segunda es de compartición: dos amigas no pueden
+        mirar el mismo listado filtrado, porque el enlace que una copia no contiene lo que la otra vería.
+        Y abrir por un borde para cerrar por el opuesto contradice el modelo espacial que la propia interacción
+        acaba de instalar: donde el usuario aprendió que está el control del panel, deja de estarlo un segundo después.
+      </p>
+    </div>
+  </div>
+
+  <div class="nota">
+    <span class="et">Hallazgo adicional</span>
+    <p>
+      Fuera de las cinco razones anteriores registramos un defecto de maquetación que conviene dejar anotado
+      (heurística 8, diseño estético y minimalista): en el bloque de accesos rápidos del menú, cuatro etiquetas
+      se dibujan superpuestas —«VESTIDOS» y «PUNTO» se solapan 32 px— y tres de las cuatro resultan ilegibles.
+      Es sintomático de un problema de fondo: el minimalismo de Zara retira información que el comprador
+      necesita —título de página, ruta, conteo de resultados— y a la vez deja en pantalla contenido roto.
+      La heurística pide eliminar lo irrelevante para que lo relevante compita mejor, no eliminar lo relevante.
+    </p>
+  </div>
+</section>
+
+<section class="salto">
+  <h2>Rediseño del caso deficiente</h2>
+  <p>
+    Cada una de las cinco correcciones que siguen ataca uno de los problemas identificados en Zara, en el mismo
+    orden en que se listaron. Ninguna propone rehacer la identidad visual de la marca: el minimalismo fotográfico
+    de Zara puede conservarse entero. Lo que cambia es dónde se ponen los controles, qué comunican y si se
+    comportan igual entre sí.
+  </p>
+
+  <h3>Wireframe 1 · El menú: áreas de clic y comportamiento</h3>
+  <div class="wf">
+    <svg viewBox="0 0 720 322" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparación del menú de Zara antes y después del rediseño">
+      <style>
+        .wt{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:11px;fill:#16181D}
+        .wl{font-family:'SF Mono',Menlo,monospace;font-size:8.5px;letter-spacing:.09em;fill:#7C838C}
+        .wa{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:9px;fill:#8E1C25}
+        .wb{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:9px;fill:#00174F}
+        .wh{font-family:'SF Mono',Menlo,monospace;font-size:9px;letter-spacing:.12em;font-weight:700}
+        .ser{font-family:'Iowan Old Style',Georgia,serif;font-size:13px;fill:#16181D}
+      </style>
+      <!-- ANTES -->
+      <text class="wh" x="0" y="12" fill="#8E1C25">ANTES</text>
+      <rect x="0" y="22" width="330" height="290" fill="#fff" stroke="#D8DAD6"/>
+      <text class="ser" x="16" y="48">MUJER</text>
+      <rect x="14" y="36" width="52" height="16" fill="none" stroke="#8E1C25" stroke-dasharray="2 2"/>
+      <text class="ser" x="16" y="70">HOMBRE</text>
+      <text class="wa" x="74" y="48">área = texto (74×25)</text>
+
+      <!-- subcategorias con hit areas gigantes y pegadas -->
+      <g>
+        <rect x="140" y="96" width="175" height="26" fill="#FBEFEF" stroke="#8E1C25" stroke-dasharray="2 2"/>
+        <rect x="140" y="122" width="175" height="26" fill="#FBEFEF" stroke="#8E1C25" stroke-dasharray="2 2"/>
+        <rect x="140" y="148" width="175" height="26" fill="#FBEFEF" stroke="#8E1C25" stroke-dasharray="2 2"/>
+        <rect x="140" y="174" width="175" height="26" fill="#FBEFEF" stroke="#8E1C25" stroke-dasharray="2 2"/>
+        <text class="wt" x="148" y="113">CAZADORAS</text>
+        <text class="wt" x="148" y="139">ABRIGOS | TRENCH</text>
+        <text class="wt" x="148" y="165">VESTIDOS | MONOS</text>
+        <text class="wt" x="148" y="191">BLAZERS</text>
+        <text class="wa" x="296" y="169">✗</text>
+        <text class="wa" x="148" y="217">✗ no tiene destino, y se ve igual que los demás</text>
+      </g>
+      <text class="wa" x="14" y="245">Área de clic 5,1× el ancho del texto.</text>
+      <text class="wa" x="14" y="259">0 px de separación: las zonas se tocan.</text>
+      <text class="wa" x="14" y="273">Cursor en «mano» de forma continua:</text>
+      <text class="wa" x="14" y="287">no hay señal de dónde termina cada botón.</text>
+      <text class="wa" x="14" y="301">Nivel 1 y nivel 2 usan reglas opuestas.</text>
+
+      <!-- DESPUES -->
+      <text class="wh" x="390" y="12" fill="#00174F">DESPUÉS</text>
+      <rect x="390" y="22" width="330" height="290" fill="#fff" stroke="#D8DAD6"/>
+      <!-- barra persistente -->
+      <rect x="390" y="22" width="330" height="26" fill="#EEF1F7" stroke="#D8DAD6"/>
+      <text class="wt" x="402" y="39">Mujer</text><text class="wt" x="440" y="39">Hombre</text>
+      <text class="wt" x="490" y="39">Niños</text><text class="wt" x="530" y="39">Nuevo</text>
+      <text class="wb" x="576" y="39">← siempre visible</text>
+
+      <g>
+        <rect x="530" y="70" width="120" height="20" fill="none" stroke="#00174F" stroke-dasharray="2 2"/>
+        <text class="wt" x="536" y="84">Casacas</text>
+        <rect x="530" y="96" width="120" height="20" fill="none" stroke="#00174F" stroke-dasharray="2 2"/>
+        <text class="wt" x="536" y="110">Abrigos y trench</text>
+        <rect x="530" y="122" width="120" height="20" fill="#EEF1F7" stroke="#00174F" stroke-dasharray="2 2"/>
+        <text class="wt" x="536" y="136">Vestidos y monos</text>
+        <text class="wt" x="640" y="136">›</text>
+        <rect x="530" y="148" width="120" height="20" fill="none" stroke="#00174F" stroke-dasharray="2 2"/>
+        <text class="wt" x="536" y="162">Blazers</text>
+      </g>
+      <path d="M524 132 L500 132" stroke="#00174F" stroke-width="1"/>
+      <text class="wb" x="404" y="128">despliega, no</text>
+      <text class="wb" x="404" y="140">navega → chevron</text>
+
+      <path d="M655 90 L672 90 M655 96 L672 96" stroke="#00174F" stroke-width="1"/>
+      <text class="wb" x="656" y="112">6 px</text>
+
+      <text class="wb" x="404" y="245">Área de clic ajustada al texto.</text>
+      <text class="wb" x="404" y="259">6 px de separación entre ítems.</text>
+      <text class="wb" x="404" y="273">Chevron  ›  solo en lo que despliega.</text>
+      <text class="wb" x="404" y="287">Una sola regla para los dos niveles.</text>
+      <text class="wb" x="404" y="301">Vocabulario peruano en las etiquetas.</text>
+    </svg>
+  </div>
+
+  <h3>Wireframe 2 · El filtrado: dónde vive el panel</h3>
+  <div class="wf">
+    <svg viewBox="0 0 720 268" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparación del panel de filtros de Zara antes y después del rediseño">
+      <style>
+        .xt{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:10px;fill:#16181D}
+        .xa{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:9px;fill:#8E1C25}
+        .xb{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:9px;fill:#00174F}
+        .xh{font-family:'SF Mono',Menlo,monospace;font-size:9px;letter-spacing:.12em;font-weight:700}
+        .xs{font-family:'SF Mono',Menlo,monospace;font-size:8px;fill:#7C838C}
+      </style>
+      <!-- ANTES -->
+      <text class="xh" x="0" y="12" fill="#8E1C25">ANTES</text>
+      <rect x="0" y="22" width="330" height="200" fill="#fff" stroke="#D8DAD6"/>
+      <text class="xt" x="10" y="42">FILTROS</text>
+      <rect x="6" y="31" width="44" height="14" fill="none" stroke="#8E1C25" stroke-dasharray="2 2"/>
+      <!-- grilla -->
+      <g fill="#F7F7F5" stroke="#E8E9E6">
+        <rect x="60" y="55" width="58" height="66"/><rect x="124" y="55" width="58" height="66"/>
+        <rect x="188" y="55" width="58" height="66"/><rect x="252" y="55" width="58" height="66"/>
+        <rect x="60" y="127" width="58" height="66"/><rect x="124" y="127" width="58" height="66"/>
+        <rect x="188" y="127" width="58" height="66"/><rect x="252" y="127" width="58" height="66"/>
+      </g>
+      <!-- panel superpuesto -->
+      <rect x="224" y="22" width="106" height="200" fill="#FBEFEF" stroke="#8E1C25"/>
+      <text class="xt" x="232" y="42">COLOR</text>
+      <text class="xt" x="232" y="60">TALLA</text>
+      <text class="xt" x="232" y="78">PRECIO</text>
+      <text class="xt" x="232" y="200">VER RESULTADOS</text>
+      <text class="xt" x="316" y="36">✕</text>
+      <!-- flecha de distancia -->
+      <path d="M28 234 L220 234" stroke="#8E1C25" stroke-width="1"/>
+      <path d="M28 231 L28 237 M220 231 L220 237" stroke="#8E1C25" stroke-width="1"/>
+      <text class="xa" x="82" y="248">833 px entre el botón y el panel</text>
+      <text class="xa" x="10" y="262">El panel tapa la grilla que está filtrando. Se abre a la izquierda, se cierra a la derecha.</text>
+
+      <!-- DESPUES -->
+      <text class="xh" x="390" y="12" fill="#00174F">DESPUÉS</text>
+      <rect x="390" y="22" width="330" height="200" fill="#fff" stroke="#D8DAD6"/>
+      <!-- migas + titulo + conteo -->
+      <text class="xs" x="398" y="36">Inicio / Mujer / Novedades / Talla M</text>
+      <text class="xt" x="398" y="52">NOVEDADES</text>
+      <text class="xs" x="640" y="52">128 productos</text>
+      <!-- columna filtros fija -->
+      <rect x="396" y="60" width="86" height="156" fill="#EEF1F7" stroke="#00174F"/>
+      <text class="xt" x="403" y="74">Filtrado por:</text>
+      <rect x="403" y="80" width="8" height="8" fill="#00174F"/>
+      <text class="xt" x="416" y="88">Talla M</text>
+      <text class="xb" x="403" y="104">Limpiar filtros</text>
+      <text class="xt" x="403" y="126">Color</text>
+      <text class="xt" x="403" y="146">Talla</text>
+      <text class="xt" x="403" y="166">Precio</text>
+      <!-- grilla sin tapar -->
+      <g fill="#F7F7F5" stroke="#E8E9E6">
+        <rect x="494" y="60" width="66" height="74"/><rect x="566" y="60" width="66" height="74"/>
+        <rect x="638" y="60" width="66" height="74"/>
+        <rect x="494" y="140" width="66" height="74"/><rect x="566" y="140" width="66" height="74"/>
+        <rect x="638" y="140" width="66" height="74"/>
+      </g>
+      <text class="xb" x="398" y="240">Filtros y resultados en el mismo campo visual, sin superposición.</text>
+      <text class="xb" x="398" y="254">Conteo en vivo, migas de pan y estado reflejado en la URL.</text>
+    </svg>
+  </div>
+
+  <h3>Wireframe 3 · El control: cómo se ve una talla seleccionada</h3>
+  <div class="wf">
+    <svg viewBox="0 0 720 158" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparación del control de talla de Zara antes y después del rediseño">
+      <style>
+        .yt{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:12px;fill:#16181D;font-weight:300}
+        .ytb{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:12px;fill:#16181D;font-weight:500}
+        .ya{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:9px;fill:#8E1C25}
+        .yb{font-family:'Avenir Next',Helvetica,Arial,sans-serif;font-size:9px;fill:#00174F}
+        .yh{font-family:'SF Mono',Menlo,monospace;font-size:9px;letter-spacing:.12em;font-weight:700}
+        .ys{font-family:'SF Mono',Menlo,monospace;font-size:8px;fill:#7C838C}
+      </style>
+      <text class="yh" x="0" y="12" fill="#8E1C25">ANTES</text>
+      <rect x="0" y="22" width="330" height="94" fill="#fff" stroke="#D8DAD6"/>
+      <text class="yt" x="20" y="44">S</text>
+      <text class="ytb" x="20" y="66">M</text>
+      <text class="yt" x="20" y="88">L</text>
+      <text class="ya" x="60" y="66">← seleccionada</text>
+      <text class="ya" x="20" y="134">Única diferencia: peso 300 → 500. Mismo color,</text>
+      <text class="ya" x="20" y="148">mismo fondo, sin casilla. Sin conteo de resultados.</text>
+
+      <text class="yh" x="390" y="12" fill="#00174F">DESPUÉS</text>
+      <rect x="390" y="22" width="330" height="94" fill="#fff" stroke="#D8DAD6"/>
+      <rect x="410" y="35" width="11" height="11" fill="none" stroke="#7C838C" stroke-width="1.4"/>
+      <text class="yt" x="432" y="45">S</text><text class="ys" x="640" y="45">42</text>
+      <rect x="410" y="57" width="11" height="11" fill="#00174F" stroke="#00174F" stroke-width="1.4"/>
+      <path d="M412.5 62.5 L415 65.5 L419 59.5" stroke="#fff" stroke-width="1.4" fill="none"/>
+      <text class="ytb" x="432" y="67">M</text><text class="ys" x="640" y="67">128</text>
+      <rect x="410" y="79" width="11" height="11" fill="none" stroke="#7C838C" stroke-width="1.4"/>
+      <text class="yt" x="432" y="89">L</text><text class="ys" x="640" y="89">96</text>
+      <text class="yb" x="410" y="134">Casilla visible, rellena y con marca de verificación.</text>
+      <text class="yb" x="410" y="148">Conteo por opción: se sabe el resultado antes de pulsar.</text>
+    </svg>
+  </div>
+
+  <h3>Las cinco correcciones</h3>
+
+  <div class="rd">
+    <div class="rd-cab">
+      <div class="et">Corrección 1 · Heurística 6 · Reconocimiento en lugar de recordar</div>
+      <div class="titulo">Sacar el catálogo de detrás del ícono y acercar el filtro a su panel</div>
+    </div>
+    <div class="rd-cuerpo">
+      <div class="rd-fila">
+        <span class="et">Por qué ocurre el problema</span>
+        <p>
+          El problema nace de tratar la navegación como si fuera contenido opcional. Al no dibujar ninguna
+          categoría en pantalla, la interfaz convierte la estructura del catálogo en algo que el usuario debe
+          recuperar de memoria en vez de reconocer a la vista, que es justamente la inversión que la heurística 6
+          prohíbe. Lo mismo pasa con el filtro: el disparador y el panel pertenecen a la misma acción pero viven
+          en extremos opuestos, así que la relación causa-efecto deja de ser reconocible y pasa a sostenerse en
+          la memoria de trabajo.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Mejora concreta</span>
+        <p>
+          Añadir una barra de navegación persistente con las cuatro entradas raíz rotuladas —Mujer, Hombre, Niños,
+          Travel Mode— fijada en la cabecera, y mantener el ícono de menú solo para el detalle de subcategorías.
+          En el listado, reemplazar el panel superpuesto por una <strong>columna de filtros fija en el borde
+          izquierdo</strong>, siempre desplegada, en el mismo lugar donde hoy está el rótulo «FILTROS».
+          El botón deja de existir porque el panel deja de esconderse.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Justificación</span>
+        <p>
+          La corrección elimina el problema en su raíz en vez de mitigarlo: no acorta la distancia de 833 px,
+          la reduce a cero al suprimir el desplazamiento. El usuario reconoce dónde está y qué puede acotar sin
+          ejecutar ninguna acción previa, y el costo motriz de abrir y cerrar desaparece del recorrido.
+          Es exactamente la disposición que aplica Tommy Hilfiger, donde la columna ocupa
+          <span class="dato">x = 40–290 px</span> y la grilla empieza en <span class="dato">x = 364 px</span>,
+          sin un solo píxel de superposición.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rd">
+    <div class="rd-cab">
+      <div class="et">Corrección 2 · Heurística 4 · Coherencia y estándares</div>
+      <div class="titulo">Una sola regla de área, y forma distinta para comportamiento distinto</div>
+    </div>
+    <div class="rd-cuerpo">
+      <div class="rd-fila">
+        <span class="et">Por qué ocurre el problema</span>
+        <p>
+          La interfaz usa una sola representación visual para dos comportamientos —navegar y desplegar— y dos
+          reglas geométricas distintas para un mismo tipo de elemento. La heurística 4 se viola en los dos
+          sentidos a la vez: por dentro, porque el mismo sistema se contradice entre sus niveles; y por fuera,
+          porque un cuadrado con borde, que la convención universal reserva para una casilla de verificación,
+          se usa para representar un color.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Mejora concreta</span>
+        <p>
+          Tres cambios acotados: <strong>(a)</strong> marcar con un chevron <strong>›</strong> los ítems que solo
+          despliegan y dejar sin él los que navegan, de modo que el comportamiento se anuncie antes del clic;
+          <strong>(b)</strong> unificar el área de clic en una regla única para los dos niveles del menú
+          —caja ajustada al texto más 8 px de holgura, con 6 px de separación vertical entre ítems contiguos—;
+          <strong>(c)</strong> usar la misma casilla de verificación en todos los grupos del panel de filtros, y
+          desplazar la muestra de color a un círculo, para que el cuadrado quede libre y signifique una sola cosa.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Justificación</span>
+        <p>
+          Cada cambio devuelve una correspondencia uno a uno entre forma y comportamiento, que es lo que la
+          heurística pide. El chevron es el signo que el propio usuario ya interpreta en cualquier menú desplegable.
+          La separación de 6 px introduce un margen de error tolerable: un clic desviado deja de ejecutar la acción
+          del vecino y pasa a no hacer nada, lo que además refuerza la heurística 5, prevención de errores.
+          Y separar la forma del cuadrado de la del círculo elimina la colisión de significados sin quitarle
+          información a nadie.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rd">
+    <div class="rd-cab">
+      <div class="et">Corrección 3 · Heurística 1 · Visibilidad del estado del sistema</div>
+      <div class="titulo">Mostrar la casilla que ya existe y publicar el conteo de resultados</div>
+    </div>
+    <div class="rd-cuerpo">
+      <div class="rd-fila">
+        <span class="et">Por qué ocurre el problema</span>
+        <p>
+          El sistema conoce su estado —la casilla interna está marcada— pero decide no dibujarlo, y lo sustituye
+          por el cambio visual más débil disponible: doscientas unidades de peso tipográfico. La heurística 1
+          pide retroalimentación apropiada, y «apropiada» significa proporcional a la importancia del cambio.
+          Además, el sistema conoce cuántos productos quedaron tras filtrar y tampoco lo publica, de modo que
+          retiene el dato que da sentido a la acción.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Mejora concreta</span>
+        <p>
+          Dibujar la casilla que ya existe en el documento: cuadrado de 16 px con borde de 2 px, y en estado
+          seleccionado relleno más marca de verificación. Añadir un <strong>bloque «Filtrado por:»</strong> en la
+          cabecera de la columna con los filtros activos como fichas removibles. Publicar el
+          <strong>número de resultados</strong> junto al título de la página, actualizado en vivo, y el número
+          de prendas disponibles al costado de cada opción, como muestra el Wireframe 3.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Justificación</span>
+        <p>
+          La casilla convierte una diferencia de grado —más o menos negrita— en una diferencia de forma, que se
+          percibe aunque el usuario no estuviera mirando ese punto exacto y que sobrevive al zoom, al bajo
+          contraste y a la lectura asistida. El conteo por opción resuelve un problema que ninguna otra corrección
+          alcanza: permite anticipar el resultado <em>antes</em> de pulsar, con lo que el usuario deja de elegir a
+          ciegas y no cae en el filtro que devuelve cero productos. El costo de implementación es prácticamente
+          nulo, porque tanto el estado de la casilla como el número de resultados ya existen en el sistema.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rd">
+    <div class="rd-cab">
+      <div class="et">Corrección 4 · Heurística 2 · Coincidencia entre el sistema y el mundo real</div>
+      <div class="titulo">Localizar el vocabulario al español peruano</div>
+    </div>
+    <div class="rd-cuerpo">
+      <div class="rd-fila">
+        <span class="et">Por qué ocurre el problema</span>
+        <p>
+          La tienda peruana hereda el árbol de categorías de la matriz española sin adaptar las etiquetas, y deja
+          además a la vista la nomenclatura interna del sistema en las direcciones y en los textos alternativos.
+          La heurística 2 pide hablar el idioma del usuario con conceptos que le resulten familiares; el sitio
+          habla el idioma de la casa matriz y el del equipo que lo construyó.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Mejora concreta</span>
+        <p>
+          Reetiquetar las categorías al uso peruano manteniendo el término original como sinónimo de búsqueda,
+          para no romper a quien ya lo conoce: <em>Cazadoras → Casacas</em>, <em>Punto → Chompas</em>,
+          <em>Camisetas → Polos</em>, <em>Cesta → Carrito</em>. Reemplazar las direcciones con identificadores
+          internos por rutas legibles del tipo <span class="dato">/mujer/ropa/vestidos</span>. Sustituir los
+          textos alternativos «Moverse a PROYECTO» y «Moverse a MAN» por descripciones del destino real.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Justificación</span>
+        <p>
+          Es la corrección más barata del conjunto —solo cambia texto— y la que más directamente elimina trabajo
+          mental: suprime el paso de traducción entre la palabra que el comprador tiene en la cabeza y la que la
+          interfaz exige reconocer. Mantener el término peninsular como sinónimo de búsqueda evita el efecto
+          secundario de dejar sin resultados a quien escriba «cazadora». Las rutas legibles cumplen además una
+          función de la heurística 1: la dirección pasa a decirle al usuario dónde está.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rd">
+    <div class="rd-cab">
+      <div class="et">Corrección 5 · Heurística 3 · Control y libertad del usuario</div>
+      <div class="titulo">Llevar el estado del filtro a la URL y cerrar donde se abrió</div>
+    </div>
+    <div class="rd-cuerpo">
+      <div class="rd-fila">
+        <span class="et">Por qué ocurre el problema</span>
+        <p>
+          El filtro se aplica solo en la memoria de la página y no queda registrado como un estado del sistema.
+          Como el navegador no se entera de que algo cambió, el mecanismo de deshacer que el usuario ya domina
+          —el botón Atrás— queda inutilizado justo donde más falta hace. La heurística 3 pide salidas de
+          emergencia señalizadas; aquí la salida que la persona ya conoce lo expulsa de la página en lugar de
+          revertir su última acción.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Mejora concreta</span>
+        <p>
+          Reflejar cada filtro aplicado en la URL, sea como segmento de ruta o como parámetro legible
+          —<span class="dato">/mujer/novedades?talla=m&amp;color=azul</span>—, empujando cada cambio al historial
+          del navegador. Añadir un enlace <strong>«Limpiar filtros»</strong> visible en la cabecera de la columna,
+          fichas removibles por filtro individual y, mientras el panel siga siendo desplegable en pantallas
+          pequeñas, ubicar el cierre <strong>en el mismo borde por el que se abrió</strong>.
+        </p>
+      </div>
+      <div class="rd-fila sol">
+        <span class="et">Justificación</span>
+        <p>
+          Poner el estado en la URL resuelve tres problemas con un solo cambio, y ninguno requiere inventar
+          controles nuevos: el botón Atrás pasa a deshacer un filtro a la vez, el resultado se vuelve compartible
+          y guardable en marcadores, y recargar la página deja de borrar el trabajo hecho. Es reversibilidad por
+          construcción en lugar de reversibilidad como función añadida. Las fichas removibles cubren el caso
+          intermedio —quitar un criterio sin perder los otros— que ni el botón Atrás ni «Limpiar filtros»
+          resuelven por sí solos.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="nota">
+    <span class="et">Uso de inteligencia artificial</span>
+    <p>
+      Las observaciones iniciales sobre el menú y el filtro de Zara son nuestras, hechas navegando el sitio.
+      Usamos Claude (Anthropic) en tres puntos concretos del proceso. <strong>Primero</strong>, para instrumentar
+      la evaluación: en lugar de estimar tamaños sobre las capturas, consultamos el DOM y los estilos computados
+      de cada elemento para obtener las cifras que aparecen en el informe —áreas de clic, distancias, pesos
+      tipográficos, colores y estado real de los controles—, y para verificar en vivo cuáles ítems del menú tienen
+      destino y cuáles no. <strong>Segundo</strong>, esa instrumentación nos hizo corregir una de nuestras
+      observaciones: habíamos anotado que el cursor no cambiaba a forma de mano en el menú, y la medición mostró
+      lo contrario y a la vez algo más preciso —el cursor se mantiene en «mano» de manera continua a lo largo de
+      toda la columna, sin volver nunca a la flecha, y por eso no señala dónde termina un botón y empieza el
+      siguiente—. <strong>Tercero</strong>, para redactar y diagramar el documento y los tres wireframes.
+      Las decisiones de qué heurística aplica a cada hallazgo y qué corrección proponer las tomamos nosotros.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Conclusión</h2>
+  <p>
+    Las dos tiendas resuelven el mismo problema para el mismo comprador, y la diferencia no está en cuánta
+    información muestran sino en <strong>si la muestran cuando hace falta</strong>. Tommy Hilfiger no es más
+    recargado que Zara: es igual de sobrio, pero pone las categorías donde se leen, el filtro junto a lo que
+    filtra y el estado donde se ve. Zara paga su minimalismo con trabajo del usuario —recordar dónde está el
+    menú, cruzar 833 px, adivinar si un clic tendrá destino, deducir de un peso tipográfico si su filtro se
+    aplicó— y ese trabajo no aparece en ninguna captura, solo en el tiempo de quien compra.
+  </p>
+  <p>
+    Vale la pena subrayar lo que las cinco correcciones tienen en común: ninguna exige rehacer la identidad
+    visual de Zara ni renunciar a la fotografía a pantalla completa. Cuatro de las cinco se resuelven cambiando
+    de sitio un control, dibujando un elemento que ya existe en el código o reescribiendo una etiqueta.
+    Eso es lo que hace útil la evaluación heurística: convierte una molestia difusa en una lista de defectos
+    localizados, medibles y baratos de arreglar.
+  </p>
+</section>
+
+<section>
+  <h2>Referencias</h2>
+  <ol class="refs">
+    <li>Nielsen, J. (1994, act. 2024). <em>10 Usability Heuristics for User Interface Design</em>. Nielsen Norman Group. <a href="https://www.nngroup.com/articles/ten-usability-heuristics/">nngroup.com/articles/ten-usability-heuristics</a></li>
+    <li>Nielsen, J. (1994). <em>Enhancing the explanatory power of usability heuristics</em>. Proceedings of CHI '94, 152–158.</li>
+    <li>Interaction Design Foundation. <em>Heuristics</em> (compendio de literatura). <a href="https://www.interaction-design.org/literature/topics/heuristics">interaction-design.org/literature/topics/heuristics</a></li>
+    <li>Shneiderman, B. <em>Eight Golden Rules of Interface Design</em>. Interaction Design Foundation. <a href="https://www.interaction-design.org/literature/article/shneiderman-s-eight-golden-rules-will-help-you-design-better-interfaces">interaction-design.org/literature/article/shneiderman-s-eight-golden-rules</a></li>
+    <li>Organización Internacional de Normalización. <em>ISO 9241-210: Ergonomía de la interacción hombre-sistema — Diseño centrado en el usuario</em>.</li>
+    <li>Chambilla, T. (2026). <em>Diseño Centrado en el Usuario y Usabilidad</em>. Material del curso CS2H01, UTEC.</li>
+    <li>Zara Perú. <a href="https://www.zara.com/pe/">zara.com/pe</a> — consultado el 19 de agosto de 2026.</li>
+    <li>Tommy Hilfiger Perú. <a href="https://pe.tommy.com/">pe.tommy.com</a> — consultado el 19 de agosto de 2026.</li>
+  </ol>
+</section>
+
+<div class="pie">
+  CS2H01 · Laboratorio 2.1 · Heurísticas de usabilidad · Mediciones tomadas el 19/08/2026 en Chrome, ventana de 1280 × 823 px
+</div>

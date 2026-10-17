@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Examen Parcial IHC · Grupo 6 · Justicia Cercana</title>
+<style>
+@page { size: A4; margin: 20mm 22mm 18mm 22mm;
+  @bottom-left { content: "CS2H01 Interacción Humano Computador · Examen Parcial · Grupo 6"; font: 8pt Arial, sans-serif; color: #6b7785; }
+  @bottom-right { content: counter(page); font: 8pt Arial, sans-serif; color: #6b7785; } }
+@page :first { margin: 25mm 30mm; @bottom-left { content: none; } @bottom-right { content: none; } }
+:root { --ink:#18232e; --ink2:#4b5967; --line:#cfd8e1; --soft:#eef3f7; --acc:#164c70; --accsoft:#e0ecf5; --note:#d0215f; --warn:#8a4f00; --warnsoft:#fff0cc; --ok:#1a6e42; --oksoft:#dff2e6; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; font: 11pt/1.5 Arial, Helvetica, sans-serif; color: var(--ink); background: #fff; }
+p { margin: 0 0 6pt; text-align: justify; }
+h1, h2, h3 { font-family: Arial, Helvetica, sans-serif; color: var(--acc); line-height: 1.2; margin: 0; }
+h1 { break-inside: avoid; font-size: 17pt; margin: 16pt 0 8pt; padding-bottom: 4pt; border-bottom: 2pt solid var(--acc); break-after: avoid; }
+h2 { font-size: 12.5pt; margin: 12pt 0 5pt; break-after: avoid; }
+h3 { font-size: 11pt; margin: 8pt 0 4pt; color: var(--ink); break-after: avoid; }
+section.pb { break-before: page; } section.pb > h1:first-child { margin-top: 0; }
+ul { margin: 0 0 6pt; padding-left: 16pt; } li { margin-bottom: 2pt; }
+a { color: var(--acc); }
+b, strong { font-weight: 700; }
+.muted { color: var(--ink2); }
+.small { font-size: 9pt; line-height: 1.35; }
+
+/* ---------- Carátula (formato UTEC) ---------- */
+.cover { height: 247mm; display: flex; flex-direction: column; align-items: center; text-align: center; font-family: "Times New Roman", Times, serif; color: #000; }
+.cover .uni { font-weight: 700; font-size: 14pt; letter-spacing: .01em; }
+.cover img { width: 76mm; margin-top: 2mm; }
+.cover .curso { margin-top: 20mm; font-size: 14pt; line-height: 1.35; }
+.cover .titulo { margin-top: 10mm; font-size: 18pt; font-weight: 700; line-height: 1.3; }
+.cover .grupo { margin-top: 20mm; font-size: 13pt; font-weight: 700; }
+.cover .alumnos { margin-top: 3mm; font-size: 12pt; line-height: 1.6; }
+.cover .asesor { margin-top: 20mm; font-size: 14pt; line-height: 1.35; }
+.cover .asesor span { font-size: 12pt; }
+.cover .fecha { margin-top: 8mm; font-size: 14pt; }
+
+/* ---------- Bloques ---------- */
+.lead { font-size: 11pt; background: var(--soft); border-left: 3pt solid var(--acc); padding: 7pt 10pt; margin: 0 0 8pt; text-align: left; }
+.proto { display: grid; grid-template-columns: 1fr 1fr; gap: 6pt 12pt; border: 1pt solid var(--line); border-radius: 6pt; padding: 8pt 10pt; margin: 6pt 0 10pt; font-size: 9.5pt; line-height: 1.4; }
+.proto b { color: var(--acc); }
+.legend-note { display: inline-flex; align-items: center; gap: 4pt; }
+.dot { display: inline-block; background: var(--note); color: #fff; border-radius: 10pt; padding: 0 5pt; font-size: 8pt; font-weight: 700; line-height: 13pt; }
+table { width: 100%; border-collapse: collapse; margin: 4pt 0 10pt; font-size: 8.8pt; line-height: 1.33; }
+th, td { border: .6pt solid var(--line); padding: 3.5pt 5pt; vertical-align: top; text-align: left; }
+th { background: var(--acc); color: #fff; font-weight: 700; }
+tr { break-inside: avoid; }
+thead { display: table-header-group; }
+td.id { font-weight: 700; color: var(--note); white-space: nowrap; }
+td.f b { color: var(--acc); }
+tbody tr:nth-child(even) td { background: #f7f9fb; }
+.dec col.c1 { width: 5%; } .dec col.c2 { width: 29%; } .dec col.c3 { width: 24%; } .dec col.c4 { width: 19%; } .dec col.c5 { width: 23%; }
+.fields col.c1 { width: 26%; } .fields col.c2 { width: 18%; } .fields col.c3 { width: 56%; }
+.req { display: inline-block; font-size: 7.8pt; font-weight: 700; padding: 0 4pt; border-radius: 3pt; background: var(--accsoft); color: var(--acc); }
+.opt { display: inline-block; font-size: 7.8pt; font-weight: 700; padding: 0 4pt; border-radius: 3pt; background: #eef0f2; color: #4b5967; border: .5pt solid var(--line); }
+.auto { display: inline-block; font-size: 7.8pt; font-weight: 700; padding: 0 4pt; border-radius: 3pt; background: var(--oksoft); color: var(--ok); }
+.new { font-size: 7.5pt; font-weight: 700; color: var(--note); }
+
+figure { margin: 0 0 8pt; break-inside: avoid; }
+.states, .flow, .map, .proto, .lead { break-inside: avoid; }
+.refs { font-size: 9pt; }
+figure img { width: 100%; display: block; border: .6pt solid var(--line); border-radius: 4pt; }
+figcaption { font-size: 8.6pt; line-height: 1.3; color: var(--ink2); margin-top: 3pt; text-align: left; }
+figcaption b { color: var(--ink); }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8pt 10pt; }
+.g2 > * { min-width: 0; }
+
+/* diagramas en HTML */
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 3pt; margin: 2pt 0 7pt; font-size: 8.6pt; }
+.flow .t { font-weight: 700; color: var(--acc); width: 100%; font-size: 9pt; margin-bottom: 1pt; }
+.flow span.s { border: .8pt solid var(--acc); background: var(--accsoft); color: var(--acc); border-radius: 4pt; padding: 1.5pt 5pt; font-weight: 700; }
+.flow span.s.ok { border-color: var(--ok); background: var(--oksoft); color: var(--ok); }
+.flow span.s.w { border-color: var(--warn); background: var(--warnsoft); color: var(--warn); }
+.flow span.a { color: var(--ink2); font-weight: 700; }
+.map { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5pt; margin: 4pt 0 10pt; font-size: 8.4pt; line-height: 1.3; }
+.map .root { grid-column: 1 / -1; text-align: center; background: var(--acc); color: #fff; font-weight: 700; border-radius: 5pt; padding: 4pt; }
+.map .col { border: .8pt solid var(--line); border-radius: 5pt; padding: 5pt 6pt; background: #fff; }
+.map .col b { display: block; color: var(--acc); font-size: 9pt; margin-bottom: 2pt; }
+.map .col ul { padding-left: 10pt; margin: 0; }
+.states { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 4pt 0 10pt; font-size: 8.6pt; line-height: 1.3; }
+.states > div { position: relative; border: 1pt solid var(--line); border-radius: 5pt; padding: 5pt 6pt; margin-right: 12pt; background: #fff; }
+.states > div:not(:last-child)::after { content: "→"; position: absolute; right: -11pt; top: 40%; color: var(--ink2); font-weight: 700; }
+.states b { display: block; font-size: 9pt; }
+.states .w { border-color: var(--warn); background: var(--warnsoft); } .states .w b { color: var(--warn); }
+.states .i { border-color: #1b57a0; background: #e3eefb; } .states .i b { color: #1b57a0; }
+.states .o { border-color: var(--ok); background: var(--oksoft); } .states .o b { color: var(--ok); }
+.states .s { border-color: var(--acc); } .states .s b { color: var(--acc); }
+.matrix td { font-size: 8.4pt; }
+.refs p { text-align: left; padding-left: 16pt; text-indent: -16pt; font-size: 9pt; line-height: 1.35; margin-bottom: 3pt; }
+</style>
+</head>
+<body>
+
+<!-- ======================= CARÁTULA ======================= -->
+<div class="cover">
+  <div class="uni">UNIVERSIDAD DE INGENIERÍA Y TECNOLOGÍA</div>
+  <img src="logo-utec.png" alt="Logotipo de UTEC">
+  <div class="curso"><b>Curso:</b><br>CS2H01 – Interacción Humano Computador</div>
+  <div class="titulo">EXAMEN PARCIAL:<br>Justicia Cercana – prototipo web para jueces de paz</div>
+  <div class="grupo">Grupo 6</div>
+  <div class="alumnos">
+    Llerena Silva, Nicolás Alejandro<br>
+    Gonzalez Kremer, Mauricio<br>
+    Rojas Cruz, Jose Alvaro
+  </div>
+  <div class="asesor">Profesor:<br><span>Chambilla Aquino, Teófilo</span></div>
+  <div class="fecha">Lima, 29 de setiembre de 2026</div>
+</div>
+
+<!-- ======================= 1. RESUMEN ======================= -->
+<section class="pb">
+<h1>1. Resumen de la propuesta</h1>
+<p class="lead"><b>Justicia Cercana</b> es una aplicación web para tableta de 10" que reemplaza los cuadernos y formularios sueltos del juzgado de paz por tres módulos (casos, actuaciones notariales y agenda). Se diseñó con un criterio: <b>la jueza nunca debe preguntarse si su información se guardó</b>. Todo se registra primero en la tableta, la pantalla indica siempre qué falta enviar y la sincronización se confirma con fecha, hora y constancia.</p>
+
+<div class="proto">
+  <div><b>Prototipo interactivo (alta fidelidad).</b> HTML, CSS y JavaScript en un solo archivo, diseñado a 1280 × 800 px (resolución CSS de una tableta Android de 10" en horizontal). Se completan de verdad las tareas de los tres módulos: formularios, validaciones, búsqueda, edición, agenda y sincronización.</div>
+  <div><b>Cómo abrirlo.</b> Enlace: <a href="https://claude.ai/artifact/YRREBJK1EHizi6nC51naka">claude.ai/artifact/YRREBJK1EHizi6nC51naka</a>, o el archivo <i>prototipo/index.html</i> en Chrome. Los datos se guardan en el almacenamiento del navegador (sobreviven a recargar). El interruptor <i>«Internet: Sí/No»</i> del menú existe solo para probar el prototipo.</div>
+</div>
+
+<p><b>Cómo leer este documento.</b> Cada decisión de diseño tiene un código <span class="dot">D1</span>–<span class="dot">D31</span>. El mismo código aparece como marca rosada sobre las capturas y como fila en las tablas de justificación. Cada fila indica el <b>principio, la heurística o el factor humano</b> del curso que aplica (Chambilla, 2026; Nielsen, 2024; Norman, 2013), la <b>necesidad de la jueza</b> que atiende y <b>cómo facilita la interacción o previene errores</b>. En la sección 9 se relaciona cada criterio de la rúbrica con la parte del documento que lo cubre.</p>
+
+<h1>2. Análisis del caso</h1>
+<h2>2.1 Usuaria y contexto de uso</h2>
+<p><b>Persona:</b> Elena Villca Torres (ficticia), 54 años, jueza de paz de San Juan de Pampa. Usa WhatsApp en su celular, pero nunca usó un sistema de registro. Atiende a las personas en el local del juzgado y en visitas a comunidades que están a una o dos horas. Hoy anota en cuadernos de actas y formularios impresos. Mientras registra tiene a las personas delante (<b>atención dividida</b>) y la interrumpen con frecuencia. Pasa horas sin Internet y sincroniza cuando viaja a la sede judicial.</p>
+<table>
+  <colgroup><col style="width:30%"><col style="width:48%"><col style="width:22%"></colgroup>
+  <thead><tr><th>Condición real del caso</th><th>Implicancia de diseño</th><th>Decisiones</th></tr></thead>
+  <tbody>
+    <tr><td>Poca experiencia con aplicaciones complejas</td><td>Lenguaje llano, tareas guiadas paso a paso, nada escondido en menús, acciones reversibles</td><td>D2, D4, D5, D12</td></tr>
+    <tr><td>Conectividad limitada: horas sin Internet</td><td>Diseño <i>offline-first</i>: todo se guarda en la tableta; estado de conexión siempre visible; sincronización manual con confirmación</td><td>D1, D6, D28–D30</td></tr>
+    <tr><td>Tableta táctil de 10"</td><td>Objetivos táctiles ≥ 56 px, texto de 18 px, maestro-detalle aprovechando la pantalla horizontal</td><td>D3, D23</td></tr>
+    <tr><td>Registra mientras atiende; la interrumpen</td><td>Borrador automático, resumen visible de lo registrado, pasos cortos</td><td>D5, D6</td></tr>
+    <tr><td>Datos duplicados, registros difíciles de encontrar, fechas olvidadas</td><td>Detección de personas y trámites repetidos, buscador único, bandeja «Requieren su atención», citas que se agendan solas</td><td>D9, D13, D15, D16</td></tr>
+    <tr><td>Personas sin DNI, sin celular o que hablan quechua</td><td>Obligatorio y opcional explícitos; opción «No tiene»; idioma de atención</td><td>D7</td></tr>
+    <tr><td>Acceso desde una computadora con Internet</td><td>La misma aplicación web se adapta a la computadora</td><td>D31</td></tr>
+  </tbody>
+</table>
+
+<h2>2.2 Proceso seguido (DCU)</h2>
+<p>Seguimos las cuatro actividades del diseño centrado en el usuario (Benyon, 2019): <b>(1)</b> identificar necesidades a partir del caso y de la situación de uso (tabla anterior); <b>(2)</b> comparar alternativas, por ejemplo un formulario largo frente a pasos cortos (se eligió pasos) o una sincronización automática frente a una manual confirmada (se eligió la confirmada, D30); <b>(3)</b> construir la versión interactiva; y <b>(4)</b> definir cómo evaluarla (sección 9.3).</p>
+</section>
+
+<!-- ======================= 3. ARQUITECTURA Y FLUJOS ======================= -->
+<section>
+<h1>3. Estructura y flujos</h1>
+<h2>3.1 Mapa de la aplicación</h2>
+<div class="map">
+  <div class="root">Barra superior en todas las pantallas: estado de Internet y cambios guardados en la tableta (D1) · Menú lateral fijo (D2)</div>
+  <div class="col"><b>Inicio</b><ul><li>3 accesos grandes</li><li>Buscador único</li><li>Requieren su atención</li><li>Hoy y mañana</li><li>Qué falta enviar</li></ul></div>
+  <div class="col"><b>Casos</b><ul><li>Lista + filtros por estado</li><li>Nuevo caso (4 pasos)</li><li>Detalle: personas, seguimiento, datos, cita, documentos</li><li>Editar · Registrar avance</li></ul></div>
+  <div class="col"><b>Actuaciones notariales</b><ul><li>Lista + filtros</li><li>Nueva actuación (4 pasos)</li><li>Detalle: personas, atención, libro y folio</li><li>Actualizar estado</li></ul></div>
+  <div class="col"><b>Agenda</b><ul><li>Mes + detalle del día</li><li>Próximos 7 días</li><li>Nueva actividad</li><li>Marcar realizada · Cancelar</li></ul></div>
+  <div class="col"><b>Sincronizar</b><ul><li>Qué falta enviar</li><li>Cómo sincronizar sin Internet</li><li>Progreso y resultado</li><li>Última sincronización</li></ul></div>
+</div>
+
+<h2>3.2 Flujos de las tareas principales</h2>
+<div class="flow"><span class="t">Registrar un conflicto (Figs. 3–6)</span><span class="s">Inicio · «Registrar un caso»</span><span class="a">→</span><span class="s">1 Personas (DNI → datos existentes)</span><span class="a">→</span><span class="s">2 El caso</span><span class="a">→</span><span class="s">3 Cita y documentos</span><span class="a">→</span><span class="s">4 Revisar</span><span class="a">→</span><span class="s ok">Guardado: código C-2026-0014 + cita en agenda</span></div>
+<div class="flow"><span class="t">Consultar y actualizar un caso (Figs. 2, 7–9)</span><span class="s">Casos · filtro «Requieren atención»</span><span class="a">→</span><span class="s">Detalle</span><span class="a">→</span><span class="s">Editar / Registrar avance</span><span class="a">→</span><span class="s w">«Está modificando…»</span><span class="a">→</span><span class="s ok">«Cambios guardados en la tableta» + Deshacer</span></div>
+<div class="flow"><span class="t">Actuación notarial (Figs. 10–13)</span><span class="s">«Registrar actuación notarial»</span><span class="a">→</span><span class="s">1 Tipo + requisitos</span><span class="a">→</span><span class="s">2 Personas</span><span class="a">→</span><span class="s w">¿Trámite repetido?</span><span class="a">→</span><span class="s">3 Detalle y resultado</span><span class="a">→</span><span class="s">4 Revisar</span><span class="a">→</span><span class="s ok">Guardado: código N-2026-0024</span></div>
+<div class="flow"><span class="t">Revisar la semana y agendar (Figs. 14–16)</span><span class="s">Agenda: mes + día</span><span class="a">→</span><span class="s">Nueva actividad</span><span class="a">→</span><span class="s w">Aviso de cruce de horario</span><span class="a">→</span><span class="s">Agendar</span><span class="a">→</span><span class="s ok">Día seleccionado con la actividad resaltada</span></div>
+<div class="flow"><span class="t">Sincronizar (Figs. 17–21)</span><span class="s w">Sin Internet: «3 cambios guardados en la tableta»</span><span class="a">→</span><span class="s">Llega a la sede: «Hay conexión… Sincronizar ahora»</span><span class="a">→</span><span class="s">Enviando 3 de 8</span><span class="a">→</span><span class="s ok">Completa: fecha, hora, constancia</span><span class="a">|</span><span class="s w">Parcial: cuál falló y «Reintentar»</span></div>
+
+<h2>3.3 La situación de uso en el prototipo</h2>
+<table>
+  <colgroup><col style="width:17%"><col style="width:53%"><col style="width:30%"></colgroup>
+  <thead><tr><th>Momento</th><th>Qué hace la jueza</th><th>Pantallas</th></tr></thead>
+  <tbody>
+    <tr><td>Inicio de la jornada</td><td>Abre la aplicación sin Internet. Ve qué casos requieren atención y qué tiene hoy y mañana.</td><td>Fig. 1</td></tr>
+    <tr><td>Mañana: conflicto vecinal</td><td>Registra a las dos personas (una ya existía y se reutilizan sus datos), el tipo y el motivo, y agenda la audiencia. Obtiene el código del caso.</td><td>Figs. 3–6</td></tr>
+    <tr><td>Solicitud notarial</td><td>Elige «Constancia de posesión», ve los requisitos y la aplicación le advierte que esa persona ya tiene una constancia igual.</td><td>Figs. 10–13</td></tr>
+    <tr><td>Fin del día</td><td>Revisa la semana en la agenda y agenda una reunión; la aplicación le avisa del cruce con una audiencia.</td><td>Figs. 14–16</td></tr>
+    <tr><td>Sin conexión</td><td>Todo lo registrado queda «En la tableta · por enviar» y la barra lo indica en todo momento.</td><td>Figs. 1, 6, 17</td></tr>
+    <tr><td>En la sede judicial</td><td>Con Internet sincroniza y recibe la confirmación. Si algo falla, sabe qué no se envió y lo reintenta.</td><td>Figs. 18–21</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ======================= 4. DECISIONES TRANSVERSALES ======================= -->
+<section>
+<h1>4. Decisiones que aplican a toda la aplicación</h1>
+<figure><img src="capturas/01-inicio.png" alt="Pantalla de inicio sin conexión"><figcaption><b>Fig. 1 · Inicio sin Internet.</b> La barra superior (D1) resume el estado. El menú (D2) replica las tareas del juzgado. «Requieren su atención» (D13) y «Hoy y mañana» (D25) evitan olvidar fechas. La franja inferior dice qué falta enviar (D28).</figcaption></figure>
+<table class="dec">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+  <thead><tr><th>#</th><th>Decisión de diseño</th><th>Principio · heurística · factor humano</th><th>Necesidad que atiende</th><th>Cómo facilita o previene errores</th></tr></thead>
+  <tbody>
+    <tr><td class="id">D1</td><td>Barra superior siempre visible con el estado de conexión y los cambios pendientes («Sin Internet · 3 cambios guardados en la tableta»), con color, ícono y texto. Al tocarla se abre Sincronizar.</td><td class="f"><b>H1</b> Visibilidad del estado del sistema; Norman: <b>visibilidad</b> y <b>feedback</b>; <b>visión</b>: arriba, dentro del foco y no en la periferia inferior.</td><td>Saber si su trabajo está a salvo sin entender qué es «offline» o «sincronizar».</td><td>Evita que crea que perdió datos o que ya los envió. El contador le recuerda que debe sincronizar.</td></tr>
+    <tr><td class="id">D2</td><td>Menú lateral fijo con 5 destinos (ícono + palabra) que corresponden a las tareas del juzgado, y en Inicio 3 accesos grandes a las tareas más frecuentes.</td><td class="f"><b>Compatibilidad</b> con tareas y flujo de trabajo; <b>memorabilidad</b> por ubicación consistente; <b>H6</b> reconocer antes que recordar; <b>H4</b>.</td><td>Pasar de un conflicto a un trámite y a la agenda sin perderse.</td><td>No hay menús ocultos. Cada módulo corresponde a uno de los cuadernos que ya usa (<b>modelo mental</b>).</td></tr>
+    <tr><td class="id">D3</td><td>Objetivos táctiles de al menos 56 px con 8 px de separación, texto base de 18 px, tipografía Atkinson Hyperlegible, contraste de 4.5:1 o más y sin textos largos en MAYÚSCULAS.</td><td class="f"><b>Tacto</b> (la yema del dedo mide unos 10 mm); <b>visión</b> (edad, luz del exterior); <b>velocidad de lectura</b>, que depende de la forma de la palabra; WCAG 2.2.</td><td>Uso con los dedos en una tableta de 10", a veces al aire libre y por personas mayores.</td><td>Reduce los toques fallidos. La fuente distingue 1, l, I y 0, O, algo clave al leer DNI y códigos.</td></tr>
+    <tr><td class="id">D4</td><td>Lenguaje llano y propio del juzgado: «Guardado en la tableta», «¿Qué trámite necesita la persona?», «Invitado» en vez de «demandado». Sin jerga técnica.</td><td class="f"><b>H2</b> Coincidencia con el mundo real; <b>modelo mental</b>; compatibilidad con la usuaria.</td><td>Poca afinidad con la tecnología; el caso pide evitar términos jurídicos innecesarios.</td><td>Reduce dudas y malas interpretaciones de los rótulos.</td></tr>
+    <tr><td class="id">D5</td><td>Los registros se hacen en 4 pasos, con «Paso 2 de 4». Los pasos ya hechos quedan en verde y se pueden reabrir, y un panel lateral muestra «Lo que lleva registrado».</td><td class="f"><b>Sencillez</b>: divulgación progresiva; <b>H1</b>; <b>H6</b>; <b>H8</b>; <b>memoria de corto plazo</b>; <b>atención dividida</b>.</td><td>Registra mientras atiende a las personas y la interrumpen.</td><td>Cada formulario es corto. Al retomar sabe en qué paso está y qué le falta.</td></tr>
+    <tr><td class="id">D6</td><td>El borrador se guarda solo con cada campo («Guardado en la tableta a las 10:42»). Al volver, un aviso dice «Continúa el borrador que dejó».</td><td class="f"><b>Error humano</b>: que tenga consecuencias mínimas; <b>flexibilidad</b>: proteger del error; <b>H3</b>.</td><td>Batería baja, cierres accidentales, tener que salir a atender a alguien.</td><td>No se pierde lo escrito aunque cierre o apague la tableta.</td></tr>
+    <tr><td class="id">D7</td><td>Cada campo dice «Obligatorio» u «Opcional». Los datos que en una zona rural pueden faltar ofrecen «No tiene» y dejan continuar.</td><td class="f"><b>H5</b> Prevención de errores; <b>visibilidad</b>; <b>flexibilidad</b> ante las diferencias entre usuarios.</td><td>Personas sin DNI o sin celular (lo pide el caso).</td><td>Evita que el formulario se trabe o que se inventen datos para completarlo.</td></tr>
+    <tr><td class="id">D8</td><td>Cada campo se valida al salir de él, con un mensaje que dice cómo corregir («El DNI tiene 8 números. Escribió 7»). Se usa teclado numérico y, al continuar, aparece un resumen de errores con enlaces a cada campo.</td><td class="f"><b>H9</b> Ayudar a reconocer, diagnosticar y recuperarse de errores; <b>H5</b>; <b>affordance</b> del teclado; <b>feedback</b>.</td><td>Evitar DNI y celulares mal escritos.</td><td>El error se detecta a tiempo, se encuentra rápido y se corrige sin perder lo demás.</td></tr>
+    <tr><td class="id">D9</td><td>Detección de duplicados: si el DNI o el nombre ya existe, la aplicación ofrece «Sí, usar sus datos». En los trámites notariales avisa si esa persona ya pidió el mismo trámite en los últimos 90 días.</td><td class="f"><b>H5</b>; <b>H6</b>; eficiencia (componente de la usabilidad).</td><td>Hoy los datos se duplican entre cuadernos (problema central del caso).</td><td>Cada persona tiene un solo registro, no se repiten trámites y se escribe menos.</td></tr>
+    <tr><td class="id">D10</td><td>Al guardar aparece una confirmación con un ✓ grande, el código generado (C-2026-0014) para anotar, dónde quedó guardado y los siguientes pasos posibles.</td><td class="f">Norman: <b>feedback</b>; <b>H1</b>; <b>visibilidad</b>.</td><td>Saber que quedó registrado y tener el código para el cuaderno o para la persona.</td><td>Evita que guarde dos veces por duda y une el registro digital con el cuaderno.</td></tr>
+    <tr><td class="id">D11</td><td>Los estados se muestran con color, ícono y palabra (En trámite, Concluido, Derivado, Pendiente…), nunca solo con color.</td><td class="f"><b>Visión del color</b>: los conos son menos sensibles al azul y cerca del 8 % de los varones tiene daltonismo; <b>Gestalt</b>: similitud; <b>H4</b>.</td><td>Reconocer rápido el estado del caso (lo pide el caso).</td><td>Evita confundir estados por el color o por la luz del ambiente.</td></tr>
+    <tr><td class="id">D12</td><td>Siempre hay una salida: «Salir · el borrador queda guardado», «Cancelar» al editar, «Deshacer» en los avisos, y cancelar una actividad pide confirmación y no la borra.</td><td class="f"><b>H3</b> Control y libertad del usuario; <b>error humano</b>: que sus efectos sean reversibles.</td><td>Miedo a «malograr algo» por falta de experiencia.</td><td>Cualquier acción se puede revertir. Nada se borra para siempre.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ======================= 5. CASOS ======================= -->
+<section>
+<h1>5. Módulo 1 · Registro de casos judiciales</h1>
+<p><b>Tareas que permite:</b> registrar un caso nuevo, consultar los casos (lista, filtros y búsqueda), ver el detalle, registrar avances, editar el estado y los datos, y reconocer qué casos requieren atención.</p>
+<div class="g2">
+  <figure><img src="capturas/02-casos.png" alt=""><figcaption><b>Fig. 2 · Lista de casos.</b> Filtros con conteo, incluido «Requieren atención» (D13), buscador único (D15), partes con su rol (D14), estado (D11) y si está enviado (D28).</figcaption></figure>
+  <figure><img src="capturas/03-caso-personas.png" alt=""><figcaption><b>Fig. 3 · Paso 1 (Personas).</b> Se empieza por el DNI: la aplicación reconoce a Juana y ofrece usar sus datos (D9). Cada campo dice si es obligatorio u opcional (D7). El borrador se autoguarda (D6).</figcaption></figure>
+  <figure><img src="capturas/04-caso-errores.png" alt=""><figcaption><b>Fig. 4 · Errores al continuar.</b> El resumen dice qué falta y cómo corregirlo, con enlace a cada campo (D8). No se pierde nada de lo ya escrito.</figcaption></figure>
+  <figure><img src="capturas/05-caso-tipo.png" alt=""><figcaption><b>Fig. 5 · Paso 2 (El caso).</b> El tipo de conflicto se elige con tarjetas con ícono y descripción (D19). El panel lateral muestra lo registrado hasta ese momento (D5).</figcaption></figure>
+  <figure><img src="capturas/07-caso-guardado.png" alt=""><figcaption><b>Fig. 6 · Confirmación.</b> Muestra el código generado, que el caso quedó «guardado en esta tableta» (D28) y que la audiencia se agregó a la agenda (D16).</figcaption></figure>
+  <figure><img src="capturas/08-caso-detalle.png" alt=""><figcaption><b>Fig. 7 · Detalle del caso.</b> Personas con su rol (D14), seguimiento en línea de tiempo (D16), próxima cita, documentos y estado de envío.</figcaption></figure>
+  <figure><img src="capturas/09-caso-editando.png" alt=""><figcaption><b>Fig. 8 · Edición.</b> Un aviso indica «Está modificando el caso…» y cada campo cambiado dice qué tenía antes (D17). «Cancelar» está siempre disponible (D12).</figcaption></figure>
+  <figure><img src="capturas/10-caso-cambios-guardados.png" alt=""><figcaption><b>Fig. 9 · Cambios guardados.</b> Aviso «Cambios guardados en la tableta» con «Deshacer». El estado pasó a «Concluido» y el caso quedó «por enviar».</figcaption></figure>
+</div>
+
+<h2>5.1 Campos, obligatoriedad y validaciones</h2>
+<table class="fields">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"></colgroup>
+  <thead><tr><th>Campo</th><th>Tipo</th><th>Validación y ayuda</th></tr></thead>
+  <tbody>
+    <tr><td>Código del caso</td><td><span class="auto">Automático</span></td><td>C-AAAA-NNNN, correlativo del juzgado y generado en la tableta. No se edita.</td></tr>
+    <tr><td>Fecha de registro</td><td><span class="req">Obligatorio</span></td><td>Hoy por defecto. No puede ser posterior a hoy.</td></tr>
+    <tr><td>Tipo de conflicto o materia</td><td><span class="req">Obligatorio</span></td><td>1 de 8 tarjetas en lenguaje llano. «Otro» obliga a escribir de qué se trata.</td></tr>
+    <tr><td>Motivo breve</td><td><span class="req">Obligatorio</span></td><td>Entre 10 y 300 caracteres, con contador visible y un ejemplo.</td></tr>
+    <tr><td>Estado</td><td><span class="req">Obligatorio</span></td><td>En trámite (por defecto), Concluido o <b>Derivado</b> (D18). Concluido y Derivado exigen escribir el resultado.</td></tr>
+    <tr><td>Observaciones</td><td><span class="opt">Opcional</span></td><td>Hasta 400 caracteres.</td></tr>
+    <tr><td>Persona: rol en el caso</td><td><span class="req">Obligatorio</span></td><td>Solicitante, Invitado o Testigo. Debe haber al menos un solicitante.</td></tr>
+    <tr><td>Nombres / Apellidos</td><td><span class="req">Obligatorio</span></td><td>Solo letras (se aceptan tildes y ñ), mínimo 2. Al coincidir con alguien ya registrado aparece el aviso de duplicado (D9).</td></tr>
+    <tr><td>Tipo y número de documento</td><td><span class="opt">Si tiene</span></td><td>DNI (8 dígitos, teclado numérico), Otro (hasta 15 caracteres) o «No tiene». El DNI reconoce a personas ya registradas.</td></tr>
+    <tr><td>Celular</td><td><span class="opt">Opcional</span></td><td>9 dígitos que empiezan con 9. Solo acepta números.</td></tr>
+    <tr><td>Comunidad o localidad</td><td><span class="req">Obligatorio</span></td><td>Lista de comunidades frecuentes o texto libre.</td></tr>
+    <tr><td>Dirección o referencia</td><td><span class="opt">Opcional</span></td><td>Texto libre, por ejemplo «frente a la posta».</td></tr>
+    <tr><td>Idioma de atención <span class="new">NUEVO</span></td><td><span class="opt">Opcional</span></td><td>Castellano, Quechua, Aimara u Otro. Sirve para prever un intérprete en la audiencia.</td></tr>
+    <tr><td>Seguimiento: fecha y qué pasó</td><td><span class="req">Obligatorio</span></td><td>La fecha no puede ser posterior a hoy. Se muestra en una línea de tiempo.</td></tr>
+    <tr><td>Próxima fecha de atención</td><td><span class="opt">Opcional</span></td><td>Hoy o después. <b>Se agrega sola a la agenda</b> como audiencia.</td></tr>
+    <tr><td>Resultado o acuerdo</td><td><span class="req">Si concluye</span></td><td>Obligatorio cuando el estado es Concluido o Derivado.</td></tr>
+    <tr><td>Documentos y referencia en papel <span class="new">NUEVO</span></td><td><span class="opt">Opcional</span></td><td>Foto o PDF desde la cámara. Libro y folio del acta física (D22).</td></tr>
+  </tbody>
+</table>
+
+<h2>5.2 Decisiones propias del módulo</h2>
+<table class="dec">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+  <thead><tr><th>#</th><th>Decisión de diseño</th><th>Principio · heurística · factor humano</th><th>Necesidad que atiende</th><th>Cómo facilita o previene errores</th></tr></thead>
+  <tbody>
+    <tr><td class="id">D13</td><td>Bandeja «Requieren su atención» en Inicio y filtro en Casos, con el motivo escrito: «Cita mañana», «Sin avance hace 38 días», «Cita vencida».</td><td class="f">Norman: <b>visibilidad</b>; <b>H6</b>; <b>H8</b>; constructivismo: mostrar solo lo que tiene significado.</td><td>Reconocer qué casos requieren atención y no olvidar fechas (lo pide el caso).</td><td>Reemplaza revisar los cuadernos página por página.</td></tr>
+    <tr><td class="id">D14</td><td>Las partes aparecen como tarjetas con su rol destacado (Solicitante, Invitado, Testigo). En la lista: «Juana Mamani · Solicitante / Teodoro Huamán · Invitado».</td><td class="f"><b>Mapping</b>: quién pide y a quién se cita; <b>Gestalt</b>: proximidad; visibilidad.</td><td>Facilitar la identificación de las partes (lo pide el caso).</td><td>Evita citar a la persona equivocada o confundir los roles.</td></tr>
+    <tr><td class="id">D15</td><td>Un solo buscador por nombre, DNI, código o tema, que muestra resultados mientras se escribe (en Inicio y en cada lista).</td><td class="f"><b>H7</b> Flexibilidad y eficiencia; <b>H6</b>; respuesta rápida.</td><td>«Es difícil encontrar un registro anterior» (problema del caso).</td><td>No necesita recordar el código ni en qué módulo está el registro.</td></tr>
+    <tr><td class="id">D16</td><td>El seguimiento se muestra como línea de tiempo (fecha y qué pasó). «Registrar avance» permite poner la próxima cita, que se agenda sola.</td><td class="f"><b>Modelo mental</b> del cuaderno de actas; <b>Gestalt</b>: continuidad; compatibilidad con el flujo de trabajo.</td><td>Dejar constancia de cada actuación y de la próxima fecha.</td><td>Evita registrar la misma cita dos veces (en el caso y en la agenda).</td></tr>
+    <tr><td class="id">D17</td><td>Edición explícita: aviso «Está modificando…», tarjeta con borde, cada cambio marcado como «Modificado · antes: …», botones Cancelar y Guardar cambios, y aviso final con Deshacer.</td><td class="f"><b>H1</b>; <b>H3</b>; <b>feedback</b>.</td><td>El caso pide indicar qué se modifica y confirmar que quedó guardado.</td><td>Evita cambios accidentales o que se pierdan sin guardar.</td></tr>
+    <tr><td class="id">D18</td><td>Se agregó el estado «Derivado», con el campo «A dónde se derivó y por qué».</td><td class="f"><b>Compatibilidad</b> con la tarea real: hay casos que exceden la competencia del juez de paz (Ley 29824), como montos altos o violencia.</td><td>Distinguir los casos cerrados por acuerdo de los que pasaron a otra autoridad.</td><td>Evita marcar como «concluido» un caso que sigue en otra instancia.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ======================= 6. NOTARIAL ======================= -->
+<section>
+<h1>6. Módulo 2 · Registro de actuaciones notariales</h1>
+<p><b>Tareas que permite:</b> dejar constancia de una actuación en 4 pasos, localizarla después (lista, filtros por estado y búsqueda) y actualizar su atención hasta la entrega.</p>
+<div class="g2">
+  <figure><img src="capturas/11-not-tipo.png" alt=""><figcaption><b>Fig. 10 · Paso 1 (Tipo de trámite).</b> Tarjetas en palabras simples (D19). Al elegir una aparece lo que normalmente se necesita (D20).</figcaption></figure>
+  <figure><img src="capturas/12-not-duplicado.png" alt=""><figcaption><b>Fig. 11 · Trámite repetido.</b> La solicitante ya tiene una constancia igual. Puede ver ese registro o confirmar que el trámite es nuevo (D9).</figcaption></figure>
+  <figure><img src="capturas/13-not-detalle.png" alt=""><figcaption><b>Fig. 12 · Paso 3 (Detalle y resultado).</b> Cada estado trae una explicación de una línea (D21). Libro y folio del acta física (D22).</figcaption></figure>
+  <figure><img src="capturas/14-not-lista.png" alt=""><figcaption><b>Fig. 13 · Lista de actuaciones.</b> Filtros por estado. Qué falta hacer («Falta atender», «Falta entregar el documento») y qué falta enviar.</figcaption></figure>
+</div>
+<h2>6.1 Campos, obligatoriedad y validaciones</h2>
+<table class="fields">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"></colgroup>
+  <thead><tr><th>Campo</th><th>Tipo</th><th>Validación y ayuda</th></tr></thead>
+  <tbody>
+    <tr><td>Código de registro</td><td><span class="auto">Automático</span></td><td>N-AAAA-NNNN, correlativo, generado en la tableta.</td></tr>
+    <tr><td>Tipo de actuación</td><td><span class="req">Obligatorio</span></td><td>8 tarjetas: posesión, domiciliaria, convivencia, supervivencia, legalización de firmas, copia certificada, transferencia de bienes, otro. «Otro» obliga a escribir cuál.</td></tr>
+    <tr><td>Fecha de solicitud</td><td><span class="req">Obligatorio</span></td><td>Hoy por defecto. No puede ser posterior a hoy.</td></tr>
+    <tr><td>Fecha de atención</td><td><span class="opt">Opcional</span></td><td>Igual o posterior a la solicitud y no posterior a hoy. Se deja vacía si aún no se atiende.</td></tr>
+    <tr><td>Asunto o descripción</td><td><span class="req">Obligatorio</span></td><td>Entre 10 y 300 caracteres, con un ejemplo según el trámite elegido.</td></tr>
+    <tr><td>Estado de la atención</td><td><span class="req">Obligatorio</span></td><td>Pendiente (por defecto), Atendida o Concluida, cada uno con su explicación.</td></tr>
+    <tr><td>Personas: participación</td><td><span class="req">Obligatorio</span></td><td>Al menos un Solicitante. Declarante y testigos se agregan según los requisitos del trámite (guía, no bloqueo).</td></tr>
+    <tr><td>Datos de cada persona</td><td>Igual que en Casos</td><td>Mismas reglas y la misma detección de personas repetidas.</td></tr>
+    <tr><td>Resultado y fecha de entrega</td><td><span class="req">Si concluye</span></td><td>Obligatorios si el estado es Concluida. La fecha de entrega no puede ser posterior a hoy.</td></tr>
+    <tr><td>Libro notarial N° y folio <span class="new">NUEVO</span></td><td><span class="opt">Opcional</span></td><td>Numéricos. Sirven para encontrar el acta en papel.</td></tr>
+    <tr><td>Foto del documento</td><td><span class="opt">Opcional</span></td><td>Desde la cámara de la tableta.</td></tr>
+    <tr><td>Control de duplicado</td><td>Regla</td><td>Aviso si la misma persona pidió el mismo trámite en los últimos 90 días (D9).</td></tr>
+  </tbody>
+</table>
+<h2>6.2 Decisiones propias del módulo</h2>
+<table class="dec">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+  <thead><tr><th>#</th><th>Decisión de diseño</th><th>Principio · heurística · factor humano</th><th>Necesidad que atiende</th><th>Cómo facilita o previene errores</th></tr></thead>
+  <tbody>
+    <tr><td class="id">D19</td><td>El tipo de actuación se elige con tarjetas grandes que tienen ícono, nombre y una línea en palabras simples («Que una persona ocupa y trabaja un terreno»).</td><td class="f"><b>H6</b>; <b>H2</b>; <b>affordance</b>; <b>sencillez</b>.</td><td>El caso pide evitar términos jurídicos o técnicos innecesarios.</td><td>Hay menos elecciones equivocadas que con una lista desplegable de nombres legales.</td></tr>
+    <tr><td class="id">D20</td><td>Al elegir el trámite aparece «Para este trámite normalmente se necesita: DNI, 2 testigos…». Es una guía y no bloquea.</td><td class="f"><b>H10</b> Ayuda en contexto; <b>H5</b>; <b>flexibilidad</b>.</td><td>Evitar registros incompletos (lo pide el caso).</td><td>Pide lo necesario antes de empezar. Si falta algo, el trámite queda «Pendiente» y se completa después.</td></tr>
+    <tr><td class="id">D21</td><td>Cada estado se explica: Pendiente = «lo pidió y aún no se atiende», Atendida = «falta entregar», Concluida = «ya se entregó».</td><td class="f"><b>H2</b>; <b>H10</b>; divulgación progresiva.</td><td>Saber después en qué quedó cada trámite.</td><td>Todos interpretan los estados de la misma manera.</td></tr>
+    <tr><td class="id">D22</td><td>Referencia al libro físico (número y folio) y foto del documento, ambos opcionales.</td><td class="f"><b>Compatibilidad</b> con el producto y los hábitos actuales; <b>memorabilidad</b>.</td><td>La jueza seguirá usando libros de actas.</td><td>Permite una transición gradual y une el registro digital con el acta en papel.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ======================= 7. AGENDA ======================= -->
+<section>
+<h1>7. Módulo 3 · Agenda</h1>
+<p><b>Tareas que permite:</b> ver las actividades del mes y de un día, reconocer las próximas, crear una actividad (audiencia, reunión, visita, trámite notarial u otra) y marcarla como realizada o cancelada.</p>
+<figure><img src="capturas/15-agenda.png" alt=""><figcaption><b>Fig. 14 · Agenda: mes y día en la misma pantalla (D23).</b> Cada actividad tiene ícono y etiqueta de categoría además del color, con leyenda visible (D24). Las realizadas se ven atenuadas y las canceladas tachadas. Arriba a la derecha: «Próximos 7 días: 6 actividades» (D25).</figcaption></figure>
+<div class="g2">
+  <figure><img src="capturas/16-actividad-nueva.png" alt=""><figcaption><b>Fig. 15 · Nueva actividad.</b> Avisa del cruce con la conciliación de las 09:00 (D26). Se puede vincular a un caso y usar fechas rápidas (D27). A la derecha, qué más hay ese día.</figcaption></figure>
+  <figure><img src="capturas/17-agenda-guardada.png" alt=""><figcaption><b>Fig. 16 · Actividad agendada.</b> Queda resaltada en el día elegido, con el aviso «Guardada en la tableta» y la opción de deshacer.</figcaption></figure>
+</div>
+<h2>7.1 Campos, obligatoriedad y validaciones</h2>
+<table class="fields">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"></colgroup>
+  <thead><tr><th>Campo</th><th>Tipo</th><th>Validación y ayuda</th></tr></thead>
+  <tbody>
+    <tr><td>Tipo de actividad</td><td><span class="req">Obligatorio</span></td><td>Audiencia, Reunión, Visita, Trámite notarial u Otra, cada uno con su ícono.</td></tr>
+    <tr><td>Título o nombre</td><td><span class="req">Obligatorio</span></td><td>Si se vincula a un caso, se sugiere solo («Audiencia caso C-2026-0009»).</td></tr>
+    <tr><td>Fecha</td><td><span class="req">Obligatorio</span></td><td>Por defecto, el día seleccionado. Atajos: Hoy, Mañana, Lunes próximo.</td></tr>
+    <tr><td>Hora de inicio</td><td><span class="req">Obligatorio</span></td><td>Salvo que se marque «Dura todo el día».</td></tr>
+    <tr><td>Hora de término</td><td><span class="opt">Opcional</span></td><td>Debe ser posterior al inicio. Avisa si se cruza con otra actividad (no bloquea).</td></tr>
+    <tr><td>Lugar o comunidad</td><td><span class="req">Obligatorio</span></td><td>Lista de comunidades o texto libre.</td></tr>
+    <tr><td>Descripción o motivo</td><td><span class="opt">Opcional</span></td><td>Texto libre.</td></tr>
+    <tr><td>Estado</td><td><span class="auto">Programada</span></td><td>Se crea como Programada. Desde el día se marca Realizada o Cancelada (esta última pide confirmación y no borra).</td></tr>
+    <tr><td>Caso vinculado <span class="new">NUEVO</span></td><td><span class="opt">Opcional</span></td><td>Lista de casos en trámite. Actualiza la próxima cita del caso.</td></tr>
+    <tr><td>Aviso un día antes <span class="new">NUEVO</span></td><td><span class="opt">Opcional</span></td><td>Activado por defecto. Es una notificación local, así que funciona sin Internet.</td></tr>
+  </tbody>
+</table>
+<h2>7.2 Decisiones propias del módulo</h2>
+<table class="dec">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+  <thead><tr><th>#</th><th>Decisión de diseño</th><th>Principio · heurística · factor humano</th><th>Necesidad que atiende</th><th>Cómo facilita o previene errores</th></tr></thead>
+  <tbody>
+    <tr><td class="id">D23</td><td>El mes y el detalle del día se ven en la misma pantalla (maestro-detalle), aprovechando la tableta en horizontal. Al tocar un día se muestran sus actividades.</td><td class="f"><b>Compatibilidad</b> con el flujo de trabajo; <b>Gestalt</b>: proximidad; tamaño del <b>dispositivo</b>.</td><td>Consultar el mes y un día específico (lo pide el caso).</td><td>Se navega menos y el mes queda siempre a la vista.</td></tr>
+    <tr><td class="id">D24</td><td>Cada actividad lleva ícono y etiqueta de categoría además del color, con leyenda visible. Las canceladas se tachan y las realizadas se atenúan.</td><td class="f">Lo pide el caso; <b>visión del color</b>; <b>Gestalt</b>: similitud; <b>memorabilidad</b> por convenciones (⚖ = audiencia).</td><td>Distinguir las categorías sin depender del color.</td><td>Funciona con daltonismo y con reflejos en la pantalla.</td></tr>
+    <tr><td class="id">D25</td><td>Fechas en lenguaje relativo («Hoy», «Mañana», «En 3 días»), contador de los próximos 7 días y bloque «Hoy y mañana» en Inicio.</td><td class="f"><b>H6</b>; <b>visibilidad</b>; <b>memoria</b>.</td><td>Reconocer las tareas próximas (lo pide el caso).</td><td>No depende de recordar qué día es.</td></tr>
+    <tr><td class="id">D26</td><td>Al agendar, avisa si hay cruce de horario y valida que el término sea posterior al inicio. Un panel lateral muestra «Ese día ya tiene…».</td><td class="f"><b>H5</b> Prevención de errores; <b>visibilidad</b>.</td><td>Organizar la semana sin choques de horario.</td><td>Evita citar a dos grupos a la misma hora, pero permite guardar si el cruce es intencional.</td></tr>
+    <tr><td class="id">D27</td><td>Vincular la actividad a un caso completa el título. Hay fechas rápidas y un aviso local un día antes.</td><td class="f"><b>H7</b> Flexibilidad y eficiencia; <b>H6</b>.</td><td>Agendar rápido una nueva reunión al final del día.</td><td>Se escribe menos y el recordatorio funciona sin Internet.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ======================= 8. SIN CONEXIÓN ======================= -->
+<section>
+<h1>8. Funcionamiento sin conexión y sincronización</h1>
+<h2>8.1 Estados de un registro y cómo se comunican</h2>
+<div class="states">
+  <div class="w"><b>1 · En la tableta</b>Se guarda al tocar «Guardar» o mientras se escribe (borrador). Insignia «En la tableta · por enviar».</div>
+  <div class="i"><b>2 · Por enviar</b>Pasa a la cola de cambios. Se cuenta en la barra superior y en el menú («Sincronizar 3»).</div>
+  <div class="s"><b>3 · Enviando</b>Solo con Internet y a pedido de la jueza. Muestra «Enviando 3 de 8…» con una barra de progreso.</div>
+  <div class="o"><b>4 · Enviado</b>Insignia «Enviado». Pantalla «Sincronización completa» con fecha, hora y constancia. Si falla, vuelve al paso 2 sin perder nada.</div>
+</div>
+<div class="g2">
+  <figure><img src="capturas/18-sync-offline.png" alt=""><figcaption><b>Fig. 17 · Sin Internet.</b> «Todo se guarda en esta tableta», 3 pasos para sincronizar y el botón desactivado con el motivo escrito (D29). Abajo, la lista de lo que falta enviar (D28).</figcaption></figure>
+  <figure><img src="capturas/19-sync-banner.png" alt=""><figcaption><b>Fig. 18 · Vuelve el Internet.</b> Una franja ofrece «Sincronizar ahora» y la barra cambia a «Con Internet · 8 por enviar» (D30, D1).</figcaption></figure>
+  <figure><img src="capturas/20-sync-progreso.png" alt=""><figcaption><b>Fig. 19 · Enviando.</b> Barra de progreso, «No apague la tableta» y el estado de cada registro (enviado o enviándose).</figcaption></figure>
+  <figure><img src="capturas/21-sync-ok.png" alt=""><figcaption><b>Fig. 20 · Sincronización completa.</b> «8 de 8», fecha y hora, constancia SYNC-… y la barra en verde: «Todo sincronizado».</figcaption></figure>
+</div>
+<div class="g2">
+  <figure><img src="capturas/22-sync-parcial.png" alt=""><figcaption><b>Fig. 21 · Error parcial.</b> «Se enviaron 2 de 3». Dice cuál no se envió, por qué y que no se perdió, con la opción «Reintentar el envío» (D29).</figcaption></figure>
+  <div>
+    <table>
+      <colgroup><col style="width:38%"><col style="width:62%"></colgroup>
+      <thead><tr><th>Situación</th><th>Mensaje en pantalla</th></tr></thead>
+      <tbody>
+        <tr><td>Se corta Internet</td><td>«Se perdió la conexión a Internet. Puede seguir trabajando: todo se guarda en la tableta.»</td></tr>
+        <tr><td>Guarda sin Internet</td><td>«Guardado en esta tableta · se enviará al sincronizar»</td></tr>
+        <tr><td>Hay Internet y pendientes</td><td>«Hay conexión a Internet. Tiene 8 cambios… [Sincronizar ahora]»</td></tr>
+        <tr><td>Envío completo</td><td>«Sincronización completa · 8 de 8 · constancia SYNC-…»</td></tr>
+        <tr><td>Envío incompleto</td><td>«1 no se pudo enviar porque… No se perdió: sigue guardado en esta tableta.»</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<h2>8.2 Cómo funciona por dentro</h2>
+<ul class="small">
+  <li><b>Aplicación web progresiva (PWA):</b> un <i>service worker</i> guarda la aplicación en la tableta, así que abre sin Internet. En la computadora es la misma dirección web.</li>
+  <li><b>Datos locales</b> en IndexedDB, cifrados y protegidos con la clave de la jueza. Cada cambio entra a una <b>cola de envío</b> con fecha y hora. El prototipo simula esto con el almacenamiento del navegador: los datos sobreviven a recargar la página.</li>
+  <li><b>Códigos sin servidor:</b> cada juzgado tiene su propia serie (C-2026-0014), así que la tableta genera el código sin consultar a nadie. El servidor verifica que no se repita.</li>
+  <li><b>Envío confirmado registro por registro:</b> cada registro tiene un identificador único, por lo que reenviarlo no crea duplicados. Si el mismo registro se editó en la tableta y en la computadora, se conserva el cambio más reciente, el historial guarda ambos y se avisa a la jueza.</li>
+</ul>
+<table class="dec">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+  <thead><tr><th>#</th><th>Decisión de diseño</th><th>Principio · heurística · factor humano</th><th>Necesidad que atiende</th><th>Cómo facilita o previene errores</th></tr></thead>
+  <tbody>
+    <tr><td class="id">D28</td><td>Cada registro muestra si está «En la tableta · por enviar» o «Enviado». También hay contadores en el menú, en la barra superior y en Inicio.</td><td class="f"><b>H1</b>; Norman: <b>feedback</b> y <b>visibilidad</b>.</td><td>Indicar que la información está guardada en la tableta y pendiente de sincronizar (lo pide el caso).</td><td>Sabe exactamente qué falta enviar.</td></tr>
+    <tr><td class="id">D29</td><td>Pantalla Sincronizar: sin Internet explica qué hacer y deja el botón desactivado con el motivo escrito; con Internet muestra el progreso y el resultado con constancia; si falla una parte, dice cuál, por qué y permite reintentar.</td><td class="f"><b>H1</b>; <b>H9</b>; <b>H10</b>; <b>feedback</b>; <b>error humano</b>: consecuencias mínimas.</td><td>Sincronizar y confirmar si el proceso terminó bien (lo pide el caso).</td><td>No quedan dudas sobre el envío. Ninguna falla borra los datos de la tableta.</td></tr>
+    <tr><td class="id">D30</td><td>Cuando detecta Internet, ofrece «Sincronizar ahora» en lugar de enviar en segundo plano sin avisar.</td><td class="f"><b>H3</b> Control y libertad; <b>H1</b>.</td><td>Decidir cuándo usar los datos móviles o la conexión de la sede.</td><td>Sabe con certeza cuándo se envió y evita consumos inesperados.</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ======================= 9. COMPUTADORA, CONCEPTOS, RÚBRICA ======================= -->
+<section class="pb">
+<h1>9. Uso desde computadora, conceptos del curso y evaluación</h1>
+<figure><img src="capturas/23-computadora.png" alt=""><figcaption><b>Fig. 22 · La misma aplicación en una computadora (1600 px).</b> El contenido se centra con un ancho máximo, las filas reaccionan al pasar el mouse y todo se puede usar con Tab y Enter. Con Internet aparece la franja para sincronizar.</figcaption></figure>
+<table class="dec">
+  <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"></colgroup>
+  <thead><tr><th>#</th><th>Decisión de diseño</th><th>Principio · heurística · factor humano</th><th>Necesidad que atiende</th><th>Cómo facilita o previene errores</th></tr></thead>
+  <tbody>
+    <tr><td class="id">D31</td><td>Una sola aplicación web adaptable: tableta (táctil, 1280 px), computadora (mouse y teclado, más de 1400 px) y celular (menú inferior).</td><td class="f"><b>Flexibilidad</b> de hardware y de tipos de interacción; <b>H4</b> Consistencia.</td><td>Usarla desde una computadora con Internet (lo pide el caso).</td><td>No tiene que aprender una segunda interfaz.</td></tr>
+  </tbody>
+</table>
+
+<h2>9.1 Conceptos del curso aplicados</h2>
+<table class="matrix">
+  <colgroup><col style="width:24%"><col style="width:76%"></colgroup>
+  <thead><tr><th>Concepto (diapositivas)</th><th>Decisiones que lo aplican</th></tr></thead>
+  <tbody>
+    <tr><td><b>Principios generales</b></td><td>Compatibilidad (D2, D16, D18, D22) · Facilidad de aprendizaje (D4, D5) · Memorabilidad (D2, D24) · Sencillez y divulgación progresiva (D5, D19, D21) · Flexibilidad (D7, D15, D27, D31)</td></tr>
+    <tr><td><b>Principios de Norman</b></td><td>Visibilidad (D1, D13, D28) · Affordances (D3, D8, D19) · Modelo mental (D2, D4, D16) · Mapping (D14, D23) · Feedback (D10, D17, D29) · Error humano (D6, D9, D12)</td></tr>
+    <tr><td><b>Heurísticas de Nielsen</b></td><td>H1 (D1, D5, D10, D17, D28, D29) · H2 (D4, D19, D21) · H3 (D6, D12, D17, D30) · H4 (D2, D11, D31) · H5 (D7, D8, D9, D20, D26) · H6 (D2, D5, D9, D13, D15, D19, D25) · H7 (D15, D27) · H8 (D5, D13) · H9 (D8, D29) · H10 (D20, D21, D29)</td></tr>
+    <tr><td><b>Factores humanos</b></td><td>Visión y color (D3, D11, D24) · Tacto y respondedores (D3) · Lectura (D3, D4) · Atención dividida (D5, D6) · Memoria de corto plazo (D5, D13, D25) · Gestalt: proximidad, similitud y continuidad (D11, D14, D16, D23, D24)</td></tr>
+  </tbody>
+</table>
+
+<h2>9.2 Relación con la rúbrica</h2>
+<table>
+  <colgroup><col style="width:28%"><col style="width:72%"></colgroup>
+  <thead><tr><th>Criterio</th><th>Dónde se cumple</th></tr></thead>
+  <tbody>
+    <tr><td>Cobertura y funcionamiento de los módulos</td><td>Secciones 5–7: registrar, consultar, actualizar y reconocer lo pendiente en los tres módulos (Figs. 2–16). El prototipo navegable permite completar cada tarea.</td></tr>
+    <tr><td>Principios de diseño y heurísticas</td><td>Tablas D1–D31 y matriz 9.1: las 10 heurísticas y los 6 principios de Norman aparecen al menos una vez.</td></tr>
+    <tr><td>Factores humanos y dispositivo</td><td>D3 (tacto y lectura), D5 y D6 (atención e interrupciones), D11 y D24 (color), D23 (pantalla de 10" en horizontal), D31 (computadora).</td></tr>
+    <tr><td>Funcionamiento sin conexión</td><td>Sección 8: cuatro estados, mensajes exactos, insignia por registro, progreso, éxito con constancia y error parcial recuperable (Figs. 17–21).</td></tr>
+    <tr><td>Justificación de las decisiones</td><td>Cada decisión tiene su principio o heurística, la necesidad de la jueza que atiende y el efecto sobre la interacción o los errores.</td></tr>
+  </tbody>
+</table>
+
+<h2>9.3 Cómo evaluaríamos el prototipo (siguiente paso del DCU)</h2>
+<p class="small">Una evaluación heurística con 3 evaluadores y una prueba con 5 jueces de paz usando las tareas de la situación de uso. Se medirían con el marco HEART (Rodden et al., 2010): <b>Task success</b>: al menos 90 % registra un caso sin ayuda en menos de 5 minutos y con 0 personas duplicadas; <b>Happiness</b>: SUS de 70 o más; <b>Adoption</b>: porcentaje de casos del mes registrados en la aplicación frente al cuaderno; <b>Retention</b>: al menos una sincronización por semana; <b>Engagement</b>: actividades agendadas por semana.</p>
+
+<h2>Referencias</h2>
+<div class="refs">
+  <p>Benyon, D. (2019). <i>Designing user experience: A guide to HCI, UX and interaction design</i> (4.ª ed.). Pearson.</p>
+  <p>Chambilla, T. (2026). <i>Principios de diseño; Factores humanos; Usabilidad y diseño centrado en el usuario</i> [Diapositivas de clase]. CS2H01 Interacción Humano Computador, UTEC.</p>
+  <p>Congreso de la República del Perú. (2012). <i>Ley N.° 29824, Ley de Justicia de Paz</i>. Diario Oficial El Peruano.</p>
+  <p>MacKenzie, I. S. (2013). <i>Human-computer interaction: An empirical research perspective</i>. Morgan Kaufmann.</p>
+  <p>Nielsen, J. (2024). <i>10 usability heuristics for user interface design</i>. Nielsen Norman Group. https://www.nngroup.com/articles/ten-usability-heuristics/</p>
+  <p>Norman, D. (2013). <i>The design of everyday things</i> (ed. revisada y ampliada). Basic Books.</p>
+  <p>Rodden, K., Hutchinson, H. y Fu, X. (2010). Measuring the user experience on a large scale: User-centered metrics for web applications. En <i>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</i> (pp. 2395–2398). ACM.</p>
+  <p>World Wide Web Consortium. (2023). <i>Web Content Accessibility Guidelines (WCAG) 2.2</i>. https://www.w3.org/TR/WCAG22/</p>
+</div>
+</section>
+</body>
+</html>
